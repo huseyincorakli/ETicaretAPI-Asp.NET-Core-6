@@ -26,18 +26,18 @@ namespace ETicaretAPI_V2.API.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var data =  _productReadRepository.GetAll(false);
+            var data =   _productReadRepository.GetAll(false);
             return Ok(data);
         }
-        [HttpGet]
+        [HttpGet("{id}")]
         public async Task<IActionResult> Get(string id)
         {
-            var data = await _productReadRepository.GetByIdAsync(id,false);
+            var data = await _productReadRepository.GetByIdAsync(id, false);
             return Ok(data);
         }
 
         [HttpPost]
-        public  async Task<IActionResult> Post(VM_Create_Product model)
+        public async Task<IActionResult> Post(VM_Create_Product model)
         {
             await _productWriteRepository.AddAsync(new()
             {
@@ -51,7 +51,7 @@ namespace ETicaretAPI_V2.API.Controllers
         [HttpPut]
         public async Task<IActionResult> Put(VM_Update_Products model)
         {
-            Product product= await _productReadRepository.GetByIdAsync(model.Id);
+            Product product = await _productReadRepository.GetByIdAsync(model.Id);
             product.Stock = model.Stock;
             product.Price = model.Price;
             product.Name = model.Name;
