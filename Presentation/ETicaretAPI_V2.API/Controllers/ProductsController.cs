@@ -15,18 +15,18 @@ namespace ETicaretAPI_V2.API.Controllers
     {
         private readonly IProductReadRepository _productReadRepository;
         private readonly IProductWriteRepository _productWriteRepository;
-       
+
         public ProductsController(IProductWriteRepository productWriteRepository, IProductReadRepository productReadRepository)
         {
             _productWriteRepository = productWriteRepository;
             _productReadRepository = productReadRepository;
-           
+
         }
 
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var data =   _productReadRepository.GetAll(false);
+            var data = _productReadRepository.GetAll(false);
             return Ok(data);
         }
         [HttpGet("{id}")]
@@ -58,12 +58,12 @@ namespace ETicaretAPI_V2.API.Controllers
             await _productWriteRepository.SaveAsync();
             return StatusCode((int)(HttpStatusCode.OK));
         }
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)
         {
             await _productWriteRepository.RemoveAsync(id);
             await _productWriteRepository.SaveAsync();
-            return StatusCode((int)(HttpStatusCode.OK));
+            return Ok();
         }
     }
 }
