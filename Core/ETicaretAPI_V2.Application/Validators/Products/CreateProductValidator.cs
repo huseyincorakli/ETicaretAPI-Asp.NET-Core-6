@@ -24,10 +24,10 @@ namespace ETicaretAPI_V2.Application.Validators.Products
 
             RuleFor(x => x.Stock)
                 .NotEmpty()
-                .NotEmpty()
+                .NotNull()
                 .WithMessage("Stok boş olmamalı!")
                 .Must(stock => stock >= 0)
-                .WithMessage("Stock değeri 0 veya büyük olmalı");
+                .WithMessage("Stok değeri 0 veya büyük olmalı");
 
         }
     }
