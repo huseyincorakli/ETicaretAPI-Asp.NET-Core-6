@@ -24,4 +24,8 @@
     <ProjectReference Include="..\..\Infrastructure\ETicaretAPI_V2.Persistence\ETicaretAPI_V2.Persistence.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\resource\product-images\" />
+  </ItemGroup>
+
 </Project>
