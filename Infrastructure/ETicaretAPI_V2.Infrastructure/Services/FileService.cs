@@ -35,64 +35,67 @@ namespace ETicaretAPI_V2.Infrastructure.Services
             }
         }
 
+        //recursive method (first?)
+        //path:C:...ETicaretAPI_V2.API\wwwroot\resource\product-images\
+        //filename: exampleFilename.img 
         async Task<string> FileRenameAsync(string path, string fileName, bool first = true)
         {
-            string newFileName = await Task.Run<string>(async () =>
+            string extension = Path.GetExtension(fileName);
+            string newFileName;
+
+            if (first)
             {
-                string extension = Path.GetExtension(fileName);
-                string newFileName = string.Empty;
-                if (first)
+                string oldName = Path.GetFileNameWithoutExtension(fileName);
+                newFileName = $"{NameOperation.CharacterRegulatory(oldName)}{extension}";
+            }
+            else
+            {
+                newFileName = fileName;
+                int indexNo1 = newFileName.IndexOf("-");
+                if (indexNo1 == -1)
                 {
-                    string oldName = Path.GetFileNameWithoutExtension(fileName);
-                    newFileName = $"{NameOperation.CharacterRegulatory(oldName)}{extension}";
+                    newFileName = $"{Path.GetFileNameWithoutExtension(newFileName)}-2{extension}";
                 }
                 else
                 {
-                    newFileName = fileName;
-                    int indexNo1 = newFileName.IndexOf("-");
-                    if (indexNo1 == -1)
-                        newFileName = $"{Path.GetFileNameWithoutExtension(newFileName)}-2{extension}";
-                    else
+                    int indexNo2 = newFileName.LastIndexOf("-");
+                    if (indexNo1 != indexNo2)
                     {
-                        int lastIndex = 0;
-                        while (true)
-                        {
-                            lastIndex = indexNo1;
-                            indexNo1 = newFileName.IndexOf("-", indexNo1 + 1);
-                            if (indexNo1 == -1)
-                            {
-                                indexNo1 = lastIndex;
-                                break;
-                            }
-                        }
-
-                        int indexNo2 = newFileName.IndexOf(".");
-                        string fileNo = newFileName.Substring(indexNo1 + 1, indexNo2 - indexNo1 - 1);
-
+                        string fileNo = newFileName.Substring(indexNo2 + 1, newFileName.Length - indexNo2 - extension.Length - 1);
                         if (int.TryParse(fileNo, out int _fileNo))
                         {
                             _fileNo++;
-                            newFileName = newFileName.Remove(indexNo1 + 1, indexNo2 - indexNo1 - 1)
-                                                .Insert(indexNo1 + 1, _fileNo.ToString());
+                            newFileName = newFileName.Remove(indexNo2 + 1, newFileName.Length - indexNo2 - extension.Length - 1)
+                                                     .Insert(indexNo2 + 1, _fileNo.ToString());
                         }
                         else
+                        {
                             newFileName = $"{Path.GetFileNameWithoutExtension(newFileName)}-2{extension}";
-
+                        }
+                    }
+                    else
+                    {
+                        newFileName = $"{Path.GetFileNameWithoutExtension(newFileName)}-2{extension}";
                     }
                 }
+            }
 
-                if (File.Exists($"{path}\\{newFileName}"))
-                    return await FileRenameAsync(path, newFileName, false);
-                else
-                    return newFileName;
-            });
-
-            return newFileName;
+            if (File.Exists(Path.Combine(path, newFileName)))
+            {
+                return await FileRenameAsync(path, newFileName, false);
+            }
+            else
+            {
+                return newFileName;
+            }
         }
 
         public async Task<List<(string fileName, string path)>> UploadAsync(string path, IFormFileCollection files)
         {
+            //path : kaydedilecek yer = C:...ETicaretAPI_V2.API\wwwroot\resource\product-images\
             string uploadPath = Path.Combine(_webHostEnvironment.WebRootPath, path);
+
+            //C:...ETicaretAPI_V2.API\wwwroot\resource\product-images\ bu pathe  dosyalarda yok ise oluşturacak!
             if (!Directory.Exists(uploadPath))
                 Directory.CreateDirectory(uploadPath);
 
@@ -100,6 +103,7 @@ namespace ETicaretAPI_V2.Infrastructure.Services
             List<bool> results = new();
             foreach (IFormFile file in files)
             {
+                //yüklenen her dosyanın  (upload path (upload neden alındı ?) ve filename) rename işlemine tabi tutulup yeni name alındı
                 string fileNewName = await FileRenameAsync(uploadPath, file.FileName);
 
                 bool result = await CopyFileAsync($"{uploadPath}\\{fileNewName}", file);
