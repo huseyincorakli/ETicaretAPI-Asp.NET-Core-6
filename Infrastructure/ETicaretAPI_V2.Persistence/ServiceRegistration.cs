@@ -1,11 +1,13 @@
 ﻿
 using ETicaretAPI_V2.Application.Repositories.CustomerRepositories;
+using ETicaretAPI_V2.Application.Repositories.FileRepositories;
 using ETicaretAPI_V2.Application.Repositories.InvoiceFileRepositories;
 using ETicaretAPI_V2.Application.Repositories.OrderRepositories;
 using ETicaretAPI_V2.Application.Repositories.ProductImageFileRepositories;
 using ETicaretAPI_V2.Application.Repositories.ProductRepositories;
 using ETicaretAPI_V2.Persistence.Contexts;
 using ETicaretAPI_V2.Persistence.Repositories.CustomerRepositories;
+using ETicaretAPI_V2.Persistence.Repositories.FileRepositories;
 using ETicaretAPI_V2.Persistence.Repositories.InvoiceFileRepositories;
 using ETicaretAPI_V2.Persistence.Repositories.OrderRepositories;
 using ETicaretAPI_V2.Persistence.Repositories.ProductImageFileRepositories;
@@ -33,8 +35,8 @@ namespace ETicaretAPI_V2.Persistence
             service.AddScoped<IOrderWriteRepository, OrderWriteRepository>();
             service.AddScoped<IProductReadRepository, ProductReadRepository>();
             service.AddScoped<IProductWriteRepository, ProductWriteRepository>();
-            service.AddScoped<IProductImageFileReadRepository, ProductImageFileReadRepository>();
-            service.AddScoped<IProductImageFileWriteRepository,ProductImageFileWriteRepository>();
+            service.AddScoped<IFileReadRepository, FileReadRepository>();
+            service.AddScoped<IFileWriteRepository,FileWriteRepository>();
             service.AddScoped<IInvoiceFileReadRepository,InvoiceFileReadRepository>();
             service.AddScoped<IInvoiceFileWriteRepository,InvoiceFileWriteRepository>();
             service.AddScoped<IProductImageFileReadRepository,ProductImageFileReadRepository>();
