@@ -1,43 +1,14 @@
 ﻿using ETicaretAPI_V2.Application.Operations;
-using ETicaretAPI_V2.Application.Services;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 
 namespace ETicaretAPI_V2.Infrastructure.Services
 {
-    public class FileService : IFileService
+    public class FileService 
     {
         readonly IWebHostEnvironment _webHostEnvironment;
 
-        public FileService(IWebHostEnvironment webHostEnvironment)
-        {
-            _webHostEnvironment = webHostEnvironment;
-        }
-
-        public async Task<bool> CopyFileAsync(string path, IFormFile file)
-        {
-            try
-            {
-                await using FileStream fileStream = new(
-                 path,
-                 FileMode.Create,
-                 FileAccess.Write,
-                 FileShare.None,
-                 1024 * 1024,
-                 useAsync: false);
-                await file.CopyToAsync(fileStream);
-                await fileStream.FlushAsync();
-                return true;
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
-        }
-
-        //recursive method (first?)
-        //path:C:...ETicaretAPI_V2.API\wwwroot\resource\product-images\
-        //filename: exampleFilename.img 
+      
+        
         async Task<string> FileRenameAsync(string path, string fileName, bool first = true)
         {
             string extension = Path.GetExtension(fileName);
@@ -88,33 +59,6 @@ namespace ETicaretAPI_V2.Infrastructure.Services
             {
                 return newFileName;
             }
-        }
-
-        public async Task<List<(string fileName, string path)>> UploadAsync(string path, IFormFileCollection files)
-        {
-            //path : kaydedilecek yer = C:...ETicaretAPI_V2.API\wwwroot\resource\product-images\
-            string uploadPath = Path.Combine(_webHostEnvironment.WebRootPath, path);
-
-            //C:...ETicaretAPI_V2.API\wwwroot\resource\product-images\ bu pathe  dosyalarda yok ise oluşturacak!
-            if (!Directory.Exists(uploadPath))
-                Directory.CreateDirectory(uploadPath);
-
-            List<(string fileName, string path)> datas = new();
-            List<bool> results = new();
-            foreach (IFormFile file in files)
-            {
-                //yüklenen her dosyanın  (upload path (upload neden alındı ?) ve filename) rename işlemine tabi tutulup yeni name alındı
-                string fileNewName = await FileRenameAsync(uploadPath, file.FileName);
-
-                bool result = await CopyFileAsync($"{uploadPath}\\{fileNewName}", file);
-                datas.Add((fileNewName, $"{path}\\{fileNewName}"));
-                results.Add(result);
-            }
-
-            if (results.TrueForAll(r => r.Equals(true)))
-                return datas;
-
-            return null;
         }
     }
 }

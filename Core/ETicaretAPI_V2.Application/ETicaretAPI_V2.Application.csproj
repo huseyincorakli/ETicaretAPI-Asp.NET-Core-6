@@ -17,4 +17,8 @@
     <ProjectReference Include="..\ETicaretAPI_V2.Domain\ETicaretAPI_V2.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Services\" />
+  </ItemGroup>
+
 </Project>
