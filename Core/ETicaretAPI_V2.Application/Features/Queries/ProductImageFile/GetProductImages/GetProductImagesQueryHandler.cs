@@ -1,17 +1,31 @@
-﻿using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using P = ETicaretAPI_V2.Domain.Entities;
+using MediatR;
+using Microsoft.Extensions.Configuration;
+using ETicaretAPI_V2.Application.Repositories.ProductRepositories;
+using Microsoft.EntityFrameworkCore;
 
 namespace ETicaretAPI_V2.Application.Features.Queries.ProductImageFile.GetProductImages
 {
-    public class GetProductImagesQueryHandler : IRequestHandler<GetProductImagesQueryRequest, GetProductImagesQueryResponse>
+    public class GetProductImagesQueryHandler : IRequestHandler<GetProductImagesQueryRequest, List<GetProductImagesQueryResponse>>
     {
-        public Task<GetProductImagesQueryResponse> Handle(GetProductImagesQueryRequest request, CancellationToken cancellationToken)
+        readonly IConfiguration _configuration;
+        readonly IProductReadRepository _productReadRepository;
+
+        public GetProductImagesQueryHandler(IConfiguration configuration, IProductReadRepository productReadRepository)
         {
-            throw new NotImplementedException();
+            _configuration = configuration;
+            _productReadRepository = productReadRepository;
+        }
+
+        public async Task<List<GetProductImagesQueryResponse>> Handle(GetProductImagesQueryRequest request, CancellationToken cancellationToken)
+        {
+            P.Product? product = await _productReadRepository.Table.Include(p => p.ProductImageFiles).FirstOrDefaultAsync(p => p.Id == Guid.Parse(request.Id));
+            return product?.ProductImageFiles.Select(p => new GetProductImagesQueryResponse
+            {
+                 Path = $"{_configuration["BaseStorageUrl"]}/{p.Path}",
+                Id= p.Id,
+                FileName= p.FileName
+            }).ToList();
         }
     }
 }
