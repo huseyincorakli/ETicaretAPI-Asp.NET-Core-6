@@ -6,7 +6,7 @@ using System.Linq;
 
 using Microsoft.EntityFrameworkCore;
 
-namespace ETicaretAPI_V2.Application.Features.Queries.GetAllProduct
+namespace ETicaretAPI_V2.Application.Features.Queries.Product.GetAllProduct
 {
     public class GetAllProductQueryHandler : IRequestHandler<GetAllProductQueryRequest, GetAllProductQueryResponse>
     {
@@ -23,7 +23,7 @@ namespace ETicaretAPI_V2.Application.Features.Queries.GetAllProduct
             var products = await _productReadRepository.GetAll(false)
                 .Skip(request.Page * request.Size)
                 .Take(request.Size)
-                .Select(p => new  
+                .Select(p => new
                 {
                     p.Id,
                     p.Name,

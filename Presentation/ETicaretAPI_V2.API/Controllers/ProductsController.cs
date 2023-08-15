@@ -1,6 +1,6 @@
 ﻿using ETicaretAPI_V2.Application.Abstraction.Storage;
-using ETicaretAPI_V2.Application.Features.Commands.CreateProduct;
-using ETicaretAPI_V2.Application.Features.Queries.GetAllProduct;
+using ETicaretAPI_V2.Application.Features.Commands.Product.CreateProduct;
+using ETicaretAPI_V2.Application.Features.Queries.Product.GetAllProduct;
 using ETicaretAPI_V2.Application.Repositories.CustomerRepositories;
 using ETicaretAPI_V2.Application.Repositories.FileRepositories;
 using ETicaretAPI_V2.Application.Repositories.InvoiceFileRepositories;

@@ -1,7 +1,7 @@
 ﻿using ETicaretAPI_V2.Application.Repositories.ProductRepositories;
 using MediatR;
 
-namespace ETicaretAPI_V2.Application.Features.Commands.CreateProduct
+namespace ETicaretAPI_V2.Application.Features.Commands.Product.CreateProduct
 {
     public class CreateProductCommandHandler : IRequestHandler<CreateProductCommandRequest, CreateProductCommandResponse>
     {
