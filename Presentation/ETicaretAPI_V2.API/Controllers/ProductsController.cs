@@ -1,4 +1,6 @@
 ﻿using ETicaretAPI_V2.Application.Abstraction.Storage;
+using ETicaretAPI_V2.Application.Features.Commands.CreateProduct;
+using ETicaretAPI_V2.Application.Features.Queries.GetAllProduct;
 using ETicaretAPI_V2.Application.Repositories.CustomerRepositories;
 using ETicaretAPI_V2.Application.Repositories.FileRepositories;
 using ETicaretAPI_V2.Application.Repositories.InvoiceFileRepositories;
@@ -9,6 +11,7 @@ using ETicaretAPI_V2.Application.RequestParameters;
 
 using ETicaretAPI_V2.Application.ViewModels.Products;
 using ETicaretAPI_V2.Domain.Entities;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -30,7 +33,9 @@ namespace ETicaretAPI_V2.API.Controllers
         readonly IInvoiceFileReadRepository _invoiceFileReadRepository;
         readonly IInvoiceFileWriteRepository _invoiceFileWriteRepository;
         readonly IConfiguration _configuration;
-        public ProductsController(IProductWriteRepository productWriteRepository, IProductReadRepository productReadRepository, IFileReadRepository fileReadRepository, IFileWriteRepository fileWriteRepository, IProductImageFileReadRepository productImageFileReadRepository, IProductImageFileWriteRepository productImageFileWriteRepository, IInvoiceFileReadRepository invoiceFileReadRepository, IInvoiceFileWriteRepository invoiceFileWriteRepository, IStorageService storageService, IConfiguration configuration)
+
+        readonly IMediator _mediator;
+        public ProductsController(IProductWriteRepository productWriteRepository, IProductReadRepository productReadRepository, IFileReadRepository fileReadRepository, IFileWriteRepository fileWriteRepository, IProductImageFileReadRepository productImageFileReadRepository, IProductImageFileWriteRepository productImageFileWriteRepository, IInvoiceFileReadRepository invoiceFileReadRepository, IInvoiceFileWriteRepository invoiceFileWriteRepository, IStorageService storageService, IConfiguration configuration, IMediator mediator)
         {
             _productWriteRepository = productWriteRepository;
             _productReadRepository = productReadRepository;
@@ -42,24 +47,16 @@ namespace ETicaretAPI_V2.API.Controllers
             _invoiceFileWriteRepository = invoiceFileWriteRepository;
             _storageService = storageService;
             _configuration = configuration;
+            _mediator = mediator;
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get([FromQuery] Pagination pagination)
+        public async Task<IActionResult> Get([FromQuery]GetAllProductQueryRequest getAllProductQueryRequest)
         {
-            var totalCount = _productReadRepository.GetAll(false).Count();
-            var products = _productReadRepository.GetAll(false).Select(p => new
-            {
-                p.Id,
-                p.Name,
-                p.Price,
-                p.Stock,
-                p.CreateDate,
-                p.UpdatedDate
-            }).Skip(pagination.Size * pagination.Page).Take(pagination.Size);
-
-
-            return Ok(new { totalCount, products });
+           GetAllProductQueryResponse response=  await _mediator.Send(getAllProductQueryRequest);
+           
+            return Ok(response);
+           
         }
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(string id)
@@ -69,15 +66,9 @@ namespace ETicaretAPI_V2.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post(VM_Create_Product model)
+        public async Task<IActionResult> Post(CreateProductCommandRequest createProductCommandRequest)
         {
-            await _productWriteRepository.AddAsync(new()
-            {
-                Name = model.Name,
-                Price = model.Price,
-                Stock = model.Stock,
-            });
-            await _productWriteRepository.SaveAsync();
+            CreateProductCommandResponse response= await _mediator.Send(createProductCommandRequest);
             return StatusCode((int)(HttpStatusCode.Created));
         }
         [HttpPut]

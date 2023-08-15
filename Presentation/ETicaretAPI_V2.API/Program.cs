@@ -1,3 +1,4 @@
+using ETicaretAPI_V2.Application;
 using ETicaretAPI_V2.Application.Validators.Products;
 using ETicaretAPI_V2.Infrastructure;
 using ETicaretAPI_V2.Infrastructure.Filters;
@@ -10,6 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddPersistenceService();
 builder.Services.AddInfrastructureServices();
+builder.Services.AddApplicationService();
 builder.Services.AddStorage<AzureStorage>();
 
 builder.Services.AddCors(options => options.AddDefaultPolicy(policy =>
