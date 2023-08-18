@@ -1,10 +1,12 @@
 ﻿using ETicaretAPI_V2.Domain.Entities;
 using ETicaretAPI_V2.Domain.Entities.Common;
+using ETicaretAPI_V2.Domain.Entities.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace ETicaretAPI_V2.Persistence.Contexts
 {
-    public class ETicaretAPI_V2DBContext : DbContext
+    public class ETicaretAPI_V2DBContext : IdentityDbContext<AppUser,AppRole,string>
     { 
         //IoC DOLDURULACAK
         public ETicaretAPI_V2DBContext(DbContextOptions options) : base(options)
