@@ -1,6 +1,8 @@
 ﻿using ETicaretAPI_V2.Application.Abstraction.Storage;
+using ETicaretAPI_V2.Application.Abstraction.Token;
 using ETicaretAPI_V2.Infrastructure.Services;
 using ETicaretAPI_V2.Infrastructure.Services.Storage;
+using ETicaretAPI_V2.Infrastructure.Services.Token;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace ETicaretAPI_V2.Infrastructure
@@ -10,6 +12,7 @@ namespace ETicaretAPI_V2.Infrastructure
         public static void AddInfrastructureServices (this IServiceCollection serviceCollection)
         {
            serviceCollection.AddScoped<IStorageService,StorageService>();
+           serviceCollection.AddScoped<ITokenHandler,TokenHandler>();
         }
         public static void AddStorage<T> (this IServiceCollection serviceCollection) where T : Storage,IStorage
         {

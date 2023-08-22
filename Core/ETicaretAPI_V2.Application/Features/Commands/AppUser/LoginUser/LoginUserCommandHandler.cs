@@ -2,6 +2,8 @@
 using AU = ETicaretAPI_V2.Domain.Entities.Identity;
 using Microsoft.AspNetCore.Identity;
 using ETicaretAPI_V2.Application.Exceptions;
+using ETicaretAPI_V2.Application.Abstraction.Token;
+using ETicaretAPI_V2.Application.DTOs;
 
 namespace ETicaretAPI_V2.Application.Features.Commands.AppUser.LoginUser
 {
@@ -9,11 +11,16 @@ namespace ETicaretAPI_V2.Application.Features.Commands.AppUser.LoginUser
     {
         readonly UserManager<AU.AppUser> _userManager;
         readonly SignInManager<AU.AppUser> _signInManager;
+        readonly ITokenHandler _tokenHandler;
 
-        public LoginUserCommandHandler(UserManager<AU.AppUser> userManager, SignInManager<AU.AppUser> signInManager)
+        public LoginUserCommandHandler(
+            UserManager<AU.AppUser> userManager, 
+            SignInManager<AU.AppUser> signInManager, 
+            ITokenHandler tokenHandler)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _tokenHandler = tokenHandler;
         }
 
         public async Task<LoginUserCommandResponse> Handle(LoginUserCommandRequest request, CancellationToken cancellationToken)
@@ -30,11 +37,15 @@ namespace ETicaretAPI_V2.Application.Features.Commands.AppUser.LoginUser
             SignInResult result =  await _signInManager.CheckPasswordSignInAsync(user, request.Password,false);
             if (result.Succeeded)
             {
-                ///Auhtorize
+                Token token=  _tokenHandler.CreateAccessToken(5);
+                return new LoginUserSuccessCommandResponse()
+                {
+                    Token= token
+                };
             }
 
 
-            return new LoginUserCommandResponse();
+            throw new AuthenticationErrorException();
         }
     }
 }
