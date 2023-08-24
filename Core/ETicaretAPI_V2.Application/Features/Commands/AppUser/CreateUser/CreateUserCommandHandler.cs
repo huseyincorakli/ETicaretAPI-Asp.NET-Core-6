@@ -1,45 +1,33 @@
-﻿using MediatR;
-using Microsoft.AspNetCore.Identity;
-using AU = ETicaretAPI_V2.Domain.Entities.Identity;
+﻿using ETicaretAPI_V2.Application.Abstraction.Services;
+using ETicaretAPI_V2.Application.DTOs.User;
+using MediatR;
 
 namespace ETicaretAPI_V2.Application.Features.Commands.AppUser.CreateUser
 {
     public class CreateUserCommandHandler : IRequestHandler<CreateUserCommandRequest, CreateUserCommandResponse>
     {
-        readonly UserManager<AU.AppUser> _userManager;
+        readonly IUserService _userService;
 
-        public CreateUserCommandHandler(UserManager<AU.AppUser> userManager)
+        public CreateUserCommandHandler(IUserService userService)
         {
-            _userManager = userManager;
+            _userService = userService;
         }
 
         public async Task<CreateUserCommandResponse> Handle(CreateUserCommandRequest request, CancellationToken cancellationToken)
         {
-           IdentityResult result= await _userManager.CreateAsync(new AU.AppUser
+           CreateUserResponse response =  await _userService.CreateAsync(new()
             {
-                Id=Guid.NewGuid().ToString(),
-                NameSurname = request.NameSurname,
                 Email = request.Email,
-                UserName = request.Username,
-
-            }, request.Password);
-            CreateUserCommandResponse response = new CreateUserCommandResponse
+                NameSurname= request.NameSurname,
+                Password = request.Password,
+                PasswordConfirm = request.PasswordConfirm,
+                Username = request.Username,
+            } );
+            return new CreateUserCommandResponse()
             {
-                Succeeded= result.Succeeded,
+                Message = response.Message,
+                Succeeded = response.Succeeded,
             };
-            if (result.Succeeded)
-            {
-                response.Message = "Kullanıcı kaydı başarılı";
-            }
-            else
-            {
-                foreach (var errors in result.Errors)
-                {
-                    response.Message += $"{errors.Code} - {errors.Description} \n ";
-                }
-            }
-
-            return response;
         }
     }
 }

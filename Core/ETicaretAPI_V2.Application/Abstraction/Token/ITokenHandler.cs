@@ -4,7 +4,7 @@ namespace ETicaretAPI_V2.Application.Abstraction.Token
 {
     public interface ITokenHandler
     {
-        //minute = life time
-        T.Token CreateAccessToken(int minute);
+        //second = life time
+        T.Token CreateAccessToken(int second);
     }
 }
