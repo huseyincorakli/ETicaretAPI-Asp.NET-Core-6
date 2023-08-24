@@ -18,13 +18,15 @@ namespace ETicaretAPI_V2.Persistence.Services
         readonly IConfiguration _configuration;
         readonly ITokenHandler _tokenHandler;
         readonly SignInManager<AU.AppUser> _signInManager;
+        readonly IUserService _userService;
 
-        public AuthService(UserManager<AppUser> userManager, IConfiguration configuration, ITokenHandler tokenHandler, SignInManager<AppUser> signInManager)
+        public AuthService(UserManager<AppUser> userManager, IConfiguration configuration, ITokenHandler tokenHandler, SignInManager<AppUser> signInManager, IUserService userService)
         {
             _userManager = userManager;
             _configuration = configuration;
             _tokenHandler = tokenHandler;
             _signInManager = signInManager;
+            _userService = userService;
         }
 
         public async Task<Token> GoogleLoginAsync(string idToken, int accessTokenLifeTime)
@@ -64,6 +66,7 @@ namespace ETicaretAPI_V2.Persistence.Services
             }
 
             Token token = _tokenHandler.CreateAccessToken(accessTokenLifeTime);
+            await _userService.UpdateRefreshToken(token.RefreshToken, user, token.Expiration, 10);
             return token;
         }
 
@@ -82,6 +85,7 @@ namespace ETicaretAPI_V2.Persistence.Services
             if (result.Succeeded)
             {
                 Token token = _tokenHandler.CreateAccessToken(accessTokenLifeTime);
+                await _userService.UpdateRefreshToken(token.RefreshToken, user, token.Expiration, 10);
                 return token;
             }
 

@@ -6,5 +6,6 @@ namespace ETicaretAPI_V2.Application.Abstraction.Token
     {
         //second = life time
         T.Token CreateAccessToken(int second);
+        string CreateRefreshToken( );
     }
 }
