@@ -1,4 +1,5 @@
 using ETicaretAPI_V2.API.Configurations.ColumnWriters;
+using ETicaretAPI_V2.API.Extensions;
 using ETicaretAPI_V2.Application;
 using ETicaretAPI_V2.Application.Validators.Products;
 using ETicaretAPI_V2.Infrastructure;
@@ -82,6 +83,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 var app = builder.Build();
+app.ConfigureExceptionHandler<Program>(app.Services.GetRequiredService<ILogger<Program>>());
 app.UseStaticFiles();
 
 if (app.Environment.IsDevelopment())
