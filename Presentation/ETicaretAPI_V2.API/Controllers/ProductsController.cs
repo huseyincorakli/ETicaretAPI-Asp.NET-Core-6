@@ -15,9 +15,11 @@ namespace ETicaretAPI_V2.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(AuthenticationSchemes = "Admin")]
+   [Authorize(AuthenticationSchemes = "Admin")]
     public class ProductsController : ControllerBase
     {
+
+
         readonly IMediator _mediator;
         public ProductsController(IMediator mediator)
         {
