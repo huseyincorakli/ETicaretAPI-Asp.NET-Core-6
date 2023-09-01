@@ -1,15 +1,19 @@
-﻿using ETicaretAPI_V2.Application.Repositories.ProductRepositories;
+﻿using ETicaretAPI_V2.Application.Abstractions.Hubs;
+using ETicaretAPI_V2.Application.Features.Commands.Product.CreateProduct;
+using ETicaretAPI_V2.Application.Repositories.ProductRepositories;
 using MediatR;
 
-namespace ETicaretAPI_V2.Application.Features.Commands.Product.CreateProduct
+namespace ETicaretAPI.Application.Features.Commands.Product.CreateProduct
 {
     public class CreateProductCommandHandler : IRequestHandler<CreateProductCommandRequest, CreateProductCommandResponse>
     {
         readonly IProductWriteRepository _productWriteRepository;
+        readonly IProductHubService _productHubService;
 
-        public CreateProductCommandHandler(IProductWriteRepository productWriteRepository)
+        public CreateProductCommandHandler(IProductWriteRepository productWriteRepository, IProductHubService productHubService)
         {
             _productWriteRepository = productWriteRepository;
+            _productHubService = productHubService;
         }
 
         public async Task<CreateProductCommandResponse> Handle(CreateProductCommandRequest request, CancellationToken cancellationToken)
@@ -18,11 +22,12 @@ namespace ETicaretAPI_V2.Application.Features.Commands.Product.CreateProduct
             {
                 Name = request.Name,
                 Price = request.Price,
-                Stock = request.Stock,
+                Stock = request.Stock
             });
+            
             await _productWriteRepository.SaveAsync();
-
-            return new CreateProductCommandResponse();
+            await _productHubService.ProductAddedMessageAsync($"{request.Name} isminde ürün eklenmiştir.");
+            return new();
         }
     }
 }

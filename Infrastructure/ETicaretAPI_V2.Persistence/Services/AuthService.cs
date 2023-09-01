@@ -67,7 +67,7 @@ namespace ETicaretAPI_V2.Persistence.Services
             }
 
             Token token = _tokenHandler.CreateAccessToken(accessTokenLifeTime, user);
-            await _userService.UpdateRefreshToken(token.RefreshToken, user, token.Expiration, 10);
+            await _userService.UpdateRefreshToken(token.RefreshToken, user, token.Expiration, 900);
             return token;
         }
 
@@ -86,7 +86,7 @@ namespace ETicaretAPI_V2.Persistence.Services
             if (result.Succeeded)
             {
                 Token token = _tokenHandler.CreateAccessToken(accessTokenLifeTime, user);
-                await _userService.UpdateRefreshToken(token.RefreshToken, user, token.Expiration, 10);
+                await _userService.UpdateRefreshToken(token.RefreshToken, user, token.Expiration, 900);
                 return token;
             }
 

@@ -6,6 +6,8 @@ using ETicaretAPI_V2.Infrastructure;
 using ETicaretAPI_V2.Infrastructure.Filters;
 using ETicaretAPI_V2.Infrastructure.Services.Storage.Local;
 using ETicaretAPI_V2.Persistence;
+using ETicaretAPI_V2.SignalR;
+using ETicaretAPI_V2.SignalR.Hubs;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.HttpLogging;
@@ -23,9 +25,10 @@ builder.Services.AddPersistenceService();
 builder.Services.AddInfrastructureServices();
 builder.Services.AddApplicationService();
 builder.Services.AddStorage<LocalStorage>();
+builder.Services.AddSignalRServices();
 
 builder.Services.AddCors(options => options.AddDefaultPolicy(policy =>
-    policy.WithOrigins("http://localhost:4200", "https://localhost:4200", "http://localhost:5173", "https://localhost:5173").AllowAnyHeader().AllowAnyMethod().AllowCredentials()
+    policy.WithOrigins("http://localhost:4200", "https://localhost:4200").AllowAnyHeader().AllowAnyMethod().AllowCredentials()
 ));
 
 builder.Services.AddControllers(options => options.Filters.Add<ValidationFilter>())
@@ -91,9 +94,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+app.UseCors();
 app.UseSerilogRequestLogging();
 app.UseHttpLogging();
-app.UseCors();
+
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
@@ -108,6 +112,8 @@ app.Use(async (contex, next) =>
 });
 
 app.MapControllers();
+
+app.MapHubs();
 
 app.Run();
 
