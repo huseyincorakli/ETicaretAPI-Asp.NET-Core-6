@@ -24,6 +24,7 @@ namespace ETicaretAPI_V2.Application.Features.Queries.Product.GetAllProduct
             var products = await _productReadRepository.GetAll(false)
                 .Skip(request.Page * request.Size)
                 .Take(request.Size)
+                .Include(p=>p.ProductImageFiles)
                 .Select(p => new
                 {
                     p.Id,
@@ -31,7 +32,8 @@ namespace ETicaretAPI_V2.Application.Features.Queries.Product.GetAllProduct
                     p.Stock,
                     p.Price,
                     p.CreateDate,
-                    p.UpdatedDate
+                    p.UpdatedDate,
+                    p.ProductImageFiles
                 })
                 .ToListAsync();
 
