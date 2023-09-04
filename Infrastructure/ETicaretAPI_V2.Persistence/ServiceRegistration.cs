@@ -55,10 +55,13 @@ namespace ETicaretAPI_V2.Persistence
             service.AddScoped<IBasketItemReadRepository,BasketItemReadRepository>();
             service.AddScoped<IBasketItemWriteRepository,BasketItemWriteRepository>();
             
+            
+            
             service.AddScoped<IUserService, UserService>();
             service.AddScoped<IAuthService, AuthService>();
             service.AddScoped<IExternalAuthentication, AuthService>();
             service.AddScoped<IInternalAuthentication, AuthService>();
+            service.AddScoped<IBasketService, BasketService>();
         }
     }
 }

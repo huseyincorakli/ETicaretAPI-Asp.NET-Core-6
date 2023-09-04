@@ -7,7 +7,6 @@ using ETicaretAPI_V2.Infrastructure.Filters;
 using ETicaretAPI_V2.Infrastructure.Services.Storage.Local;
 using ETicaretAPI_V2.Persistence;
 using ETicaretAPI_V2.SignalR;
-using ETicaretAPI_V2.SignalR.Hubs;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.HttpLogging;
@@ -26,6 +25,7 @@ builder.Services.AddInfrastructureServices();
 builder.Services.AddApplicationService();
 builder.Services.AddStorage<LocalStorage>();
 builder.Services.AddSignalRServices();
+builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddCors(options => options.AddDefaultPolicy(policy =>
     policy.WithOrigins("http://localhost:4200", "https://localhost:4200").AllowAnyHeader().AllowAnyMethod().AllowCredentials()
@@ -117,3 +117,11 @@ app.MapHubs();
 
 app.Run();
 
+
+
+
+#region NOT 1
+//User.Identity.Name herhangi bir servisten yada katmandan ulaþmak için httpcontext e ihtyiacýmýz vardýr
+//bu servis ile ulaþabiliriz builder.Services.AddHttpContextAccessor()
+//Clienttan gelen istekler neticesinde oluþturulan HttpContext nesnesine katmanlardaki classlar üzerinden eriþebilmemizi saðlaar..
+#endregion
