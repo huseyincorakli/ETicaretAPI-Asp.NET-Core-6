@@ -3,6 +3,7 @@ using System;
 using ETicaretAPI_V2.Persistence.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ETicaretAPI_V2.Persistence.Migrations
 {
     [DbContext(typeof(ETicaretAPI_V2DBContext))]
-    partial class ETicaretAPI_V2DBContextModelSnapshot : ModelSnapshot
+    [Migration("20230904165427_mig_13")]
+    partial class mig_13
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -233,11 +236,15 @@ namespace ETicaretAPI_V2.Persistence.Migrations
             modelBuilder.Entity("ETicaretAPI_V2.Domain.Entities.Order", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<string>("Address")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<Guid>("BasketId")
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreateDate")
                         .HasColumnType("timestamp with time zone");
@@ -253,6 +260,9 @@ namespace ETicaretAPI_V2.Persistence.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("BasketId")
+                        .IsUnique();
 
                     b.HasIndex("CustomerId");
 
@@ -474,15 +484,15 @@ namespace ETicaretAPI_V2.Persistence.Migrations
 
             modelBuilder.Entity("ETicaretAPI_V2.Domain.Entities.Order", b =>
                 {
-                    b.HasOne("ETicaretAPI_V2.Domain.Entities.Customer", "Customer")
-                        .WithMany("Orders")
-                        .HasForeignKey("CustomerId")
+                    b.HasOne("ETicaretAPI_V2.Domain.Entities.Basket", "Basket")
+                        .WithOne("Order")
+                        .HasForeignKey("ETicaretAPI_V2.Domain.Entities.Order", "BasketId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ETicaretAPI_V2.Domain.Entities.Basket", "Basket")
-                        .WithOne("Order")
-                        .HasForeignKey("ETicaretAPI_V2.Domain.Entities.Order", "Id")
+                    b.HasOne("ETicaretAPI_V2.Domain.Entities.Customer", "Customer")
+                        .WithMany("Orders")
+                        .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

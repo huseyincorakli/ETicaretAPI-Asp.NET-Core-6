@@ -6,8 +6,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ETicaretAPI_V2.Persistence.Contexts
 {
-    public class ETicaretAPI_V2DBContext : IdentityDbContext<AppUser,AppRole,string>
-    { 
+    public class ETicaretAPI_V2DBContext : IdentityDbContext<AppUser, AppRole, string>
+    {
         //IoC DOLDURULACAK
         public ETicaretAPI_V2DBContext(DbContextOptions options) : base(options)
         {
@@ -19,17 +19,31 @@ namespace ETicaretAPI_V2.Persistence.Contexts
         public DbSet<Domain.Entities.File> Files { get; set; }
         public DbSet<ProductImageFile> ProductImageFiles { get; set; }
         public DbSet<InvoiceFile> InvoiceFiles { get; set; }
+        public DbSet<Basket> Baskets { get; set; }
+        public DbSet<BasketItem> BasketItems { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            builder.Entity<Order>()
+                .HasKey(o => o.Id);
+            builder.Entity<Basket>()
+                .HasOne(o => o.Order)
+                .WithOne(b => b.Basket)
+                .HasForeignKey<Order>(b => b.Id);
+
+            base.OnModelCreating(builder);
+        }
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
-            var datas= ChangeTracker.Entries<BaseEntitiy>();
+            var datas = ChangeTracker.Entries<BaseEntitiy>();
             foreach (var data in datas)
             {
                 _ = data.State switch
                 {
                     EntityState.Added => data.Entity.CreateDate = DateTime.UtcNow,
                     EntityState.Modified => data.Entity.UpdatedDate = DateTime.UtcNow,
-                    _=> DateTime.UtcNow
+                    _ => DateTime.UtcNow
                 };
             }
 
