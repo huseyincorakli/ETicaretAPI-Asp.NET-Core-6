@@ -18,7 +18,7 @@ namespace ETicaretAPI_V2.Application.Features.Queries.Basket.GetBasketItems
 
             return basketItems.Select(ba => new GetBasketItemsQueryResponse
             {
-                BasketItemId = ba.BasketId.ToString(),
+                BasketItemId = ba.Id.ToString(),
                 Name = ba.Product.Name,
                 Price = ba.Product.Price,
                 Quantity = ba.Quantity

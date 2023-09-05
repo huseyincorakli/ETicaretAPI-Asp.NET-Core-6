@@ -122,11 +122,11 @@ namespace ETicaretAPI_V2.Persistence.Services
 
         public async Task UpdateQuantityAsync(VM_Update_BasketItem basketItem)
         {
-            BasketItem _basketItem = await _basketItemReadRepository.GetByIdAsync(basketItem.BasketItemId);
-            if(basketItem != null)
+            BasketItem? _basketItem = await _basketItemReadRepository.GetByIdAsync(basketItem.BasketItemId);
+            if(_basketItem != null)
             {
                 _basketItem.Quantity=basketItem.Quantity;
-                _basketItemWriteRepository.SaveAsync();
+               await _basketItemWriteRepository.SaveAsync();
             }
         }
     }
