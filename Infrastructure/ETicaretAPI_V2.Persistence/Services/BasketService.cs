@@ -89,9 +89,9 @@ namespace ETicaretAPI_V2.Persistence.Services
                     await _basketItemWriteRepository.AddAsync(new()
                     {
                         BasketId = basket.Id,
-                        ProductId=Guid.Parse(basketItem.ProductId),
+                        ProductId = Guid.Parse(basketItem.ProductId),
                         Quantity = basketItem.Quantity,
-                    }) ;
+                    });
                 }
                 await _basketItemWriteRepository.SaveAsync();
             }
@@ -101,7 +101,7 @@ namespace ETicaretAPI_V2.Persistence.Services
         public async Task<List<BasketItem>> GetBasketItemsAsync()
         {
             Basket? basket = await ContextUser();
-            Basket? result =  await _basketReadRepository.Table
+            Basket? result = await _basketReadRepository.Table
                 .Include(b => b.BasketItems)
                 .ThenInclude(bi => bi.Product)
                 .FirstOrDefaultAsync(b => b.Id == basket.Id);
@@ -117,16 +117,25 @@ namespace ETicaretAPI_V2.Persistence.Services
                 _basketItemWriteRepository.Remove(basketItem);
                 await _basketItemWriteRepository.SaveAsync();
             }
-            
+
         }
 
         public async Task UpdateQuantityAsync(VM_Update_BasketItem basketItem)
         {
             BasketItem? _basketItem = await _basketItemReadRepository.GetByIdAsync(basketItem.BasketItemId);
-            if(_basketItem != null)
+            if (_basketItem != null)
             {
-                _basketItem.Quantity=basketItem.Quantity;
-               await _basketItemWriteRepository.SaveAsync();
+                _basketItem.Quantity = basketItem.Quantity;
+                await _basketItemWriteRepository.SaveAsync();
+            }
+        }
+
+        public Basket? GetUserActiveBasket
+        {
+            get
+            {
+                Basket? basket = ContextUser().Result;
+                return basket;
             }
         }
     }
