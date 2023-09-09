@@ -39,6 +39,7 @@ namespace ETicaretAPI_V2.Persistence.Services
                    .ThenInclude(d => d.Product)
                    .Select(o => new
                    {
+                       Id=o.Id,
                        CreatedDate = o.CreateDate,
                        OrderCode = o.OrderCode,
                        TotalPrice = o.Basket.BasketItems.Sum(bi => bi.Product.Price * bi.Quantity),
