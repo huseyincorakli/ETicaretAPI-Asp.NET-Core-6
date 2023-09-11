@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using System.Net;
 using System.Net.Mail;
+using System.Text;
 
 namespace ETicaretAPI_V2.Infrastructure.Services.Mail
 {
@@ -14,7 +15,7 @@ namespace ETicaretAPI_V2.Infrastructure.Services.Mail
             _configuration = configuration;
         }
 
-        public async Task SendMessageAsync(string[] tos, string subject, string body, bool isBodyHtml = true)
+        public async Task SendMailAsync(string[] tos, string subject, string body, bool isBodyHtml = true)
         {
             using MailMessage mail = new();
             mail.IsBodyHtml= isBodyHtml;
@@ -40,9 +41,30 @@ namespace ETicaretAPI_V2.Infrastructure.Services.Mail
                 throw  e;
             }
         }
-         public async Task SendMessageAsync(string to, string subject, string body, bool isBodyHtml = true)
+         public async Task SendMailAsync(string to, string subject, string body, bool isBodyHtml = true)
         {
-            await SendMessageAsync(new[] {to},subject, body, isBodyHtml);
+            await SendMailAsync(new[] {to},subject, body, isBodyHtml);
+        }
+
+        public async Task SendPasswordResetMailAsync(string to, string userId, string resetToken)
+        {
+            StringBuilder mail = new();
+            mail.AppendLine("Merhaba,<br>");
+            mail.AppendLine("Eğer yeni şifre talebinde bulunduysanız aşağıdaki linkten şifrenizi yenileyebilirsiniz.<br><br>Şifrenizi sıfırlamak için tıklayınız:");
+            mail.AppendLine();
+            mail.Append(_configuration["AngularClientUrl"]);
+            mail.Append("/update-password/");
+            mail.Append(userId);
+            mail.Append("/");
+            mail.Append(resetToken);
+            mail.AppendLine();
+            mail.AppendLine();
+            mail.AppendLine("<br><br>CART CURT TİCARET");
+
+            string mailBody = mail.ToString();
+
+
+            await SendMailAsync(to, "Şifre Yenileme Talebi", mailBody);
         }
     }
 }

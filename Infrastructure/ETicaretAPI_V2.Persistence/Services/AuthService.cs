@@ -2,13 +2,14 @@
 using ETicaretAPI_V2.Application.Abstraction.Token;
 using ETicaretAPI_V2.Application.DTOs;
 using ETicaretAPI_V2.Application.Exceptions;
-using ETicaretAPI_V2.Application.Features.Commands.AppUser.LoginUser;
+using ETicaretAPI_V2.Application.Helpers;
 using ETicaretAPI_V2.Domain.Entities.Identity;
 using Google.Apis.Auth;
-using MediatR;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using System.Text;
 using AU = ETicaretAPI_V2.Domain.Entities.Identity;
 
 namespace ETicaretAPI_V2.Persistence.Services
@@ -20,25 +21,27 @@ namespace ETicaretAPI_V2.Persistence.Services
         readonly ITokenHandler _tokenHandler;
         readonly SignInManager<AU.AppUser> _signInManager;
         readonly IUserService _userService;
+        readonly IMailService _mailService;
 
-        public AuthService(UserManager<AppUser> userManager, IConfiguration configuration, ITokenHandler tokenHandler, SignInManager<AppUser> signInManager, IUserService userService)
+        public AuthService(UserManager<AppUser> userManager, IConfiguration configuration, ITokenHandler tokenHandler, SignInManager<AppUser> signInManager, IUserService userService, IMailService mailService)
         {
             _userManager = userManager;
             _configuration = configuration;
             _tokenHandler = tokenHandler;
             _signInManager = signInManager;
             _userService = userService;
+            _mailService = mailService;
         }
 
         public async Task<Token> GoogleLoginAsync(string idToken, int accessTokenLifeTime)
         {
             var settings = new GoogleJsonWebSignature.ValidationSettings()
             {
-                Audience = new List<string> {_configuration["ExternalLoginSettings:Google:Client_Id"]},
+                Audience = new List<string> { _configuration["ExternalLoginSettings:Google:Client_Id"] },
             };
             var payload = await GoogleJsonWebSignature.ValidateAsync(idToken, settings);
 
-            var info = new UserLoginInfo("GOOGLE", payload.Subject,"GOOGLE");
+            var info = new UserLoginInfo("GOOGLE", payload.Subject, "GOOGLE");
             AU.AppUser user = await _userManager.FindByLoginAsync(info.LoginProvider, info.ProviderKey);
             bool result = user != null;
             if (user == null)
@@ -67,7 +70,7 @@ namespace ETicaretAPI_V2.Persistence.Services
             }
 
             Token token = _tokenHandler.CreateAccessToken(accessTokenLifeTime, user);
-            await _userService.UpdateRefreshToken(token.RefreshToken, user, token.Expiration, 900);
+            await _userService.UpdateRefreshTokenAsync(token.RefreshToken, user, token.Expiration, 900);
             return token;
         }
 
@@ -86,7 +89,7 @@ namespace ETicaretAPI_V2.Persistence.Services
             if (result.Succeeded)
             {
                 Token token = _tokenHandler.CreateAccessToken(accessTokenLifeTime, user);
-                await _userService.UpdateRefreshToken(token.RefreshToken, user, token.Expiration, 900);
+                await _userService.UpdateRefreshTokenAsync(token.RefreshToken, user, token.Expiration, 900);
                 return token;
             }
 
@@ -94,17 +97,47 @@ namespace ETicaretAPI_V2.Persistence.Services
             throw new AuthenticationErrorException();
         }
 
+
+
         public async Task<Token> RefreshTokenLoginAsync(string refreshToken)
         {
-            AppUser? user= await _userManager.Users.FirstOrDefaultAsync(user=> user.RefreshToken== refreshToken);
+            AppUser? user = await _userManager.Users.FirstOrDefaultAsync(user => user.RefreshToken == refreshToken);
             if (user != null && user?.RefreshTokenEndDate > DateTime.UtcNow)
             {
                 Token token = _tokenHandler.CreateAccessToken(15, user);
-                _userService.UpdateRefreshToken(token.RefreshToken, user, token.Expiration, 10);
+               await _userService.UpdateRefreshTokenAsync(token.RefreshToken, user, token.Expiration, 10);
                 return token;
             }
             else
                 throw new NotFoundUserException();
+        }
+
+
+        public async Task PasswordResetAsync(string Email)
+        {
+            AppUser user = await _userManager.FindByEmailAsync(Email);
+            if (user != null)
+            {
+                string resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+                resetToken = resetToken.UrlEncode();
+
+                await _mailService.SendPasswordResetMailAsync(Email, user.Id, resetToken);
+
+            }
+        }
+
+        public async Task<bool> VerifyResetToken(string resetToken, string userId)
+        {
+            AppUser user = await _userManager.FindByIdAsync(userId);
+            if (user != null)
+            {
+                resetToken = resetToken.UrlDecode();
+
+                return await _userManager.VerifyUserTokenAsync(user, _userManager.Options.Tokens.PasswordResetTokenProvider, "ResetPassword", resetToken);
+
+            }
+            return false;
         }
     }
 }
