@@ -1,5 +1,6 @@
 ﻿using ETicaretAPI_V2.Application.Abstraction.Services;
 using ETicaretAPI_V2.Application.DTOs.Order;
+using ETicaretAPI_V2.Application.Repositories.CompletedOrderRepositories;
 using ETicaretAPI_V2.Application.Repositories.OrderRepositories;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,12 +10,17 @@ namespace ETicaretAPI_V2.Persistence.Services
     {
         readonly IOrderReadRepository _orderReadRepository;
         readonly IOrderWriteRepository _orderWriteRepository;
+        readonly ICompletedOrderReadRepository _completedOrderReadRepository;
+        readonly ICompletedOrderWriteRepository _completedOrderWriteRepository;
 
-        public OrderService(IOrderReadRepository orderReadRepository, IOrderWriteRepository orderWriteRepository)
+        public OrderService(IOrderReadRepository orderReadRepository, IOrderWriteRepository orderWriteRepository, ICompletedOrderReadRepository completedOrderReadRepository, ICompletedOrderWriteRepository completedOrderWriteRepository)
         {
             _orderReadRepository = orderReadRepository;
             _orderWriteRepository = orderWriteRepository;
+            _completedOrderReadRepository = completedOrderReadRepository;
+            _completedOrderWriteRepository = completedOrderWriteRepository;
         }
+
 
         public async Task CreateOrderAsync(CreateOrder createOrder)
         {
@@ -80,5 +86,11 @@ namespace ETicaretAPI_V2.Persistence.Services
             };
 
         }
+
+        public Task CompleteOrderAsync(string id)
+        {
+            throw new NotImplementedException();
+        }
     }
+
 }

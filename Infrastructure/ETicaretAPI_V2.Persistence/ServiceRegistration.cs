@@ -2,6 +2,7 @@
 using ETicaretAPI_V2.Application.Abstraction.Services.Authentications;
 using ETicaretAPI_V2.Application.Repositories.BasketItemRepositories;
 using ETicaretAPI_V2.Application.Repositories.BasketRepositories;
+using ETicaretAPI_V2.Application.Repositories.CompletedOrderRepositories;
 using ETicaretAPI_V2.Application.Repositories.CustomerRepositories;
 using ETicaretAPI_V2.Application.Repositories.FileRepositories;
 using ETicaretAPI_V2.Application.Repositories.InvoiceFileRepositories;
@@ -12,6 +13,7 @@ using ETicaretAPI_V2.Domain.Entities.Identity;
 using ETicaretAPI_V2.Persistence.Contexts;
 using ETicaretAPI_V2.Persistence.Repositories.BasketItemRepositories;
 using ETicaretAPI_V2.Persistence.Repositories.BasketRepositories;
+using ETicaretAPI_V2.Persistence.Repositories.CompletedOrderRepositories;
 using ETicaretAPI_V2.Persistence.Repositories.CustomerRepositories;
 using ETicaretAPI_V2.Persistence.Repositories.FileRepositories;
 using ETicaretAPI_V2.Persistence.Repositories.InvoiceFileRepositories;
@@ -58,9 +60,11 @@ namespace ETicaretAPI_V2.Persistence
             service.AddScoped<IBasketWriteRepository,BasketWriteRepository>();
             service.AddScoped<IBasketItemReadRepository,BasketItemReadRepository>();
             service.AddScoped<IBasketItemWriteRepository,BasketItemWriteRepository>();
-            
-            
-            
+            service.AddScoped<ICompletedOrderReadRepository,CompletedOrderReadRepository>();
+            service.AddScoped<ICompletedOrderWriteRepository,CompletedOrderWriteRepository>();
+
+
+
             service.AddScoped<IUserService, UserService>();
             service.AddScoped<IAuthService, AuthService>();
             service.AddScoped<IExternalAuthentication, AuthService>();

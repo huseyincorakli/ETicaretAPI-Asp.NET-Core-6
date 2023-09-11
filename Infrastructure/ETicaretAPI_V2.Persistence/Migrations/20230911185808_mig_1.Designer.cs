@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ETicaretAPI_V2.Persistence.Migrations
 {
     [DbContext(typeof(ETicaretAPI_V2DBContext))]
-    [Migration("20230907200152_mig_1")]
+    [Migration("20230911185808_mig_1")]
     partial class mig_1
     {
         /// <inheritdoc />
@@ -76,6 +76,29 @@ namespace ETicaretAPI_V2.Persistence.Migrations
                     b.HasIndex("ProductId");
 
                     b.ToTable("BasketItems");
+                });
+
+            modelBuilder.Entity("ETicaretAPI_V2.Domain.Entities.CompletedOrder", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("OrderId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("UpdatedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderId")
+                        .IsUnique();
+
+                    b.ToTable("CompletedOrders");
                 });
 
             modelBuilder.Entity("ETicaretAPI_V2.Domain.Entities.Customer", b =>
@@ -462,6 +485,17 @@ namespace ETicaretAPI_V2.Persistence.Migrations
                     b.Navigation("Product");
                 });
 
+            modelBuilder.Entity("ETicaretAPI_V2.Domain.Entities.CompletedOrder", b =>
+                {
+                    b.HasOne("ETicaretAPI_V2.Domain.Entities.Order", "Order")
+                        .WithOne("CompletedOrder")
+                        .HasForeignKey("ETicaretAPI_V2.Domain.Entities.CompletedOrder", "OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Order");
+                });
+
             modelBuilder.Entity("ETicaretAPI_V2.Domain.Entities.Order", b =>
                 {
                     b.HasOne("ETicaretAPI_V2.Domain.Entities.Basket", "Basket")
@@ -550,6 +584,12 @@ namespace ETicaretAPI_V2.Persistence.Migrations
             modelBuilder.Entity("ETicaretAPI_V2.Domain.Entities.Identity.AppUser", b =>
                 {
                     b.Navigation("Baskets");
+                });
+
+            modelBuilder.Entity("ETicaretAPI_V2.Domain.Entities.Order", b =>
+                {
+                    b.Navigation("CompletedOrder")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("ETicaretAPI_V2.Domain.Entities.Product", b =>

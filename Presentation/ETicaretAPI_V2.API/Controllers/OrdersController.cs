@@ -40,5 +40,11 @@ namespace ETicaretAPI_V2.API.Controllers
 
             return Ok(response);
         }
+
+        [HttpGet("complete-order/{Id}")]
+        public async Task<IActionResult> CompleteOrder()
+        {
+            return Ok();
+        }
     }
 }
