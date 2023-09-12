@@ -44,7 +44,7 @@ namespace ETicaretAPI_V2.Persistence.Services
                    .Include(a => a.Basket)
                    .ThenInclude(b => b.BasketItems)
                    .ThenInclude(d => d.Product);
-                   
+
 
             var data = query.Skip(page * size).Take(size);
 
@@ -54,11 +54,11 @@ namespace ETicaretAPI_V2.Persistence.Services
                         from _co in co.DefaultIfEmpty()
                         select new
                         {
-                            Id=order.Id,
-                            CreatedDate=order.CreateDate,
-                            OrderCode= order.OrderCode,
-                            Basket=order.Basket,
-                            Completed=_co !=null ? true:false
+                            Id = order.Id,
+                            CreatedDate = order.CreateDate,
+                            OrderCode = order.OrderCode,
+                            Basket = order.Basket,
+                            Completed = _co != null ? true : false
                         };
 
             return new()
@@ -67,10 +67,10 @@ namespace ETicaretAPI_V2.Persistence.Services
                 Orders = await data2.Select(o => new
                 {
                     Id = o.Id,
-                    CreatedDate=o.CreatedDate,
-                    OrderCode= o.OrderCode,
-                    TotalPrice=o.Basket.BasketItems.Sum(bi=>bi.Quantity*bi.Product.Price),
-                    UserName=o.Basket.User.UserName,
+                    CreatedDate = o.CreatedDate,
+                    OrderCode = o.OrderCode,
+                    TotalPrice = o.Basket.BasketItems.Sum(bi => bi.Quantity * bi.Product.Price),
+                    UserName = o.Basket.User.UserName,
                     o.Completed
                 }).ToListAsync()
             };
@@ -82,7 +82,7 @@ namespace ETicaretAPI_V2.Persistence.Services
                             .Include(o => o.Basket)
                             .ThenInclude(b => b.BasketItems)
                             .ThenInclude(bi => bi.Product);
-                            
+
             var data2 = await (from order in data
                                join completedOrder in _completedOrderReadRepository.Table
                                on order.Id equals completedOrder.OrderId into co
@@ -94,8 +94,8 @@ namespace ETicaretAPI_V2.Persistence.Services
                                    OrderCode = order.OrderCode,
                                    Basket = order.Basket,
                                    Completed = _co != null ? true : false,
-                                   Address=order.Address,
-                                   Description=order.Description,
+                                   Address = order.Address,
+                                   Description = order.Description,
                                }).FirstOrDefaultAsync(o => o.Id == Guid.Parse(id)); ;
             return new()
             {
@@ -111,22 +111,34 @@ namespace ETicaretAPI_V2.Persistence.Services
                 CreatedDate = data2.CreateDate,
                 Description = data2.Description,
                 OrderCode = data2.OrderCode,
-                Completed=data2.Completed
+                Completed = data2.Completed
             };
 
         }
-       
-        public async Task CompleteOrderAsync(string id)
+
+        public async Task<(bool, CompletedOrderDTO)> CompleteOrderAsync(string id)
         {
-            Order order = await _orderReadRepository.GetByIdAsync(id);
+            Order? order = await _orderReadRepository.Table
+                .Include(o => o.Basket)
+                .ThenInclude(b => b.User)
+                .FirstOrDefaultAsync(o => o.Id == Guid.Parse(id));
             if (order != null)
             {
                 await _completedOrderWriteRepository.AddAsync(new CompletedOrder()
                 {
                     OrderId = Guid.Parse(id),
                 });
-                await _completedOrderWriteRepository.SaveAsync();
+                return (await _completedOrderWriteRepository.SaveAsync() > 0, new()
+                {
+                    OrderCode = order.OrderCode,
+                    OrderDate = order.CreateDate,
+                    Username = order.Basket.User.UserName,
+                    UserSurname = order.Basket.User.NameSurname,
+                    Email = order.Basket.User.Email,
+                });
             }
+            return (false, null);
+
         }
     }
 
