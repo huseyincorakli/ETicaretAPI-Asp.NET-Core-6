@@ -23,7 +23,8 @@ namespace ETicaretAPI_V2.Application.Features.Queries.Order.GetOrderById
                 Description = data.Description,
                 Address = data.Address,
                 BasketItems= data.BasketItems,
-                CreatedDate = data.CreatedDate
+                CreatedDate = data.CreatedDate,
+                Completed=data.Completed
             };
         }
     }
