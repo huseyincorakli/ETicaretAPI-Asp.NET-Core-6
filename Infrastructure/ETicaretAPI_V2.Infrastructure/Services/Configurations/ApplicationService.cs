@@ -2,11 +2,13 @@
 using ETicaretAPI_V2.Application.CustomAttributes;
 using ETicaretAPI_V2.Application.DTOs.Configurations;
 using ETicaretAPI_V2.Application.Enums;
+using ETicaretAPI_V2.Application.Helpers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
-using System.Collections.Generic;
+using System.Diagnostics.Metrics;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using DTO = ETicaretAPI_V2.Application.DTOs.Configurations;
 
 namespace ETicaretAPI_V2.Infrastructure.Services.Configurations
@@ -53,7 +55,8 @@ namespace ETicaretAPI_V2.Infrastructure.Services.Configurations
                                 DTO.Action _action = new()
                                 {
                                     ActionType = Enum.GetName(typeof(ActionType),authorizeDefinitionAttribute.ActionType),
-                                    Definition = authorizeDefinitionAttribute.Definition,
+                                    Definition = Regex.Replace(authorizeDefinitionAttribute.Definition, @"\s+", " ") ,
+                                    
                                 };
 
                                 //ilgili actionun  attributeların typelarından olan ve HttpMethodAttribute classından türemiş olan httpAttributeları değere atadık
@@ -66,6 +69,8 @@ namespace ETicaretAPI_V2.Infrastructure.Services.Configurations
                                 {
                                     _action.HttpType = HttpMethods.Get;
                                 }
+                                
+                                _action.Code = $"{_action.HttpType}.{_action.ActionType}.{Regex.Replace(_action.Definition, @"\s+", "")}";
                                 menu.Actions.Add(_action);
                             }
                         }

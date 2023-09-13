@@ -24,7 +24,7 @@ namespace ETicaretAPI_V2.API.Controllers
         }
 
         [HttpGet]
-        [AuthorizeDefinition(Menu = AuthorizeDefinitionConstants.Baskets, ActionType = ActionType.Reading, Definition = "Get Basket Items")]
+        [AuthorizeDefinition(Menu = AuthorizeDefinitionConstants.Baskets, ActionType = ActionType.Reading, Definition = "Get Basket     Items")]
         public async Task<IActionResult> GetBasketItems([FromQuery] GetBasketItemsQueryRequest getBasketItemsQueryRequest)
         {
             List<GetBasketItemsQueryResponse> response = await _mediator.Send(getBasketItemsQueryRequest);
