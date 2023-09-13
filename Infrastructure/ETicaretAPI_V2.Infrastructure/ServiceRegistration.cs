@@ -1,7 +1,9 @@
 ﻿using ETicaretAPI_V2.Application.Abstraction.Services;
+using ETicaretAPI_V2.Application.Abstraction.Services.Configurations;
 using ETicaretAPI_V2.Application.Abstraction.Storage;
 using ETicaretAPI_V2.Application.Abstraction.Token;
 using ETicaretAPI_V2.Infrastructure.Services;
+using ETicaretAPI_V2.Infrastructure.Services.Configurations;
 using ETicaretAPI_V2.Infrastructure.Services.Mail;
 using ETicaretAPI_V2.Infrastructure.Services.Storage;
 using ETicaretAPI_V2.Infrastructure.Services.Token;
@@ -16,6 +18,7 @@ namespace ETicaretAPI_V2.Infrastructure
            serviceCollection.AddScoped<IStorageService,StorageService>();
            serviceCollection.AddScoped<ITokenHandler,TokenHandler>();
            serviceCollection.AddScoped<IMailService,MailService>();
+           serviceCollection.AddScoped<IApplicationService,ApplicationService>();
         }
         public static void AddStorage<T> (this IServiceCollection serviceCollection) where T : Storage,IStorage
         {
