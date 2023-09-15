@@ -15,10 +15,8 @@ namespace ETicaretAPI_V2.Application.Features.Queries.AuthorizationEndpoint.GetR
         public async Task<GetRolesToEndpointQueryResponse> Handle(GetRolesToEndpointQueryRequest request, CancellationToken cancellationToken)
         {
             var datas = await _authorizationEndpointService.GetRolesToEndpointAsync(request.Code,request.Menu);
-            return new()
-            {
-                Roles = datas
-            };
+            return new() { Roles = datas };
+
         }
     }
 }

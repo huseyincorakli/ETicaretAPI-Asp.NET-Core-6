@@ -91,13 +91,11 @@ namespace ETicaretAPI_V2.Persistence.Services
         {
             Endpoint? endpoint =await _endpointReadRepository.Table.Include(e => e.Roles).Include(e=>e.Menu).FirstOrDefaultAsync(e => e.Code==code && e.Menu.Name== menu);
             if (endpoint!=null)
-            {
                 return endpoint.Roles.Select(r => r.Name).ToList();
-            }
+            
             else
-            {
                 return null;
-            }
+            
         }
     }
 }
