@@ -68,21 +68,19 @@ namespace ETicaretAPI_V2.Persistence.Services
                 await _endpointWriteRepository.SaveAsync();
             }
             else
-            {
                 foreach (var role in endpoint.Roles)
                 {
                     endpoint.Roles.Remove(role);
                 }
-            }
+            
 
             //roles parametresinden gelen değere göre rolleri çekiyoruz
             var appRoles = await _roleManager.Roles.Where(r => roles.Contains(r.Name)).ToListAsync();
 
             //ilgili endpointe rolleri atıyoruz.
             foreach (var role in appRoles)
-            {
                 endpoint.Roles.Add(role);
-            }
+            
             await _endpointWriteRepository.SaveAsync();
 
         }
