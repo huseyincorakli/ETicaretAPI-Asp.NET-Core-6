@@ -22,7 +22,6 @@
 
   <ItemGroup>
     <Folder Include="DTOs\Role\" />
-    <Folder Include="Services\" />
   </ItemGroup>
 
 </Project>
