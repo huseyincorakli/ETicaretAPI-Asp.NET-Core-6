@@ -46,7 +46,7 @@ namespace ETicaretAPI_V2.API.Filters
 
                 if (!hasRole)
                 {
-                    //eğer ilgili kullanıcı role sahip değil ise 401 dönecektir
+                    //eğer ilgili kullanıcı role sahip değil ise 401 
                     context.Result = new UnauthorizedResult();
                 }
                 else
