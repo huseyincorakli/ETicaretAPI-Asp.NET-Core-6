@@ -3,5 +3,6 @@
     public interface IProductService
     {
         Task<byte[]> QRCodeToProductAsync(string productId);
+        Task UpdateProductStockAsync(string productId,int stock);
     }
 }
