@@ -4,6 +4,7 @@ using ETicaretAPI_V2.Application.Exceptions;
 using ETicaretAPI_V2.Application.Helpers;
 using ETicaretAPI_V2.Domain.Entities.Identity;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using AU = ETicaretAPI_V2.Domain.Entities.Identity;
 
 namespace ETicaretAPI_V2.Persistence.Services
@@ -11,6 +12,8 @@ namespace ETicaretAPI_V2.Persistence.Services
     public class UserService : IUserService
     {
         UserManager<AU.AppUser> _userManager;
+
+        
 
         public UserService(UserManager<AppUser> userManager)
         {
@@ -65,15 +68,34 @@ namespace ETicaretAPI_V2.Persistence.Services
             if (user != null)
             {
                 resetToken = resetToken.UrlDecode();
-                IdentityResult result =  await _userManager.ResetPasswordAsync(user, resetToken,newPassword);
+                IdentityResult result = await _userManager.ResetPasswordAsync(user, resetToken, newPassword);
                 if (result.Succeeded)
                 {
                     await _userManager.UpdateSecurityStampAsync(user);
                 }
                 else
                     throw new PasswordChangeFailedException();
-                
+
             }
         }
+
+        public async Task<List<ListUser>> GetAllUsers(int page, int size)
+        {
+            var users = await _userManager.Users.
+                         Skip(page * size).Take(size).
+                         ToListAsync();
+
+            return users.Select(user => new ListUser
+            {
+               Id=user.Id,
+               Email=user.Email,
+               NameSurname=user.NameSurname,
+               TwoFactorEnabled=user.TwoFactorEnabled,
+               UserName = user.UserName
+
+            }).ToList();
+        }
+
+        public int TotalUserCount => _userManager.Users.Count();
     }
 }

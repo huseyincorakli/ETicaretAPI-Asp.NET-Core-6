@@ -1,8 +1,11 @@
 ﻿using ETicaretAPI_V2.Application.Abstraction.Services;
+using ETicaretAPI_V2.Application.CustomAttributes;
 using ETicaretAPI_V2.Application.Features.Commands.AppUser.CreateUser;
 using ETicaretAPI_V2.Application.Features.Commands.AppUser.UpdatePassword;
+using ETicaretAPI_V2.Application.Features.Queries.AppUser.GetAllUsers;
 using ETicaretAPI_V2.Infrastructure.Services.Mail;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ETicaretAPI_V2.API.Controllers
@@ -27,12 +30,7 @@ namespace ETicaretAPI_V2.API.Controllers
             CreateUserCommandResponse response = await _mediator.Send(createUserCommandRequest);
             return Ok(response);
         }
-        [HttpGet]
-        public async Task<IActionResult> TestMail()
-        {
-            await _mailService.SendMailAsync("huseyincorakli46@gmail.com", "Test", "<h1>Deneme<h1/>");
-            return Ok();
-        }
+        
 
         [HttpPost("update-password")]
         public async Task<IActionResult> UpdatePassword([FromBody] UpdatePasswordCommandRequest updatePasswordCommandRequest)
@@ -40,5 +38,22 @@ namespace ETicaretAPI_V2.API.Controllers
             UpdatePasswordCommandResponse response = await _mediator.Send(updatePasswordCommandRequest);
             return Ok(response);
         }
+
+        [HttpGet]
+        [Authorize(AuthenticationSchemes = "Admin")]
+        [AuthorizeDefinition(ActionType = Application.Enums.ActionType.Reading, Definition = "Get All Users", Menu = "Users")]
+        public async Task<IActionResult> GetAllUsers([FromQuery]GetAllUsersQueryRequest getAllUsersQueryRequest)
+        {
+            GetAllUsersQueryResponse response = await _mediator.Send(getAllUsersQueryRequest);
+            return Ok(response);
+        }
     }
 }
+
+
+//[HttpGet]
+//public async Task<IActionResult> TestMail()
+//{
+//    await _mailService.SendMailAsync("huseyincorakli46@gmail.com", "Test", "<h1>Deneme<h1/>");
+//    return Ok();
+//}
