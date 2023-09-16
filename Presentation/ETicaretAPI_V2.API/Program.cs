@@ -1,5 +1,6 @@
 using ETicaretAPI_V2.API.Configurations.ColumnWriters;
 using ETicaretAPI_V2.API.Extensions;
+using ETicaretAPI_V2.API.Filters;
 using ETicaretAPI_V2.Application;
 using ETicaretAPI_V2.Application.Validators.Products;
 using ETicaretAPI_V2.Infrastructure;
@@ -31,7 +32,11 @@ builder.Services.AddCors(options => options.AddDefaultPolicy(policy =>
     policy.WithOrigins("http://localhost:4200", "https://localhost:4200").AllowAnyHeader().AllowAnyMethod().AllowCredentials()
 ));
 
-builder.Services.AddControllers(options => options.Filters.Add<ValidationFilter>())
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add<ValidationFilter>();
+    options.Filters.Add<RolePermissionFilter>();
+})
     .AddFluentValidation(configuration => configuration.RegisterValidatorsFromAssemblyContaining<CreateProductValidator>())
     .ConfigureApiBehaviorOptions(options => options.SuppressModelStateInvalidFilter = true);
 
