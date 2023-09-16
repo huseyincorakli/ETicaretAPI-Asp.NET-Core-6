@@ -13,7 +13,7 @@ namespace ETicaretAPI_V2.Persistence.Services
     {
         UserManager<AU.AppUser> _userManager;
 
-        
+
 
         public UserService(UserManager<AppUser> userManager)
         {
@@ -87,15 +87,38 @@ namespace ETicaretAPI_V2.Persistence.Services
 
             return users.Select(user => new ListUser
             {
-               Id=user.Id,
-               Email=user.Email,
-               NameSurname=user.NameSurname,
-               TwoFactorEnabled=user.TwoFactorEnabled,
-               UserName = user.UserName
+                Id = user.Id,
+                Email = user.Email,
+                NameSurname = user.NameSurname,
+                TwoFactorEnabled = user.TwoFactorEnabled,
+                UserName = user.UserName
 
             }).ToList();
         }
 
         public int TotalUserCount => _userManager.Users.Count();
+
+        public async Task AssignRoleToUser(string userId, string[] roles)
+        {
+            AppUser user = await _userManager.FindByIdAsync(userId);
+            if (user != null)
+            {
+                var userRoles = await _userManager.GetRolesAsync(user);
+                await _userManager.RemoveFromRolesAsync(user, userRoles);
+
+                await _userManager.AddToRolesAsync(user, roles);
+            }
+        }
+
+        public async Task<string[]> GetRolesToUserAsync(string userId)
+        {
+            AppUser user = await _userManager.FindByIdAsync(userId);
+            if (user!=null)
+            {
+               var userRoles= await _userManager.GetRolesAsync(user);
+               return userRoles.ToArray();
+            }
+            return new string[] {""};
+        }
     }
 }

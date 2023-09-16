@@ -1,8 +1,11 @@
-﻿using ETicaretAPI_V2.Application.Abstraction.Services;
+﻿using Azure;
+using ETicaretAPI_V2.Application.Abstraction.Services;
 using ETicaretAPI_V2.Application.CustomAttributes;
+using ETicaretAPI_V2.Application.Features.Commands.AppUser.AssignRoleToUser;
 using ETicaretAPI_V2.Application.Features.Commands.AppUser.CreateUser;
 using ETicaretAPI_V2.Application.Features.Commands.AppUser.UpdatePassword;
 using ETicaretAPI_V2.Application.Features.Queries.AppUser.GetAllUsers;
+using ETicaretAPI_V2.Application.Features.Queries.AppUser.GetRolesToUser;
 using ETicaretAPI_V2.Infrastructure.Services.Mail;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -45,6 +48,24 @@ namespace ETicaretAPI_V2.API.Controllers
         public async Task<IActionResult> GetAllUsers([FromQuery]GetAllUsersQueryRequest getAllUsersQueryRequest)
         {
             GetAllUsersQueryResponse response = await _mediator.Send(getAllUsersQueryRequest);
+            return Ok(response);
+        }
+
+        [HttpGet("get-roles-to-user/{userId}")]
+        [Authorize(AuthenticationSchemes = "Admin")]
+        [AuthorizeDefinition(ActionType = Application.Enums.ActionType.Reading, Definition = "Get Roles To User", Menu = "Users")]
+        public async Task<IActionResult> GetRolesToUser([FromRoute] GetRolesToUserQueryRequest  getRolesToUserQueryRequest)
+        {
+          GetRolesToUserQueryResponse response =   await _mediator.Send(getRolesToUserQueryRequest);
+            return Ok(response);
+        }
+
+        [HttpPost("assign-role-to-user")]
+        [Authorize(AuthenticationSchemes = "Admin")]
+        [AuthorizeDefinition(ActionType = Application.Enums.ActionType.Writing, Definition = "Assign Role To User", Menu = "Users")]
+        public async Task<IActionResult> AssignRoleToUser([FromBody]AssignRoleToUserCommandRequest roleToUserCommandRequest)
+        {
+            AssignRoleToUserCommandResponse response= await _mediator.Send(roleToUserCommandRequest);
             return Ok(response);
         }
     }

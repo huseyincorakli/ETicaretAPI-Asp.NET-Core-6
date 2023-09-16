@@ -10,5 +10,7 @@ namespace ETicaretAPI_V2.Application.Abstraction.Services
         Task UpdatePasswordAsync(string userId, string resetToken, string newPassword);
         Task<List<ListUser>> GetAllUsers(int page,int size);
         int TotalUserCount { get; }
+        Task AssignRoleToUser(string userId, string[] roles);
+        Task<string[]> GetRolesToUserAsync(string userId);
     }
 }
