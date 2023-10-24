@@ -14,24 +14,30 @@ namespace ETicaretAPI_V2.Persistence.Services
     public class UserService : IUserService
     {
         readonly UserManager<AU.AppUser> _userManager;
+        readonly RoleManager<AU.AppRole> _roleManager;
         readonly IEndpointReadRepository _endpointReadRepository;
 
 
 
-        public UserService(UserManager<AppUser> userManager, IEndpointReadRepository endpointReadRepository)
-        {
-            _userManager = userManager;
-            _endpointReadRepository = endpointReadRepository;
-        }
 
-        public async Task<CreateUserResponse> CreateAsync(CreateUser model)
+		public UserService(UserManager<AppUser> userManager, IEndpointReadRepository endpointReadRepository, RoleManager<AppRole> roleManager)
+		{
+			_userManager = userManager;
+			_endpointReadRepository = endpointReadRepository;
+			_roleManager = roleManager;
+		}
+
+		public async Task<CreateUserResponse> CreateAsync(CreateUser model)
         {
-            IdentityResult result = await _userManager.CreateAsync(new AU.AppUser
+            var id = Guid.NewGuid().ToString();
+
+			IdentityResult result = await _userManager.CreateAsync(new AU.AppUser
             {
-                Id = Guid.NewGuid().ToString(),
+                Id = id,
                 NameSurname = model.NameSurname,
                 Email = model.Email,
                 UserName = model.Username,
+                
 
             }, model.Password);
             CreateUserResponse response = new CreateUserResponse
@@ -41,7 +47,10 @@ namespace ETicaretAPI_V2.Persistence.Services
             if (result.Succeeded)
             {
                 response.Message = "Kullanıcı kaydı başarılı";
-            }
+                AU.AppUser user=await _userManager.FindByIdAsync(id);
+                var role= await _roleManager.FindByNameAsync("Müşteri");
+                await _userManager.AddToRoleAsync(user, role.Name);
+			}
             else
             {
                 foreach (var errors in result.Errors)
@@ -126,7 +135,11 @@ namespace ETicaretAPI_V2.Persistence.Services
                 var userRoles = await _userManager.GetRolesAsync(user);
                 return userRoles.ToArray();
             }
-            return new string[] { "" };
+            else
+            {
+                return new[] { "" };
+            }
+            
         }
 
         public async Task<bool> HasRolePermissionToEndpointAsync(string name, string code)

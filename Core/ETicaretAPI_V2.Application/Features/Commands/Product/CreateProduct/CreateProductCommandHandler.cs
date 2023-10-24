@@ -22,8 +22,9 @@ namespace ETicaretAPI.Application.Features.Commands.Product.CreateProduct
             {
                 Name = request.Name,
                 Price = request.Price,
-                Stock = request.Stock
-            });
+                Stock = request.Stock,
+                Desciription = request.Description
+            }) ;
             
             await _productWriteRepository.SaveAsync();
             await _productHubService.ProductAddedMessageAsync($"{request.Name} isminde ürün eklenmiştir.");
