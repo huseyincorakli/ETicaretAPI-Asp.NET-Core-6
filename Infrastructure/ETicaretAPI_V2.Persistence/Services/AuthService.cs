@@ -74,7 +74,7 @@ namespace ETicaretAPI_V2.Persistence.Services
             return token;
         }
 
-        public async Task<Token> LoginAsync(string usernameOrEmail, string password, int accessTokenLifeTime)
+        public async Task<(Token,IList<string> Roles)> LoginAsync(string usernameOrEmail, string password, int accessTokenLifeTime)
         {
             AU.AppUser user = await _userManager.FindByNameAsync(usernameOrEmail);
             if (user == null)
@@ -89,8 +89,10 @@ namespace ETicaretAPI_V2.Persistence.Services
             if (result.Succeeded)
             {
                 Token token = _tokenHandler.CreateAccessToken(accessTokenLifeTime, user);
+                
+                var roles = await _userManager.GetRolesAsync(user);
                 await _userService.UpdateRefreshTokenAsync(token.RefreshToken, user, token.Expiration, 900);
-                return token;
+                return (token, roles);
             }
 
 

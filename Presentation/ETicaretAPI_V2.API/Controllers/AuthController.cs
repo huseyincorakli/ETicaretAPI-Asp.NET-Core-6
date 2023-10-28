@@ -41,7 +41,7 @@ namespace ETicaretAPI_V2.API.Controllers
             return Ok(response);
         }
 
-        [HttpPost("password-reset")]
+        [HttpPost("password-reset")] 
         public async Task<IActionResult> PasswordReset([FromBody] PasswordResetCommandRequest passwordResetCommandRequest)
         {
             PasswordResetCommandResponse response = await _mediator.Send(passwordResetCommandRequest);
