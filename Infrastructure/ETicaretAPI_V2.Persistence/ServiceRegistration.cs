@@ -2,6 +2,7 @@
 using ETicaretAPI_V2.Application.Abstraction.Services.Authentications;
 using ETicaretAPI_V2.Application.Repositories.BasketItemRepositories;
 using ETicaretAPI_V2.Application.Repositories.BasketRepositories;
+using ETicaretAPI_V2.Application.Repositories.CategoryRepositories;
 using ETicaretAPI_V2.Application.Repositories.CompletedOrderRepositories;
 using ETicaretAPI_V2.Application.Repositories.CustomerRepositories;
 using ETicaretAPI_V2.Application.Repositories.EndpointRepositories;
@@ -11,10 +12,12 @@ using ETicaretAPI_V2.Application.Repositories.MenuRepositories;
 using ETicaretAPI_V2.Application.Repositories.OrderRepositories;
 using ETicaretAPI_V2.Application.Repositories.ProductImageFileRepositories;
 using ETicaretAPI_V2.Application.Repositories.ProductRepositories;
+using ETicaretAPI_V2.Application.Repositories.ProductTagRepositories;
 using ETicaretAPI_V2.Domain.Entities.Identity;
 using ETicaretAPI_V2.Persistence.Contexts;
 using ETicaretAPI_V2.Persistence.Repositories.BasketItemRepositories;
 using ETicaretAPI_V2.Persistence.Repositories.BasketRepositories;
+using ETicaretAPI_V2.Persistence.Repositories.CategoryRepositories;
 using ETicaretAPI_V2.Persistence.Repositories.CompletedOrderRepositories;
 using ETicaretAPI_V2.Persistence.Repositories.CustomerRepositories;
 using ETicaretAPI_V2.Persistence.Repositories.EnpointRepositories;
@@ -24,6 +27,7 @@ using ETicaretAPI_V2.Persistence.Repositories.MenuRepositories;
 using ETicaretAPI_V2.Persistence.Repositories.OrderRepositories;
 using ETicaretAPI_V2.Persistence.Repositories.ProductImageFileRepositories;
 using ETicaretAPI_V2.Persistence.Repositories.ProductRepositores;
+using ETicaretAPI_V2.Persistence.Repositories.ProductTagRepositories;
 using ETicaretAPI_V2.Persistence.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -70,12 +74,17 @@ namespace ETicaretAPI_V2.Persistence
             service.AddScoped<IMenuWriteRepository,MenuWriteRepository>();
             service.AddScoped<IEndpointReadRepository, EndpointReadRepository>();
             service.AddScoped<IEndpointWriteRepository, EndpointWriteRepository>();
-            
+
+            service.AddScoped<IProductTagReadRepository, ProductTagReadRepository>();
+            service.AddScoped<IProductTagWriteRepository, ProductTagWriteRepository>();
+            service.AddScoped<ICategoryReadRepository, CategoryReadRepository>();
+            service.AddScoped<ICategoryWriteRepository, CategoryWriteRepository>();
 
 
 
 
-            service.AddScoped<IUserService, UserService>();
+
+			service.AddScoped<IUserService, UserService>();
             service.AddScoped<IAuthService, AuthService>();
             service.AddScoped<IExternalAuthentication, AuthService>();
             service.AddScoped<IInternalAuthentication, AuthService>();
