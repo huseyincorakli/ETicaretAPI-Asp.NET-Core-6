@@ -1,5 +1,6 @@
 ﻿using ETicaretAPI_V2.Application.Features.Commands.Category.ChangeCategoryStatus;
 using ETicaretAPI_V2.Application.Features.Commands.Category.CreateCategory;
+using ETicaretAPI_V2.Application.Features.Commands.Category.GetAllCategoryName;
 using ETicaretAPI_V2.Application.Features.Commands.Category.UpdateCategory;
 using ETicaretAPI_V2.Application.Features.Queries.Category.GetAllCategory;
 using ETicaretAPI_V2.Application.Features.Queries.Category.GetCategoryById;
@@ -24,6 +25,13 @@ namespace ETicaretAPI_V2.API.Controllers
 		public async Task<IActionResult> GetAllCategories([FromQuery]GetAllCategoryQueryRequest getAllCategoryQueryRequest)
 		{
 			var response = await _mediator.Send(getAllCategoryQueryRequest);
+			return Ok(response);
+		}
+
+		[HttpGet("[action]")]
+		public async Task<IActionResult> GetAllCategoryName()
+		{
+			var response = await _mediator.Send(new GetAllCategoryNameCommandRequest());
 			return Ok(response);
 		}
 
