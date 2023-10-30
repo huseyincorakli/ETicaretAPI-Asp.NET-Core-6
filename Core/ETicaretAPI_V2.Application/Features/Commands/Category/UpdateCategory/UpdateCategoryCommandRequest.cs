@@ -1,6 +1,4 @@
-﻿using ETicaretAPI_V2.Application.DTOs.Category;
-using MediatR;
-using UC = ETicaretAPI_V2.Application.DTOs.Category;
+﻿using MediatR;
 
 namespace ETicaretAPI_V2.Application.Features.Commands.Category.UpdateCategory
 {

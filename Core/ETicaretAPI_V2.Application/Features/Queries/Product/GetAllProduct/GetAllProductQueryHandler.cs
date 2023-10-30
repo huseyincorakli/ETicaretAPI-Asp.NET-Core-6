@@ -25,6 +25,7 @@ namespace ETicaretAPI_V2.Application.Features.Queries.Product.GetAllProduct
                 .Skip(request.Page * request.Size)
                 .Take(request.Size)
                 .Include(p=>p.ProductImageFiles)
+                .Include(p=>p.ProductTags)
                 .Select(p => new
                 {
                     p.Id,
@@ -33,7 +34,8 @@ namespace ETicaretAPI_V2.Application.Features.Queries.Product.GetAllProduct
                     p.Price,
                     p.CreateDate,
                     p.UpdatedDate,
-                    p.ProductImageFiles
+                    p.ProductImageFiles,
+                    p.ProductTags,
                 })
                 .ToListAsync();
 

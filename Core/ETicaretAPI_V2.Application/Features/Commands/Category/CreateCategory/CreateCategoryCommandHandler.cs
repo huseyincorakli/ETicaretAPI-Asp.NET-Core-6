@@ -18,9 +18,9 @@ namespace ETicaretAPI_V2.Application.Features.Commands.Category.CreateCategory
 		{
 			await _categoryWriteRepository.AddAsync(new()
 			{
-				CategoryName = request.CreateCategory.CategoryName,
+				CategoryName = request.CategoryName,
 				CreateDate = DateTime.UtcNow,
-				IsActive = request.CreateCategory.IsActive,
+				IsActive = request.IsActive,
 			});
 			await _categoryWriteRepository.SaveAsync();
 
