@@ -58,7 +58,7 @@ namespace ETicaretAPI_V2.API.Controllers
 		}
 
 		[HttpPut("[action]")]
-		public async Task<IActionResult> ChangeCategoryStatus(ChangeCategoryStatusCommandRequest changeCategoryStatusCommandRequest)
+		public async Task<IActionResult> ChangeCategoryStatus([FromBody]ChangeCategoryStatusCommandRequest changeCategoryStatusCommandRequest)
 		{
 			var response=  await _mediator.Send(changeCategoryStatusCommandRequest);
 			return Ok(response);
