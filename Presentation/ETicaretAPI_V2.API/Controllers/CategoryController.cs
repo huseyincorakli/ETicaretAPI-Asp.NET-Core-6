@@ -63,5 +63,7 @@ namespace ETicaretAPI_V2.API.Controllers
 			var response=  await _mediator.Send(changeCategoryStatusCommandRequest);
 			return Ok(response);
 		}
+
+		
 	}
 }

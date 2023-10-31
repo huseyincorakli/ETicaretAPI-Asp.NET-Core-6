@@ -2,6 +2,6 @@
 {
 	public class GetAllCategoryNameCommandResponse
 	{
-		public List<string> CategoryNames { get; set; }
+		public List<object> CategoryNames { get; set; }
 	}
 }
