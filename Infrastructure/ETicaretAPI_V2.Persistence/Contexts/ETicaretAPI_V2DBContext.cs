@@ -13,7 +13,7 @@ namespace ETicaretAPI_V2.Persistence.Contexts
         {
         }
         public DbSet<Product> Products { get; set; }
-        public DbSet<ProductTag> ProductTags { get; set; }
+       // public DbSet<ProductTag> ProductTags { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Order> Orders { get; set; }
        // public DbSet<Customer> Customers { get; set; }
@@ -29,10 +29,11 @@ namespace ETicaretAPI_V2.Persistence.Contexts
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.Entity<ProductTag>()
-                .HasOne(pt => pt.Category)
-                .WithMany(c => c.ProductTags)
-                .HasForeignKey(pt => pt.CategoryId);
+            
+            //builder.Entity<ProductTag>()
+            //    .HasOne(pt => pt.Category)
+            //    .WithMany(c => c.ProductTags)
+            //    .HasForeignKey(pt => pt.CategoryId);
 
             builder.Entity<Order>()
                .HasKey(b => b.Id);

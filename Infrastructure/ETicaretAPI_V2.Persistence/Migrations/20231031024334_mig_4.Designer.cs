@@ -3,6 +3,7 @@ using System;
 using ETicaretAPI_V2.Persistence.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ETicaretAPI_V2.Persistence.Migrations
 {
     [DbContext(typeof(ETicaretAPI_V2DBContext))]
-    partial class ETicaretAPI_V2DBContextModelSnapshot : ModelSnapshot
+    [Migration("20231031024334_mig_4")]
+    partial class mig_4
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -397,6 +400,35 @@ namespace ETicaretAPI_V2.Persistence.Migrations
                     b.ToTable("Products");
                 });
 
+            modelBuilder.Entity("ETicaretAPI_V2.Domain.Entities.ProductTag", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("CategoryId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("TagName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("UpdatedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
+
+                    b.ToTable("ProductTags");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.Property<int>("Id")
@@ -518,6 +550,21 @@ namespace ETicaretAPI_V2.Persistence.Migrations
                     b.ToTable("ProductProductImageFile");
                 });
 
+            modelBuilder.Entity("ProductProductTag", b =>
+                {
+                    b.Property<Guid>("ProductTagsId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ProductsId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("ProductTagsId", "ProductsId");
+
+                    b.HasIndex("ProductsId");
+
+                    b.ToTable("ProductProductTag");
+                });
+
             modelBuilder.Entity("ETicaretAPI_V2.Domain.Entities.InvoiceFile", b =>
                 {
                     b.HasBaseType("ETicaretAPI_V2.Domain.Entities.File");
@@ -627,6 +674,17 @@ namespace ETicaretAPI_V2.Persistence.Migrations
                     b.Navigation("Category");
                 });
 
+            modelBuilder.Entity("ETicaretAPI_V2.Domain.Entities.ProductTag", b =>
+                {
+                    b.HasOne("ETicaretAPI_V2.Domain.Entities.Category", "Category")
+                        .WithMany("ProductTags")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Category");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("ETicaretAPI_V2.Domain.Entities.Identity.AppRole", null)
@@ -693,6 +751,21 @@ namespace ETicaretAPI_V2.Persistence.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("ProductProductTag", b =>
+                {
+                    b.HasOne("ETicaretAPI_V2.Domain.Entities.ProductTag", null)
+                        .WithMany()
+                        .HasForeignKey("ProductTagsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ETicaretAPI_V2.Domain.Entities.Product", null)
+                        .WithMany()
+                        .HasForeignKey("ProductsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("ETicaretAPI_V2.Domain.Entities.Basket", b =>
                 {
                     b.Navigation("BasketItems");
@@ -703,6 +776,8 @@ namespace ETicaretAPI_V2.Persistence.Migrations
 
             modelBuilder.Entity("ETicaretAPI_V2.Domain.Entities.Category", b =>
                 {
+                    b.Navigation("ProductTags");
+
                     b.Navigation("Products");
                 });
 

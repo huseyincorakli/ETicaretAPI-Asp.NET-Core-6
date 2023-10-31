@@ -12,7 +12,6 @@ using ETicaretAPI_V2.Application.Repositories.MenuRepositories;
 using ETicaretAPI_V2.Application.Repositories.OrderRepositories;
 using ETicaretAPI_V2.Application.Repositories.ProductImageFileRepositories;
 using ETicaretAPI_V2.Application.Repositories.ProductRepositories;
-using ETicaretAPI_V2.Application.Repositories.ProductTagRepositories;
 using ETicaretAPI_V2.Domain.Entities.Identity;
 using ETicaretAPI_V2.Persistence.Contexts;
 using ETicaretAPI_V2.Persistence.Repositories.BasketItemRepositories;
@@ -27,7 +26,7 @@ using ETicaretAPI_V2.Persistence.Repositories.MenuRepositories;
 using ETicaretAPI_V2.Persistence.Repositories.OrderRepositories;
 using ETicaretAPI_V2.Persistence.Repositories.ProductImageFileRepositories;
 using ETicaretAPI_V2.Persistence.Repositories.ProductRepositores;
-using ETicaretAPI_V2.Persistence.Repositories.ProductTagRepositories;
+
 using ETicaretAPI_V2.Persistence.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -75,8 +74,6 @@ namespace ETicaretAPI_V2.Persistence
             service.AddScoped<IEndpointReadRepository, EndpointReadRepository>();
             service.AddScoped<IEndpointWriteRepository, EndpointWriteRepository>();
 
-            service.AddScoped<IProductTagReadRepository, ProductTagReadRepository>();
-            service.AddScoped<IProductTagWriteRepository, ProductTagWriteRepository>();
             service.AddScoped<ICategoryReadRepository, CategoryReadRepository>();
             service.AddScoped<ICategoryWriteRepository, CategoryWriteRepository>();
 

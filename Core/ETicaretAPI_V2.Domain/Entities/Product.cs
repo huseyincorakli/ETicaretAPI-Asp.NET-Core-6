@@ -8,9 +8,11 @@ namespace ETicaretAPI_V2.Domain.Entities
         public int  Stock { get; set; }
         public float Price { get; set; }
         public string  Desciription { get; set; }
+        public Guid CategoryId { get; set; }
+        public Category Category { get; set; }
         //public ICollection<Order> Orders { get; set; }
         public ICollection<BasketItem> BasketItems { get; set; }
         public ICollection<ProductImageFile> ProductImageFiles { get; set; }
-        public ICollection<ProductTag> ProductTags { get; set; }
+        //public ICollection<ProductTag> ProductTags { get; set; }
     }
 }

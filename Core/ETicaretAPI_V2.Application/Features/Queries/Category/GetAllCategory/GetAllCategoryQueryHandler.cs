@@ -19,7 +19,7 @@ namespace ETicaretAPI_V2.Application.Features.Queries.Category.GetAllCategory
 			var categories = await _categoryReadRepository.GetAll(false)
 				.Skip(request.Page*request.Size)
 				.Take(request.Size)
-				.Include(a=>a.ProductTags)
+				
 				.Select(x => new
 				{
 					x.Id,
@@ -27,7 +27,7 @@ namespace ETicaretAPI_V2.Application.Features.Queries.Category.GetAllCategory
 					x.IsActive,
 					x.CreateDate,
 					x.UpdatedDate,
-					x.ProductTags,
+					
 					
 				})
 				.ToListAsync();

@@ -23,7 +23,6 @@
   <ItemGroup>
     <Folder Include="DTOs\Category\" />
     <Folder Include="DTOs\Role\" />
-    <Folder Include="Features\Queries\ProductTag\GetProductTagById\" />
   </ItemGroup>
 
 </Project>
