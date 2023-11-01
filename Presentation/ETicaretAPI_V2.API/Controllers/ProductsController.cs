@@ -12,6 +12,7 @@ using ETicaretAPI_V2.Application.Features.Commands.ProductImageFile.RemoveProduc
 using ETicaretAPI_V2.Application.Features.Commands.ProductImageFile.UploadProductImage;
 using ETicaretAPI_V2.Application.Features.Queries.Product.GetAllProduct;
 using ETicaretAPI_V2.Application.Features.Queries.Product.GetByIdProduct;
+using ETicaretAPI_V2.Application.Features.Queries.Product.GetProductsByCategory;
 using ETicaretAPI_V2.Application.Features.Queries.ProductImageFile.GetProductImages;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -135,6 +136,13 @@ namespace ETicaretAPI_V2.API.Controllers
 		public async Task<IActionResult> ChangeShowcaseImage([FromQuery] ChangeShowcaseCommandRequest changeShowcaseCommandRequest)
 		{
 			ChangeShowcaseCommandResponse response = await _mediator.Send(changeShowcaseCommandRequest);
+			return Ok(response);
+		}
+
+		[HttpGet("[action]")]
+		public async Task<IActionResult> GetProductsByCategory([FromQuery]GetProductsByCategoryQueryRequest getProductsByCategoryQueryRequest)
+		{
+			var response = await _mediator.Send(getProductsByCategoryQueryRequest);
 			return Ok(response);
 		}
 
