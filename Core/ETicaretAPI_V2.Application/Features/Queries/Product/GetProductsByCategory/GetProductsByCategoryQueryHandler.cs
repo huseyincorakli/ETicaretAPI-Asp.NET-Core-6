@@ -15,7 +15,19 @@ namespace ETicaretAPI_V2.Application.Features.Queries.Product.GetProductsByCateg
 
 		public async Task<GetProductsByCategoryQueryResponse> Handle(GetProductsByCategoryQueryRequest request, CancellationToken cancellationToken)
 		{
-			var data=  await _productReadRepository.GetAll().Where(p => p.CategoryId == Guid.Parse(request.CategoryId)).ToListAsync();
+			var data=  await _productReadRepository.GetAll(false).Where(p => p.CategoryId == Guid.Parse(request.CategoryId)).Include(p=>p.ProductImageFiles).Select(p => new
+			{
+				p.Id,
+				p.Name,
+				p.Stock,
+				p.Price,
+				p.CreateDate,
+				p.UpdatedDate,
+				p.ProductImageFiles,
+				p.Category.CategoryName
+			})
+				.ToListAsync(); 
+
 			var dataCount=	data?.Count();
 
 			return new()
