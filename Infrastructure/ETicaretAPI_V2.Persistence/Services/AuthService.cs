@@ -22,18 +22,20 @@ namespace ETicaretAPI_V2.Persistence.Services
         readonly SignInManager<AU.AppUser> _signInManager;
         readonly IUserService _userService;
         readonly IMailService _mailService;
+        readonly RoleManager<AppRole> _roleManager;
 
-        public AuthService(UserManager<AppUser> userManager, IConfiguration configuration, ITokenHandler tokenHandler, SignInManager<AppUser> signInManager, IUserService userService, IMailService mailService)
-        {
-            _userManager = userManager;
-            _configuration = configuration;
-            _tokenHandler = tokenHandler;
-            _signInManager = signInManager;
-            _userService = userService;
-            _mailService = mailService;
-        }
+		public AuthService(UserManager<AppUser> userManager, IConfiguration configuration, ITokenHandler tokenHandler, SignInManager<AppUser> signInManager, IUserService userService, IMailService mailService, RoleManager<AppRole> roleManager)
+		{
+			_userManager = userManager;
+			_configuration = configuration;
+			_tokenHandler = tokenHandler;
+			_signInManager = signInManager;
+			_userService = userService;
+			_mailService = mailService;
+			_roleManager = roleManager;
+		}
 
-        public async Task<Token> GoogleLoginAsync(string idToken, int accessTokenLifeTime)
+		public async Task<(Token,string Role)> GoogleLoginAsync(string idToken, int accessTokenLifeTime)
         {
             var settings = new GoogleJsonWebSignature.ValidationSettings()
             {
@@ -55,14 +57,20 @@ namespace ETicaretAPI_V2.Persistence.Services
                         Email = payload.Email,
                         UserName = payload.Email,
                         NameSurname = payload.Name,
+                        
+                        
                     };
+                    
                     var identityResult = await _userManager.CreateAsync(user);
                     result = identityResult.Succeeded;
                 }
             }
             if (result)
             {
-                await _userManager.AddLoginAsync(user, info);
+                var RoledUser = await _userManager.FindByEmailAsync(payload.Email);
+				var role = await _roleManager.FindByNameAsync("Müşteri");
+				await _userManager.AddToRoleAsync(RoledUser, role.Name);
+				await _userManager.AddLoginAsync(user, info);
             }
             else
             {
@@ -71,10 +79,11 @@ namespace ETicaretAPI_V2.Persistence.Services
 
             Token token = _tokenHandler.CreateAccessToken(accessTokenLifeTime, user);
             await _userService.UpdateRefreshTokenAsync(token.RefreshToken, user, token.Expiration, 900);
-            return token;
+            var role2 = await _userManager.GetRolesAsync(user) ;
+            return (token, role2[0]);
         }
 
-        public async Task<(Token,IList<string> Roles)> LoginAsync(string usernameOrEmail, string password, int accessTokenLifeTime)
+        public async Task<(Token,IList<string> Roles,string userId)> LoginAsync(string usernameOrEmail, string password, int accessTokenLifeTime)
         {
             AU.AppUser user = await _userManager.FindByNameAsync(usernameOrEmail);
             if (user == null)
@@ -92,7 +101,7 @@ namespace ETicaretAPI_V2.Persistence.Services
                 
                 var roles = await _userManager.GetRolesAsync(user);
                 await _userService.UpdateRefreshTokenAsync(token.RefreshToken, user, token.Expiration, 900);
-                return (token, roles);
+                return (token, roles,user.Id);
             }
 
 

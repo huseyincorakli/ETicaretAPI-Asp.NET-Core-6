@@ -4,8 +4,10 @@ using ETicaretAPI_V2.Application.CustomAttributes;
 using ETicaretAPI_V2.Application.Features.Commands.AppUser.AssignRoleToUser;
 using ETicaretAPI_V2.Application.Features.Commands.AppUser.CreateUser;
 using ETicaretAPI_V2.Application.Features.Commands.AppUser.UpdatePassword;
+using ETicaretAPI_V2.Application.Features.Commands.AppUser.UpdateProfile;
 using ETicaretAPI_V2.Application.Features.Queries.AppUser.GetAllUsers;
 using ETicaretAPI_V2.Application.Features.Queries.AppUser.GetRolesToUser;
+using ETicaretAPI_V2.Application.Features.Queries.AppUser.GetUserById;
 using ETicaretAPI_V2.Infrastructure.Services.Mail;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -65,6 +67,20 @@ namespace ETicaretAPI_V2.API.Controllers
         public async Task<IActionResult> AssignRoleToUser([FromBody]AssignRoleToUserCommandRequest roleToUserCommandRequest)
         {
             AssignRoleToUserCommandResponse response= await _mediator.Send(roleToUserCommandRequest);
+            return Ok(response);
+        }
+
+        [HttpPut("[action]")]
+        public async Task<IActionResult> UpdateProfile([FromBody]UpdateProfileCommandRequest updateProfileCommandRequest)
+        {
+            var response = await _mediator.Send(updateProfileCommandRequest);
+            return Ok(response);
+        }
+
+        [HttpGet("[action]")]
+        public async Task<IActionResult> GetUserById([FromQuery] GetUserByIdQueryRequest getUserByIdQueryRequest)
+        {
+            var response = await _mediator.Send(getUserByIdQueryRequest);
             return Ok(response);
         }
     }

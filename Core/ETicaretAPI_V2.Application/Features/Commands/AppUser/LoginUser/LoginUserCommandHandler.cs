@@ -18,7 +18,8 @@ namespace ETicaretAPI_V2.Application.Features.Commands.AppUser.LoginUser
             return new LoginUserSuccessCommandResponse()
             {
                 Token = data.Item1,
-                Role = data.Roles[0]
+                Role = data.Roles[0],
+                UserId=data.userId
             };
         }
     }

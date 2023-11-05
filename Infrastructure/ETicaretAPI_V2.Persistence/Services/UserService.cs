@@ -7,6 +7,7 @@ using ETicaretAPI_V2.Domain.Entities;
 using ETicaretAPI_V2.Domain.Entities.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Text;
 using AU = ETicaretAPI_V2.Domain.Entities.Identity;
 
 namespace ETicaretAPI_V2.Persistence.Services
@@ -89,6 +90,29 @@ namespace ETicaretAPI_V2.Persistence.Services
                 else
                     throw new PasswordChangeFailedException();
 
+            }
+        }
+
+        public async Task<IdentityResult> UpdateProfileAsync(string userId, UpdateProfile user)
+        {
+            AppUser user1 = await _userManager.FindByIdAsync(userId);
+            if (user1 != null)
+            {
+                var resetToken=  await _userManager.GeneratePasswordResetTokenAsync(user1);
+                resetToken=resetToken.UrlEncode();
+                if (user.Password != user.PasswordConfirm)
+                    throw new PasswordChangeFailedException("Şifreler Uyuşmuyor");
+
+                await UpdatePasswordAsync(userId, resetToken, user.Password);
+                user1.Email=user.Email;
+                user1.NameSurname = user.NameSurname;
+                user1.UserName = user.Username;
+				IdentityResult result  = await _userManager.UpdateAsync(user1);
+                return result;
+            }
+            else
+            {
+                throw new Exception("Böyle bir kullanıcı yok");
             }
         }
 
