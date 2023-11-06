@@ -25,15 +25,12 @@ namespace ETicaretAPI_V2.Persistence.Contexts
         public DbSet<CompletedOrder> CompletedOrders { get; set; }
         public DbSet<Menu> Menus { get; set; }
         public DbSet<Endpoint> Endpoints { get; set; }
-        
+        public DbSet<Address> Addresses { get; set; }
 
-        protected override void OnModelCreating(ModelBuilder builder)
+
+		protected override void OnModelCreating(ModelBuilder builder)
         {
             
-            //builder.Entity<ProductTag>()
-            //    .HasOne(pt => pt.Category)
-            //    .WithMany(c => c.ProductTags)
-            //    .HasForeignKey(pt => pt.CategoryId);
 
             builder.Entity<Order>()
                .HasKey(b => b.Id);
@@ -49,6 +46,11 @@ namespace ETicaretAPI_V2.Persistence.Contexts
                  .HasOne(o => o.CompletedOrder)
                  .WithOne(co => co.Order)
                  .HasForeignKey<CompletedOrder>(co=>co.OrderId);
+
+            builder.Entity<AppUser>()
+                .HasOne(au => au.Address)
+                .WithOne(ad => ad.AppUser)
+                .HasForeignKey<Address>(ad => ad.UserId);
 
             base.OnModelCreating(builder);
             base.OnModelCreating(builder);

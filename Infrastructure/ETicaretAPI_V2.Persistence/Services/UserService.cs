@@ -195,7 +195,12 @@ namespace ETicaretAPI_V2.Persistence.Services
             return false;
 
         }
-    }
+
+		public async Task<AppUser> GetUserById(string userId)
+		{
+			return await _userManager.FindByIdAsync(userId) ?? null;
+		}
+	}
 }
 
 

@@ -1,5 +1,6 @@
 ﻿using ETicaretAPI_V2.Application.Abstraction.Services;
 using ETicaretAPI_V2.Application.Abstraction.Services.Authentications;
+using ETicaretAPI_V2.Application.Repositories.AddressRepositories;
 using ETicaretAPI_V2.Application.Repositories.BasketItemRepositories;
 using ETicaretAPI_V2.Application.Repositories.BasketRepositories;
 using ETicaretAPI_V2.Application.Repositories.CategoryRepositories;
@@ -14,6 +15,7 @@ using ETicaretAPI_V2.Application.Repositories.ProductImageFileRepositories;
 using ETicaretAPI_V2.Application.Repositories.ProductRepositories;
 using ETicaretAPI_V2.Domain.Entities.Identity;
 using ETicaretAPI_V2.Persistence.Contexts;
+using ETicaretAPI_V2.Persistence.Repositories.AddressRepositories;
 using ETicaretAPI_V2.Persistence.Repositories.BasketItemRepositories;
 using ETicaretAPI_V2.Persistence.Repositories.BasketRepositories;
 using ETicaretAPI_V2.Persistence.Repositories.CategoryRepositories;
@@ -73,16 +75,17 @@ namespace ETicaretAPI_V2.Persistence
             service.AddScoped<IMenuWriteRepository,MenuWriteRepository>();
             service.AddScoped<IEndpointReadRepository, EndpointReadRepository>();
             service.AddScoped<IEndpointWriteRepository, EndpointWriteRepository>();
-
             service.AddScoped<ICategoryReadRepository, CategoryReadRepository>();
             service.AddScoped<ICategoryWriteRepository, CategoryWriteRepository>();
-
+			service.AddScoped<IAddressReadRepository, AddressReadRepository>();
+			service.AddScoped<IAddressWriteRepository, AddressWriteRepository>();
 
 
 
 
 			service.AddScoped<IUserService, UserService>();
-            service.AddScoped<IAuthService, AuthService>();
+			service.AddScoped<IAddressService, AddressService>();
+			service.AddScoped<IAuthService, AuthService>();
             service.AddScoped<IExternalAuthentication, AuthService>();
             service.AddScoped<IInternalAuthentication, AuthService>();
             service.AddScoped<IBasketService, BasketService>();
