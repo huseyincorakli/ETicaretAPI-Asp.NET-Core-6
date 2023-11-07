@@ -15,10 +15,20 @@ namespace ETicaretAPI_V2.Application.Features.Queries.Address.GetAddressByUserId
 		public async Task<GetAddressByUserIdQueryResponse> Handle(GetAddressByUserIdQueryRequest request, CancellationToken cancellationToken)
 		{
 			var data = await _addressService.GetAddressByUserIDAsync(request.UserId);
-			return new()
+			if(data != null)
 			{
-				Address = data
-			};
+				return new()
+				{
+					Address = data
+				};
+			}
+			else
+			{
+				return new()
+				{
+					Address = false
+				};
+			}
 		}
 	}
 }

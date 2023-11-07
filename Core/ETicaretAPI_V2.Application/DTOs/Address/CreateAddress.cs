@@ -2,6 +2,7 @@
 {
 	public class CreateAddress
 	{
+
 		public string NameSurname { get; set; }
 		public string UserId { get; set; }
 		public string TelNumber { get; set; }
