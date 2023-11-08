@@ -17,13 +17,13 @@ namespace ETicaretAPI_V2.Application.Features.Commands.Address.AddAddress
 		 	var result= await _addressService.AddAdressAsync(new()
 			{
 				
-				AddressInfo = request.CreateAddress.AddressInfo,
-				City = request.CreateAddress.City,
-				County = request.CreateAddress.County,
-				Directions = request.CreateAddress.Directions,
-				NameSurname = request.CreateAddress.NameSurname,
-				TelNumber = request.CreateAddress.TelNumber,
-				UserId = request.CreateAddress.UserId,
+				AddressInfo = request.AddressInfo,
+				City = request.City,
+				County = request.County,
+				Directions = request.Directions,
+				NameSurname = request.NameSurname,
+				TelNumber = request.TelNumber,
+				UserId = request.UserId,
 			});
 
 			return new()

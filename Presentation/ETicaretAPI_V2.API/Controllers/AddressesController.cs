@@ -21,8 +21,8 @@ namespace ETicaretAPI_V2.API.Controllers
 			_mediator = mediator;
 		}
 
-		[HttpPost]
-		public async Task<IActionResult> Post(CreateAddressCommandRequest createAddressCommandRequest)
+		[HttpPost("[action]")]
+		public async Task<IActionResult> CreateAddress([FromBody]CreateAddressCommandRequest createAddressCommandRequest)
 		{
 			var response = await _mediator.Send(createAddressCommandRequest);
 			return Ok(response);
