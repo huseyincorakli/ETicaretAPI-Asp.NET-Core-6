@@ -21,7 +21,8 @@ namespace ETicaretAPI_V2.Application.Features.Queries.Basket.GetBasketItems
                 BasketItemId = ba.Id.ToString(),
                 Name = ba.Product.Name,
                 Price = ba.Product.Price,
-                Quantity = ba.Quantity
+                Quantity = ba.Quantity,
+                TotalPrice = ba.Quantity * ba.Product.Price
             }).ToList();
         }
     }
