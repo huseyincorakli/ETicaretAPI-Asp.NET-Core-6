@@ -1,4 +1,5 @@
 ﻿using ETicaretAPI_V2.Application.Repositories.ProductRepositories;
+using ETicaretAPI_V2.Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -29,7 +30,10 @@ namespace ETicaretAPI_V2.Application.Features.Queries.Product.GetProductsByCateg
 				.ToListAsync(); 
 
 			var dataCount=	data?.Count();
-
+			if (!string.IsNullOrEmpty(request.ProductName))
+			{
+				data = data.Where(p => p.Name.Contains(request.ProductName, StringComparison.OrdinalIgnoreCase)).ToList();
+			}
 			return new()
 			{
 				Products = data,

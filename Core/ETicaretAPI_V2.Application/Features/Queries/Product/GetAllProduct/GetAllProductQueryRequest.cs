@@ -9,5 +9,6 @@ namespace ETicaretAPI_V2.Application.Features.Queries.Product.GetAllProduct
         public int Page { get; set; } = 0;
 
         public int Size { get; set; } = 5;
-    }
+		public string? ProductName { get; set; } 
+	}
 }

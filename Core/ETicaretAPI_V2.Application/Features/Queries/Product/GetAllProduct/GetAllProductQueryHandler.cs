@@ -20,10 +20,17 @@ namespace ETicaretAPI_V2.Application.Features.Queries.Product.GetAllProduct
         public async Task<GetAllProductQueryResponse> Handle(GetAllProductQueryRequest request, CancellationToken cancellationToken)
         {
             _logger.LogInformation("Tüm PRODUCTLAR LİSTLENEDİ!");
+            int size = request.Size;
+            int skip = request.Size * request.Page;
+            if (!string.IsNullOrEmpty(request.ProductName))
+            {
+                size = 300;
+                skip = 0;
+            }
             var totalProductCount = await _productReadRepository.GetAll(false).CountAsync();
             var products = await _productReadRepository.GetAll(false)
-                .Skip(request.Page * request.Size)
-                .Take(request.Size)
+                .Skip(skip)
+                .Take(size)
                 .Include(p=>p.ProductImageFiles)
                 .Select(p => new
                 {
@@ -37,8 +44,13 @@ namespace ETicaretAPI_V2.Application.Features.Queries.Product.GetAllProduct
                     p.Category.CategoryName
                 })
                 .ToListAsync();
+			if (!string.IsNullOrEmpty(request.ProductName))
+			{
+				products = products.Where(p => p.Name.Contains(request.ProductName, StringComparison.OrdinalIgnoreCase)).ToList();
+			}
 
-            var response = new GetAllProductQueryResponse
+
+			var response = new GetAllProductQueryResponse
             {
                 TotalProductCount = totalProductCount,
                 Products = products
