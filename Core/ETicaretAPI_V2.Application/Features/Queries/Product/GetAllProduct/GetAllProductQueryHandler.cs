@@ -29,6 +29,7 @@ namespace ETicaretAPI_V2.Application.Features.Queries.Product.GetAllProduct
             }
             var totalProductCount = await _productReadRepository.GetAll(false).CountAsync();
             var products = await _productReadRepository.GetAll(false)
+                .Where(P=>P.Category.IsActive)
                 .Skip(skip)
                 .Take(size)
                 .Include(p=>p.ProductImageFiles)
@@ -41,7 +42,8 @@ namespace ETicaretAPI_V2.Application.Features.Queries.Product.GetAllProduct
                     p.CreateDate,
                     p.UpdatedDate,
                     p.ProductImageFiles,
-                    p.Category.CategoryName
+                    p.Category.CategoryName,
+                    p.Category.IsActive
                 })
                 .ToListAsync();
 			if (!string.IsNullOrEmpty(request.ProductName))
