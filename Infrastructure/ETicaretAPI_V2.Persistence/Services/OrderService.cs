@@ -37,46 +37,53 @@ namespace ETicaretAPI_V2.Persistence.Services
             await _orderWriteRepository.SaveAsync();
         }
 
-        public async Task<ListOrder> GetAllOrdersAsync(int page, int size)
-        {
-            var query = _orderReadRepository.Table.Include(x => x.Basket)
-                   .ThenInclude(c => c.User)
-                   .Include(a => a.Basket)
-                   .ThenInclude(b => b.BasketItems)
-                   .ThenInclude(d => d.Product);
+		public async Task<ListOrder> GetAllOrdersAsync(int page, int size, bool isCompleted)
+		{
+			var query = _orderReadRepository.Table.Include(x => x.Basket)
+				   .ThenInclude(c => c.User)
+				   .Include(a => a.Basket)
+				   .ThenInclude(b => b.BasketItems)
+				   .ThenInclude(d => d.Product);
 
+			// Retrieve the data without Skip and Take to manipulate it in-memory
+			var data = await query.ToListAsync();
 
-            var data = query.Skip(page * size).Take(size);
+			var data2 = from order in data
+						join completedOrder in _completedOrderReadRepository.Table
+						on order.Id equals completedOrder.OrderId into co
+						from _co in co.DefaultIfEmpty()
+						select new
+						{
+							Id = order.Id,
+							CreatedDate = order.CreateDate,
+							OrderCode = order.OrderCode,
+							Basket = order.Basket,
+							Completed = _co != null ? true : false
+						};
 
-            var data2 = from order in data
-                        join completedOrder in _completedOrderReadRepository.Table
-                        on order.Id equals completedOrder.OrderId into co
-                        from _co in co.DefaultIfEmpty()
-                        select new
-                        {
-                            Id = order.Id,
-                            CreatedDate = order.CreateDate,
-                            OrderCode = order.OrderCode,
-                            Basket = order.Basket,
-                            Completed = _co != null ? true : false
-                        };
+			// Filter the data based on the 'isCompleted' variable
+			var filteredData = data2.Where(a => a.Completed == isCompleted);
 
-            return new()
-            {
-                TotalOrderCount = await query.CountAsync(),
-                Orders = await data2.Select(o => new
-                {
-                    Id = o.Id,
-                    CreatedDate = o.CreatedDate,
-                    OrderCode = o.OrderCode,
-                    TotalPrice = o.Basket.BasketItems.Sum(bi => bi.Quantity * bi.Product.Price),
-                    UserName = o.Basket.User.UserName,
-                    o.Completed
-                }).ToListAsync()
-            };
-        }
+			// Perform pagination on the filtered data
+			var paginatedData = filteredData.Skip(page * size).Take(size);
 
-        public async Task<SingleOrder> GetOrderByIdAsync(string id)
+			// Now, perform the final projection and return the result
+			return new ListOrder
+			{
+				TotalOrderCount = filteredData.Count(), // Total count after filtering
+				Orders = paginatedData.Select(o => new
+				{
+					Id = o.Id,
+					CreatedDate = o.CreatedDate,
+					OrderCode = o.OrderCode,
+					TotalPrice = o.Basket.BasketItems.Sum(bi => bi.Quantity * bi.Product.Price),
+					UserName = o.Basket.User.UserName,
+					o.Completed
+				}).OrderBy(o => o.CreatedDate).ToList()
+			};
+		}
+
+		public async Task<SingleOrder> GetOrderByIdAsync(string id)
         {
             var data = _orderReadRepository.Table
                             .Include(o => o.Basket)

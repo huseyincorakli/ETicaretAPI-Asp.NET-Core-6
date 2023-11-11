@@ -14,7 +14,9 @@ namespace ETicaretAPI_V2.Application.Features.Queries.Order.GetAllOrder
 
         public async Task<GetAllOrdersQueryResponse> Handle(GetAllOrdersQueryRequest request, CancellationToken cancellationToken)
         {
-           var data= await _orderService.GetAllOrdersAsync(request.Page,request.Size);
+
+           var data= await _orderService.GetAllOrdersAsync(request.Page,request.Size,request.IsCompleted);
+            
 
             return new()
             {

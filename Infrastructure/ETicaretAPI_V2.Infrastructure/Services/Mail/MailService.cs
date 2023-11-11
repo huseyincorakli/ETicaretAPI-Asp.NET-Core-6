@@ -25,7 +25,7 @@ namespace ETicaretAPI_V2.Infrastructure.Services.Mail
                 mail.To.Add(to);
             mail.Subject = subject;
             mail.Body = body;
-            mail.From = new("hc.pc29@outlook.com","CART CURT E-TİCARET",System.Text.Encoding.UTF8);
+            mail.From = new("hc.pc29@outlook.com","Cartopia",System.Text.Encoding.UTF8);
 
             using SmtpClient smtp = new();
             smtp.Credentials = new NetworkCredential(_configuration["Mail:Address"], _configuration["Mail:Password"]);

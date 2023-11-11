@@ -35,6 +35,7 @@ namespace ETicaretAPI_V2.API.Controllers
         [AuthorizeDefinition(Menu = AuthorizeDefinitionConstants.Orders, ActionType = ActionType.Reading, Definition = "Get All Orders")]
         public async Task<IActionResult> GetAllOrders([FromQuery]GetAllOrdersQueryRequest getAllOrdersQueryRequest)
         {
+
             GetAllOrdersQueryResponse response = await _mediator.Send(getAllOrdersQueryRequest);
             return Ok(response);
         }

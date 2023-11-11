@@ -6,5 +6,6 @@ namespace ETicaretAPI_V2.Application.Features.Queries.Order.GetAllOrder
     {
         public int Page { get; set; } = 0;
         public int Size { get; set; } = 5;
+        public bool IsCompleted { get; set; } 
     }
 }
