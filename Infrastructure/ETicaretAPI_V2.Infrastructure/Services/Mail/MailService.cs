@@ -61,7 +61,7 @@ namespace ETicaretAPI_V2.Infrastructure.Services.Mail
             mail.Append(resetToken);
             mail.AppendLine();
             mail.AppendLine();
-            mail.AppendLine("<br><br>CART CURT TİCARET");
+            mail.AppendLine("<br><br>Cartopia");
 
             string mailBody = mail.ToString();
 

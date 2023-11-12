@@ -78,7 +78,7 @@ namespace ETicaretAPI_V2.Persistence.Services
             }
 
             Token token = _tokenHandler.CreateAccessToken(accessTokenLifeTime, user);
-            await _userService.UpdateRefreshTokenAsync(token.RefreshToken, user, token.Expiration, 900);
+            await _userService.UpdateRefreshTokenAsync(token.RefreshToken, user, token.Expiration, 9000);
             var role2 = await _userManager.GetRolesAsync(user) ;
             return (token, role2[0]);
         }
@@ -100,7 +100,7 @@ namespace ETicaretAPI_V2.Persistence.Services
                 Token token = _tokenHandler.CreateAccessToken(accessTokenLifeTime, user);
                 
                 var roles = await _userManager.GetRolesAsync(user);
-                await _userService.UpdateRefreshTokenAsync(token.RefreshToken, user, token.Expiration, 900);
+                await _userService.UpdateRefreshTokenAsync(token.RefreshToken, user, token.Expiration, 4500);
                 return (token, roles,user.Id);
             }
 
@@ -115,8 +115,8 @@ namespace ETicaretAPI_V2.Persistence.Services
             AppUser? user = await _userManager.Users.FirstOrDefaultAsync(user => user.RefreshToken == refreshToken);
             if (user != null && user?.RefreshTokenEndDate > DateTime.UtcNow)
             {
-                Token token = _tokenHandler.CreateAccessToken(15, user);
-               await _userService.UpdateRefreshTokenAsync(token.RefreshToken, user, token.Expiration, 10);
+                Token token = _tokenHandler.CreateAccessToken(4500, user);
+               await _userService.UpdateRefreshTokenAsync(token.RefreshToken, user, token.Expiration,1500);
                 return token;
             }
             else

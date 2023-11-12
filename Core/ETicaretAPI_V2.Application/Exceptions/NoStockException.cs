@@ -2,7 +2,7 @@
 {
 	public class NoStockException: Exception
 	{
-		public NoStockException() : base("Not enough stock available")
+		public NoStockException() : base("Ürün stokta bulunmamaktadır.")
 		{
 		}
 
