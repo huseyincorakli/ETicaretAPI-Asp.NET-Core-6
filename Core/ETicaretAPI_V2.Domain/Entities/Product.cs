@@ -5,6 +5,8 @@ namespace ETicaretAPI_V2.Domain.Entities
     public class Product:BaseEntitiy
     {
         public string Name { get; set; }
+        //public string ShortDesciription { get; set; }
+        //public string Brand { get; set; }
         public int  Stock { get; set; }
         public float Price { get; set; }
         public string  Desciription { get; set; }
