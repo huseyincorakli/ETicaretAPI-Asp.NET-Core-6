@@ -35,6 +35,9 @@ namespace ETicaretAPI_V2.Application.Features.Queries.Product.GetByIdProduct
 				Stock = product.Stock,
 				CategoryName = category.CategoryName,
 				Description = product.Desciription,
+				Brand= product.Brand,
+				ShortDesciription= product.ShortDesciription,
+				Specifications=product.Specifications,
 				ImageFiles = imageFiles.Select(imageFile => new
 				{
 					FileName = imageFile.FileName,

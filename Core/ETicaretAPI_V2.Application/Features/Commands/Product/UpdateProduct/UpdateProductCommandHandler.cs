@@ -21,6 +21,11 @@ namespace ETicaretAPI_V2.Application.Features.Commands.Product.UpdateProduct
             product.Stock = request.Stock;
             product.Price = request.Price;
             product.Name = request.Name;
+            product.Desciription = request.Description;
+            product.ShortDesciription = request.ShortDesciription;
+            product.Brand= request.Brand;
+            product.Specifications = request.Spesification;
+            product.UpdatedDate= DateTime.UtcNow;
             await _productWriteRepository.SaveAsync();
             return new UpdateProductCommandResponse() { };
         }

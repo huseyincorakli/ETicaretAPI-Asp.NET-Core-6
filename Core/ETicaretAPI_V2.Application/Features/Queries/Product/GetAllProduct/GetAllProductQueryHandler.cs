@@ -43,12 +43,17 @@ namespace ETicaretAPI_V2.Application.Features.Queries.Product.GetAllProduct
                     p.UpdatedDate,
                     p.ProductImageFiles,
                     p.Category.CategoryName,
-                    p.Category.IsActive
+                    p.Category.IsActive,
+                    p.Brand,
+                    p.Desciription,
+                    p.ShortDesciription,
+                    p.Specifications
                 })
                 .ToListAsync();
 			if (!string.IsNullOrEmpty(request.ProductName))
 			{
-				products = products.Where(p => p.Name.Contains(request.ProductName, StringComparison.OrdinalIgnoreCase)).ToList();
+				products = products.Where(p => 
+                p.Name.Contains(request.ProductName, StringComparison.OrdinalIgnoreCase) || p.Brand.Contains(request.ProductName, StringComparison.OrdinalIgnoreCase)).ToList();
 			}
 
 

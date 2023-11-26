@@ -33,7 +33,10 @@ namespace ETicaretAPI.Application.Features.Commands.Product.CreateProduct
 					Price = request.Price,
 					Stock = request.Stock,
 					Desciription = request.Description,
-					CategoryId=Guid.Parse(request.CategoryId)
+					CategoryId=Guid.Parse(request.CategoryId),
+					ShortDesciription=request.ShortDesciription,
+					Brand=request.Brand,
+					Specifications=request.Specifications
 				});
 				await _productWriteRepository.SaveAsync();
 				await _productHubService.ProductAddedMessageAsync($"{request.Name} isminde ürün eklenmiştir.");

@@ -14,5 +14,8 @@ namespace ETicaretAPI_V2.Application.Features.Queries.Product.GetByIdProduct
         public string  Description { get; set; }
         public string CategoryName { get; set; }
         public object ImageFiles { get; set; }
+        public string Brand { get; set; }
+        public string ShortDesciription { get; set; }
+        public string[] Specifications { get; set; }
     }
 }

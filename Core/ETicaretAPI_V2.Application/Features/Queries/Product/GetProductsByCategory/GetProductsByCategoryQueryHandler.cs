@@ -25,7 +25,9 @@ namespace ETicaretAPI_V2.Application.Features.Queries.Product.GetProductsByCateg
 				p.CreateDate,
 				p.UpdatedDate,
 				p.ProductImageFiles,
-				p.Category.CategoryName
+				p.Category.CategoryName,
+				p.Brand,
+				p.Specifications
 			})
 				.ToListAsync(); 
 
