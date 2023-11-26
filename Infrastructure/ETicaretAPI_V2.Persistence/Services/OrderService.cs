@@ -110,6 +110,7 @@ namespace ETicaretAPI_V2.Persistence.Services
                 Id = data2.Id.ToString(),
                 BasketItems = data2.Basket.BasketItems.Select(bi => new
                 {
+                    bi.ProductId,
                     bi.Product.Name,
                     bi.Product.Price,
                     bi.Quantity
