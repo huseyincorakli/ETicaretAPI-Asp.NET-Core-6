@@ -40,6 +40,7 @@ namespace ETicaretAPI_V2.Application.Features.Commands.Order.CreateOrder
                     await _productWriteRepository.SaveAsync();
                 }
             }
+
             await _orderService.CreateOrderAsync(new()
             {
                 Address = request.Address,

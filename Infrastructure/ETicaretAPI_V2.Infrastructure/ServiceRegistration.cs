@@ -22,7 +22,7 @@ namespace ETicaretAPI_V2.Infrastructure
            serviceCollection.AddScoped<IApplicationService,ApplicationService>();
            serviceCollection.AddScoped<IQRCodeService,QRCodeService>();
             serviceCollection.AddScoped<IGeneratorService,GeneratorService>();
-        }
+		}
         public static void AddStorage<T> (this IServiceCollection serviceCollection) where T : Storage,IStorage
         {
             serviceCollection.AddScoped<IStorage, T>(); 

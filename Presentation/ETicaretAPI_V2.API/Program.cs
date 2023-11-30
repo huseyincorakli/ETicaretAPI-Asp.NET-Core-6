@@ -16,8 +16,10 @@ using Serilog;
 using Serilog.Context;
 using Serilog.Core;
 using Serilog.Sinks.PostgreSQL;
+using Stripe;
 using System.Security.Claims;
 using System.Text;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,7 +33,7 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddCors(options => options.AddDefaultPolicy(policy =>
     policy.WithOrigins("http://localhost:4200", "https://localhost:4200").AllowAnyHeader().AllowAnyMethod().AllowCredentials()
 ));
-
+StripeConfiguration.ApiKey = "sk_test_51OHAF3FTVXhGXu7OUxoR9otHM2SlImUe0RtRObYJvT362XLBr7S1rFIXsNLqkqxnbKZ3dyDU7JTeM6HbeYAVJDtW00Kxsscolb";
 builder.Services.AddControllers(options =>
 {
     options.Filters.Add<ValidationFilter>();
