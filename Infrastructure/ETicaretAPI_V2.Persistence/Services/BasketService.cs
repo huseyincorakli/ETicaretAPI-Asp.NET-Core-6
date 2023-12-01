@@ -104,6 +104,7 @@ namespace ETicaretAPI_V2.Persistence.Services
             Basket? result = await _basketReadRepository.Table
                 .Include(b => b.BasketItems)
                 .ThenInclude(bi => bi.Product)
+                .ThenInclude(pi=>pi.ProductImageFiles)
                 .FirstOrDefaultAsync(b => b.Id == basket.Id);
 
             return result.BasketItems.ToList();

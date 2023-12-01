@@ -15,11 +15,13 @@ namespace ETicaretAPI_V2.Application.Features.Queries.Basket.GetBasketItems
         public async Task<List<GetBasketItemsQueryResponse>> Handle(GetBasketItemsQueryRequest request, CancellationToken cancellationToken)
         {
             var basketItems = await _basketService.GetBasketItemsAsync();
-
+            
             return basketItems.Select(ba => new GetBasketItemsQueryResponse
             {
                 BasketItemId = ba.Id.ToString(),
-                Name = ba.Product.Name,
+                ProductId=ba.Product.Id.ToString(),
+				ImagePath= ba.Product.ProductImageFiles?.FirstOrDefault()?.Path,
+				Name = ba.Product.Name,
                 Price = ba.Product.Price,
                 Quantity = ba.Quantity,
                 TotalPrice = ba.Quantity * ba.Product.Price

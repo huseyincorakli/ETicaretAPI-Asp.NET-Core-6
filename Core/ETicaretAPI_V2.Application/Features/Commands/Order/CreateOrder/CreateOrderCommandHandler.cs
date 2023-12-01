@@ -37,6 +37,8 @@ namespace ETicaretAPI_V2.Application.Features.Commands.Order.CreateOrder
                 else
                 {
                     data.Product.Stock = data.Product.Stock - data.Quantity;
+                    data.Product.QuantitySold = data.Product.QuantitySold + data.Quantity;
+
                     await _productWriteRepository.SaveAsync();
                 }
             }
