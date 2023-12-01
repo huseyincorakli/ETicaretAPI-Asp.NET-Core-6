@@ -26,7 +26,10 @@ namespace ETicaretAPI_V2.Persistence.Contexts
         public DbSet<Menu> Menus { get; set; }
         public DbSet<Endpoint> Endpoints { get; set; }
         public DbSet<Address> Addresses { get; set; }
+        public DbSet<LowestStockProduct> LowestStockProducts { get; set; }
+        public DbSet<BestSellingProduct> BestSellingProducts { get; set; }
 
+       
 
 		protected override void OnModelCreating(ModelBuilder builder)
         {

@@ -14,6 +14,7 @@ using ETicaretAPI_V2.Application.Features.Queries.Product.GetAllProduct;
 using ETicaretAPI_V2.Application.Features.Queries.Product.GetByIdProduct;
 using ETicaretAPI_V2.Application.Features.Queries.Product.GetProductsByCategory;
 using ETicaretAPI_V2.Application.Features.Queries.ProductImageFile.GetProductImages;
+using ETicaretAPI_V2.Application.Repositories.ProductRepositories;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -27,10 +28,20 @@ namespace ETicaretAPI_V2.API.Controllers
 	{
 		readonly IMediator _mediator;
 		readonly IProductService _productService;
-		public ProductsController(IMediator mediator, IProductService productService)
+		readonly IProductReadRepository _productReadRepository;
+		public ProductsController(IMediator mediator, IProductService productService, IProductReadRepository productReadRepository)
 		{
 			_mediator = mediator;
 			_productService = productService;
+			_productReadRepository = productReadRepository;
+		}
+		[HttpGet("[action]")]
+		public async Task<IActionResult> Get5Product()
+		{
+			var data= await _productReadRepository.GetTop5LowestStockProductsAsync();
+			//var data= await _productReadRepository.GetSellingProductsAsync();
+
+			return Ok(data);
 		}
 
 		[HttpGet("qrCode/{productId}")]
