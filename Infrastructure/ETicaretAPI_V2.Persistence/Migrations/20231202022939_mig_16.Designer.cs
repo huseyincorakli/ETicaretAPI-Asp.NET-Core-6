@@ -3,6 +3,7 @@ using System;
 using ETicaretAPI_V2.Persistence.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ETicaretAPI_V2.Persistence.Migrations
 {
     [DbContext(typeof(ETicaretAPI_V2DBContext))]
-    partial class ETicaretAPI_V2DBContextModelSnapshot : ModelSnapshot
+    [Migration("20231202022939_mig_16")]
+    partial class mig_16
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -228,23 +231,6 @@ namespace ETicaretAPI_V2.Persistence.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("DailySales");
-                });
-
-            modelBuilder.Entity("ETicaretAPI_V2.Domain.Entities.DailySaleSold", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("sale_date")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<int>("total_quantity_sold")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("DailySaleSolds");
                 });
 
             modelBuilder.Entity("ETicaretAPI_V2.Domain.Entities.Endpoint", b =>

@@ -11,9 +11,12 @@ using ETicaretAPI_V2.Application.Features.Commands.ProductImageFile.ChangeShowca
 using ETicaretAPI_V2.Application.Features.Commands.ProductImageFile.RemoveProductImage;
 using ETicaretAPI_V2.Application.Features.Commands.ProductImageFile.UploadProductImage;
 using ETicaretAPI_V2.Application.Features.Queries.Product.GetAllProduct;
+using ETicaretAPI_V2.Application.Features.Queries.Product.GetBestSellingProduct;
 using ETicaretAPI_V2.Application.Features.Queries.Product.GetByIdProduct;
+using ETicaretAPI_V2.Application.Features.Queries.Product.GetLowStockProduct;
 using ETicaretAPI_V2.Application.Features.Queries.Product.GetProductsByCategory;
 using ETicaretAPI_V2.Application.Features.Queries.ProductImageFile.GetProductImages;
+using ETicaretAPI_V2.Application.Repositories.DailySaleRepositories;
 using ETicaretAPI_V2.Application.Repositories.ProductRepositories;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -29,20 +32,16 @@ namespace ETicaretAPI_V2.API.Controllers
 		readonly IMediator _mediator;
 		readonly IProductService _productService;
 		readonly IProductReadRepository _productReadRepository;
-		public ProductsController(IMediator mediator, IProductService productService, IProductReadRepository productReadRepository)
+		readonly IDailySaleReadRepository _dailySaleReadRepository;
+		public ProductsController(IMediator mediator, IProductService productService, IProductReadRepository productReadRepository, IDailySaleReadRepository dailySaleReadRepository)
 		{
 			_mediator = mediator;
 			_productService = productService;
 			_productReadRepository = productReadRepository;
+			_dailySaleReadRepository = dailySaleReadRepository;
 		}
-		[HttpGet("[action]")]
-		public async Task<IActionResult> Get5Product()
-		{
-			var data= await _productReadRepository.GetTop5LowestStockProductsAsync();
-			//var data= await _productReadRepository.GetSellingProductsAsync();
 
-			return Ok(data);
-		}
+
 
 		[HttpGet("qrCode/{productId}")]
 		public async Task<IActionResult> GetQRCodeToProduct([FromRoute] string productId)
@@ -157,7 +156,26 @@ namespace ETicaretAPI_V2.API.Controllers
 			return Ok(response);
 		}
 
+		[HttpGet("[action]")]
+		public async Task<IActionResult> GetLowStockProducts([FromQuery] GetLowStockProductQueryRequest getLowStockProductQueryRequest)
+		{
+			GetLowStockProductQueryResponse response = await _mediator.Send(getLowStockProductQueryRequest);
+			return Ok(response);
+		}
 
+		[HttpGet("[action]")]
+		public async Task<IActionResult> GetBestSellingProducts([FromQuery] GetBestSellingProductQueryRequest getBestSellingProductQueryRequest)
+		{
+			GetBestSellingProductQueryResponse response = await _mediator.Send(getBestSellingProductQueryRequest);
+			return Ok(response);
+		}
+
+		[HttpGet("[action]")]
+		public async Task<IActionResult> GetDailySale(int year,int mounth,int day)
+		{
+			var data= await _dailySaleReadRepository.GetDailySale (new DateTime(year, day, mounth, 0, 0, 0, DateTimeKind.Utc));
+			return Ok(data);
+		}
 
 	}
 }

@@ -6,6 +6,7 @@ using ETicaretAPI_V2.Application.Repositories.BasketRepositories;
 using ETicaretAPI_V2.Application.Repositories.CategoryRepositories;
 using ETicaretAPI_V2.Application.Repositories.CompletedOrderRepositories;
 using ETicaretAPI_V2.Application.Repositories.CustomerRepositories;
+using ETicaretAPI_V2.Application.Repositories.DailySaleRepositories;
 using ETicaretAPI_V2.Application.Repositories.EndpointRepositories;
 using ETicaretAPI_V2.Application.Repositories.FileRepositories;
 using ETicaretAPI_V2.Application.Repositories.InvoiceFileRepositories;
@@ -21,6 +22,7 @@ using ETicaretAPI_V2.Persistence.Repositories.BasketRepositories;
 using ETicaretAPI_V2.Persistence.Repositories.CategoryRepositories;
 using ETicaretAPI_V2.Persistence.Repositories.CompletedOrderRepositories;
 using ETicaretAPI_V2.Persistence.Repositories.CustomerRepositories;
+using ETicaretAPI_V2.Persistence.Repositories.DailySaleRepositories;
 using ETicaretAPI_V2.Persistence.Repositories.EnpointRepositories;
 using ETicaretAPI_V2.Persistence.Repositories.FileRepositories;
 using ETicaretAPI_V2.Persistence.Repositories.InvoiceFileRepositories;
@@ -79,6 +81,9 @@ namespace ETicaretAPI_V2.Persistence
             service.AddScoped<ICategoryWriteRepository, CategoryWriteRepository>();
 			service.AddScoped<IAddressReadRepository, AddressReadRepository>();
 			service.AddScoped<IAddressWriteRepository, AddressWriteRepository>();
+			service.AddScoped<IDailySaleReadRepository, DailySaleReadRepository>();
+			service.AddScoped<IDailySaleWriteRepository, DailySaleWriteRepository>();
+
 
 
 
