@@ -1,5 +1,6 @@
 ﻿using ETicaretAPI_V2.Application.Abstraction.Services;
 using MediatR;
+using C = ETicaretAPI_V2.Domain.Entities;
 
 namespace ETicaretAPI_V2.Application.Features.Queries.Comment.GetCommentByProductId
 {
@@ -14,11 +15,16 @@ namespace ETicaretAPI_V2.Application.Features.Queries.Comment.GetCommentByProduc
 
 		public async Task<GetCommentByProductIdQueryResponse> Handle(GetCommentByProductIdQueryRequest request, CancellationToken cancellationToken)
 		{
-			object data = await _commentService.GetCommentByProductIdAsync(request.ProductId);
-
+			(List<C.Comment>,int totalCount,float avarageScore) data = await _commentService.GetCommentByProductIdAsync(request.ProductId,request.Size,request.Page);
+			if (data.totalCount==null)
+			{
+				return null;
+			}
 			return new()
 			{
-				ResponseData = data
+				ResponseData=data.Item1,
+				TotalCount=(data).totalCount,
+				AvarageScore=data.avarageScore
 			};
 		}
 	}

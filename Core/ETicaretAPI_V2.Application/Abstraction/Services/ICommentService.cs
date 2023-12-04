@@ -1,11 +1,12 @@
 ﻿using ETicaretAPI_V2.Application.DTOs.Comment;
+using ETicaretAPI_V2.Domain.Entities;
 
 namespace ETicaretAPI_V2.Application.Abstraction.Services
 {
 	public interface ICommentService
 	{
 		Task<bool> CreateCommentAsync(CreateComment createComment);
-		Task<object> GetCommentByProductIdAsync(string productId);
+		Task<(List<Comment>, int TotalCount, float averageRating)> GetCommentByProductIdAsync(string productId, int Size, int Page);
 		Task<object> GetCommentByUserIdAsync(string userId);
 	}
 }

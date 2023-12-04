@@ -1,7 +1,9 @@
 ﻿using ETicaretAPI_V2.Application.Abstraction.Services;
 using ETicaretAPI_V2.Application.DTOs.Comment;
 using ETicaretAPI_V2.Application.Repositories.CommentRepositories;
+using ETicaretAPI_V2.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using System.Drawing;
 
 namespace ETicaretAPI_V2.Persistence.Services
 {
@@ -42,10 +44,22 @@ namespace ETicaretAPI_V2.Persistence.Services
 			
 		}
 
-		public async Task<object> GetCommentByProductIdAsync(string productId)
+		public async Task<(List<Comment>,int TotalCount , float averageRating)> GetCommentByProductIdAsync(string productId,int Size,int Page)
 		{
-			object data = await _commentReadRepository.GetAll().Where(p => p.ProductId == Guid.Parse(productId)).ToListAsync();
-			return data;
+			var query = _commentReadRepository.GetAll();
+			
+			var total = await _commentReadRepository.GetAll().ToListAsync();
+
+			var query2 =  query.Where(p => p.ProductId == Guid.Parse(productId));
+			List<Comment> data = await query2.Skip(Size*Page).Take(Size).ToListAsync();
+			int tCount = (await query2.ToListAsync()).Count;
+			float totalScore = 0;
+			foreach (var item in await query2.ToListAsync())
+			{
+				totalScore += item.UserScore;
+			}
+			float avarageScore = totalScore / tCount;
+			return (data, tCount, avarageScore);
 		}
 
 		public Task<object> GetCommentByUserIdAsync(string userId)

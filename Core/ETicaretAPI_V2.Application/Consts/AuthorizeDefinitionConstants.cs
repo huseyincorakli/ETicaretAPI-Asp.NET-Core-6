@@ -8,5 +8,6 @@
         public const string ApplicationServices = "ApplicationServices";
         public const string Roles = "Roles";
         public const string Files = "Files";
+        public const string Comments = "Comments";
 	}
 }
