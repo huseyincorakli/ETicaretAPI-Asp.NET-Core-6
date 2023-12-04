@@ -93,6 +93,7 @@ namespace ETicaretAPI_V2.Persistence
 
 
 
+
 			service.AddScoped<IUserService, UserService>();
 			service.AddScoped<IAddressService, AddressService>();
 			service.AddScoped<IAuthService, AuthService>();
@@ -103,6 +104,8 @@ namespace ETicaretAPI_V2.Persistence
             service.AddScoped<IRoleService, RoleService>();
             service.AddScoped<IAuthorizationEndpointService, AuthorizationEndpointService>();
             service.AddScoped<IProductService, ProductService>();
-        }
-    }
+			service.AddScoped<ICommentService, CommentService>();
+
+		}
+	}
 }

@@ -57,6 +57,11 @@ namespace ETicaretAPI_V2.Persistence.Contexts
                 .WithOne(c => c.Product)
                 .HasForeignKey(c => c.ProductId);
 
+            builder.Entity<AppUser>()
+                .HasMany(u => u.Comments)
+                .WithOne(c => c.AppUser)
+                .HasForeignKey(c => c.UserId);
+
             base.OnModelCreating(builder);
             base.OnModelCreating(builder);
         }
