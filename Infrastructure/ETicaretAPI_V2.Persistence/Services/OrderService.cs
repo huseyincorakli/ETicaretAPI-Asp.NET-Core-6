@@ -37,7 +37,46 @@ namespace ETicaretAPI_V2.Persistence.Services
             await _orderWriteRepository.SaveAsync();
         }
 
-		public async Task<ListOrder> GetAllOrdersAsync(int page, int size, bool isCompleted)
+        public async Task<ListOrder> GetUnCompletedOrders(int size)
+        {
+			var query = _orderReadRepository.Table.Include(x => x.Basket)
+				   .ThenInclude(c => c.User)
+				   .Include(a => a.Basket)
+				   .ThenInclude(b => b.BasketItems)
+				   .ThenInclude(d => d.Product);
+
+			var data = await query.ToListAsync();
+			var data2 = from order in data
+						join completedOrder in _completedOrderReadRepository.Table
+						on order.Id equals completedOrder.OrderId into co
+						from _co in co.DefaultIfEmpty()
+						select new
+						{
+							Id = order.Id,
+							CreatedDate = order.CreateDate,
+							OrderCode = order.OrderCode,
+							Basket = order.Basket,
+							Completed = _co != null ? true : false
+						};
+
+			var filteredData = data2.Where(a => a.Completed == false);
+            var sortedData= filteredData.OrderBy(a=>a.CreatedDate).ToList().Take(size);
+			return new ListOrder
+			{
+				TotalOrderCount = filteredData.Count(),
+				Orders = sortedData.Select(o => new
+				{
+					Id = o.Id,
+					CreatedDate = o.CreatedDate,
+					OrderCode = o.OrderCode,
+					TotalPrice = o.Basket.BasketItems.Sum(bi => bi.Quantity * bi.Product.Price),
+					UserName = o.Basket.User.NameSurname,
+					o.Completed
+				}).OrderBy(o => o.CreatedDate).ToList()
+			};
+		}
+
+		public async Task<ListOrder> GetAllOrdersAsync(int page, int size, bool isCompleted, string orderCode)
 		{
 			var query = _orderReadRepository.Table.Include(x => x.Basket)
 				   .ThenInclude(c => c.User)
@@ -45,7 +84,6 @@ namespace ETicaretAPI_V2.Persistence.Services
 				   .ThenInclude(b => b.BasketItems)
 				   .ThenInclude(d => d.Product);
 
-			// Retrieve the data without Skip and Take to manipulate it in-memory
 			var data = await query.ToListAsync();
 
 			var data2 = from order in data
@@ -61,16 +99,16 @@ namespace ETicaretAPI_V2.Persistence.Services
 							Completed = _co != null ? true : false
 						};
 
-			// Filter the data based on the 'isCompleted' variable
 			var filteredData = data2.Where(a => a.Completed == isCompleted);
-
-			// Perform pagination on the filtered data
+            if (orderCode!="")
+            {
+                filteredData = filteredData.Where(a => a.OrderCode == orderCode);
+            }
 			var paginatedData = filteredData.Skip(page * size).Take(size);
 
-			// Now, perform the final projection and return the result
 			return new ListOrder
 			{
-				TotalOrderCount = filteredData.Count(), // Total count after filtering
+				TotalOrderCount = filteredData.Count(), 
 				Orders = paginatedData.Select(o => new
 				{
 					Id = o.Id,

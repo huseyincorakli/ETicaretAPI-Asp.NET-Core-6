@@ -116,24 +116,27 @@ namespace ETicaretAPI_V2.Persistence.Services
             }
         }
 
-        public async Task<List<ListUser>> GetAllUsers(int page, int size)
-        {
-            var users = await _userManager.Users.
-                         Skip(page * size).Take(size).
-                         ToListAsync();
+		public async Task<List<ListUser>> GetAllUsers(int page, int size, string searchName)
+		{
+			var users = await _userManager.Users
+                .Where(user => string.IsNullOrEmpty(searchName) || user.NameSurname.ToLower().Contains(searchName.ToLower()))
+				.Skip(page * size)
+				.Take(size)
+				.ToListAsync();
 
-            return users.Select(user => new ListUser
-            {
-                Id = user.Id,
-                Email = user.Email,
-                NameSurname = user.NameSurname,
-                TwoFactorEnabled = user.TwoFactorEnabled,
-                UserName = user.UserName
+			return users.Select(user => new ListUser
+			{
+				Id = user.Id,
+				Email = user.Email,
+				NameSurname = user.NameSurname,
+				TwoFactorEnabled = user.TwoFactorEnabled,
+				UserName = user.UserName
 
-            }).ToList();
-        }
+			}).ToList();
+		}
 
-        public int TotalUserCount => _userManager.Users.Count();
+
+		public int TotalUserCount => _userManager.Users.Count();
 
         public async Task AssignRoleToUser(string userId, string[] roles)
         {

@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ETicaretAPI_V2.Persistence.Migrations
 {
     [DbContext(typeof(ETicaretAPI_V2DBContext))]
-    [Migration("20231201030907_mig_9")]
-    partial class mig_9
+    [Migration("20231203205432_mig_1")]
+    partial class mig_1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -139,6 +139,24 @@ namespace ETicaretAPI_V2.Persistence.Migrations
                     b.HasIndex("ProductId");
 
                     b.ToTable("BasketItems");
+                });
+
+            modelBuilder.Entity("ETicaretAPI_V2.Domain.Entities.BestSellingProduct", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("QuantitySold")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("BestSellingProducts");
                 });
 
             modelBuilder.Entity("ETicaretAPI_V2.Domain.Entities.Category", b =>
@@ -358,6 +376,24 @@ namespace ETicaretAPI_V2.Persistence.Migrations
                         .HasDatabaseName("UserNameIndex");
 
                     b.ToTable("AspNetUsers", (string)null);
+                });
+
+            modelBuilder.Entity("ETicaretAPI_V2.Domain.Entities.LowestStockProduct", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("Stock")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("LowestStockProducts");
                 });
 
             modelBuilder.Entity("ETicaretAPI_V2.Domain.Entities.Menu", b =>

@@ -180,6 +180,43 @@ namespace ETicaretAPI_V2.Persistence.Migrations
                     b.ToTable("Categories");
                 });
 
+            modelBuilder.Entity("ETicaretAPI_V2.Domain.Entities.Comment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("UpdatedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("UserCommentContent")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("UserCommentTitle")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("UserNameSurname")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<float>("UserScore")
+                        .HasColumnType("real");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("Comments");
+                });
+
             modelBuilder.Entity("ETicaretAPI_V2.Domain.Entities.CompletedOrder", b =>
                 {
                     b.Property<Guid>("Id")
@@ -212,14 +249,10 @@ namespace ETicaretAPI_V2.Persistence.Migrations
                     b.Property<DateTime>("CreateDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("ProductId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int>("QuantitySold")
+                    b.Property<int>("SaleQuantity")
                         .HasColumnType("integer");
 
-                    b.Property<DateTime>("SaleDate")
+                    b.Property<DateTime>("SalesTime")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime>("UpdatedDate")
@@ -228,23 +261,6 @@ namespace ETicaretAPI_V2.Persistence.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("DailySales");
-                });
-
-            modelBuilder.Entity("ETicaretAPI_V2.Domain.Entities.DailySaleSold", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("sale_date")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<int>("total_quantity_sold")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("DailySaleSolds");
                 });
 
             modelBuilder.Entity("ETicaretAPI_V2.Domain.Entities.Endpoint", b =>
@@ -736,6 +752,17 @@ namespace ETicaretAPI_V2.Persistence.Migrations
                     b.Navigation("Product");
                 });
 
+            modelBuilder.Entity("ETicaretAPI_V2.Domain.Entities.Comment", b =>
+                {
+                    b.HasOne("ETicaretAPI_V2.Domain.Entities.Product", "Product")
+                        .WithMany("Comments")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+                });
+
             modelBuilder.Entity("ETicaretAPI_V2.Domain.Entities.CompletedOrder", b =>
                 {
                     b.HasOne("ETicaretAPI_V2.Domain.Entities.Order", "Order")
@@ -880,6 +907,8 @@ namespace ETicaretAPI_V2.Persistence.Migrations
             modelBuilder.Entity("ETicaretAPI_V2.Domain.Entities.Product", b =>
                 {
                     b.Navigation("BasketItems");
+
+                    b.Navigation("Comments");
                 });
 #pragma warning restore 612, 618
         }

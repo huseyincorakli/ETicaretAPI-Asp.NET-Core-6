@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ETicaretAPI_V2.Persistence.Migrations
 {
     [DbContext(typeof(ETicaretAPI_V2DBContext))]
-    [Migration("20231201174136_mig_11")]
-    partial class mig_11
+    [Migration("20231204001258_mig_3")]
+    partial class mig_3
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -141,6 +141,24 @@ namespace ETicaretAPI_V2.Persistence.Migrations
                     b.ToTable("BasketItems");
                 });
 
+            modelBuilder.Entity("ETicaretAPI_V2.Domain.Entities.BestSellingProduct", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("QuantitySold")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("BestSellingProducts");
+                });
+
             modelBuilder.Entity("ETicaretAPI_V2.Domain.Entities.Category", b =>
                 {
                     b.Property<Guid>("Id")
@@ -186,6 +204,29 @@ namespace ETicaretAPI_V2.Persistence.Migrations
                         .IsUnique();
 
                     b.ToTable("CompletedOrders");
+                });
+
+            modelBuilder.Entity("ETicaretAPI_V2.Domain.Entities.DailySale", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("SaleQuantity")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("SalesTime")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("UpdatedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("DailySales");
                 });
 
             modelBuilder.Entity("ETicaretAPI_V2.Domain.Entities.Endpoint", b =>
@@ -358,6 +399,24 @@ namespace ETicaretAPI_V2.Persistence.Migrations
                         .HasDatabaseName("UserNameIndex");
 
                     b.ToTable("AspNetUsers", (string)null);
+                });
+
+            modelBuilder.Entity("ETicaretAPI_V2.Domain.Entities.LowestStockProduct", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("Stock")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("LowestStockProducts");
                 });
 
             modelBuilder.Entity("ETicaretAPI_V2.Domain.Entities.Menu", b =>

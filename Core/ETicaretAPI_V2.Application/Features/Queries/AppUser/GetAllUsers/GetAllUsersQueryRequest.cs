@@ -6,5 +6,6 @@ namespace ETicaretAPI_V2.Application.Features.Queries.AppUser.GetAllUsers
     {
         public int Page { get; set; } = 0;
         public int Size { get; set; } = 5;
+        public string? searchName { get; set; }
     }
 }

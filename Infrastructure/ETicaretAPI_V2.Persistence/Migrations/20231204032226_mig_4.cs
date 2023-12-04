@@ -6,49 +6,46 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ETicaretAPI_V2.Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class mig_6 : Migration
+    public partial class mig_4 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Addresses",
+                name: "Comments",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    NameSurname = table.Column<string>(type: "text", nullable: false),
-                    UserId = table.Column<string>(type: "text", nullable: false),
-                    TelNumber = table.Column<string>(type: "text", nullable: false),
-                    City = table.Column<string>(type: "text", nullable: false),
-                    County = table.Column<string>(type: "text", nullable: false),
-                    AddressInfo = table.Column<string>(type: "text", nullable: false),
-                    Directions = table.Column<string>(type: "text", nullable: false),
+                    ProductId = table.Column<Guid>(type: "uuid", nullable: false),
+                    UserNameSurname = table.Column<string>(type: "text", nullable: false),
+                    UserCommentTitle = table.Column<string>(type: "text", nullable: false),
+                    UserCommentContent = table.Column<string>(type: "text", nullable: false),
+                    UserScore = table.Column<float>(type: "real", nullable: false),
                     CreateDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     UpdatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Addresses", x => x.Id);
+                    table.PrimaryKey("PK_Comments", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Addresses_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
+                        name: "FK_Comments_Products_ProductId",
+                        column: x => x.ProductId,
+                        principalTable: "Products",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Addresses_UserId",
-                table: "Addresses",
-                column: "UserId",
-                unique: true);
+                name: "IX_Comments_ProductId",
+                table: "Comments",
+                column: "ProductId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Addresses");
+                name: "Comments");
         }
     }
 }

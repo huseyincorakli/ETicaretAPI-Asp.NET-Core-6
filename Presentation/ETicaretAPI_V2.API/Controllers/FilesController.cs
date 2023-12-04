@@ -5,6 +5,7 @@ namespace ETicaretAPI_V2.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+
     public class FilesController : ControllerBase
     {
         readonly IConfiguration _configuration;
@@ -15,6 +16,7 @@ namespace ETicaretAPI_V2.API.Controllers
         }
 
         [HttpGet("[action]")]
+
         public  IActionResult GetBaseStorageUrl()
         {
             return Ok(new

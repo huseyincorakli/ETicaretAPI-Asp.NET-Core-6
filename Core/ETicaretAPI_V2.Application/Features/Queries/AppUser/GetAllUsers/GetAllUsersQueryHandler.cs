@@ -15,7 +15,7 @@ namespace ETicaretAPI_V2.Application.Features.Queries.AppUser.GetAllUsers
 
         public async Task<GetAllUsersQueryResponse> Handle(GetAllUsersQueryRequest request, CancellationToken cancellationToken)
         {
-            List<ListUser> users =  await _userService.GetAllUsers(request.Page, request.Size);
+            List<ListUser> users =  await _userService.GetAllUsers(request.Page, request.Size,request.searchName);
             int totalUsersCount =  _userService.TotalUserCount;
 
             return new()

@@ -4,6 +4,7 @@ using ETicaretAPI_V2.Application.Exceptions;
 using ETicaretAPI_V2.Application.Repositories.DailySaleRepositories;
 using ETicaretAPI_V2.Application.Repositories.ProductRepositories;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace ETicaretAPI_V2.Application.Features.Commands.Order.CreateOrder
 {
@@ -14,13 +15,18 @@ namespace ETicaretAPI_V2.Application.Features.Commands.Order.CreateOrder
         readonly IOrderHubService _orderHubService;
         readonly IProductWriteRepository _productWriteRepository;
         readonly IDailySaleWriteRepository _dailySaleWriteRepository;
-		public CreateOrderCommandHandler(IOrderService orderService, IBasketService basketService, IOrderHubService orderHubService, IProductWriteRepository productWriteRepository, IDailySaleWriteRepository dailySaleWriteRepository)
+        readonly IDailySaleReadRepository _dailySaleReadRepository;
+
+
+
+		public CreateOrderCommandHandler(IOrderService orderService, IBasketService basketService, IOrderHubService orderHubService, IProductWriteRepository productWriteRepository, IDailySaleWriteRepository dailySaleWriteRepository, IDailySaleReadRepository dailySaleReadRepository)
 		{
 			_orderService = orderService;
 			_basketService = basketService;
 			_orderHubService = orderHubService;
 			_productWriteRepository = productWriteRepository;
 			_dailySaleWriteRepository = dailySaleWriteRepository;
+			_dailySaleReadRepository = dailySaleReadRepository;
 		}
 
 		public async Task<CreateOrderCommandResponse> Handle(CreateOrderCommandRequest request, CancellationToken cancellationToken)
@@ -41,16 +47,31 @@ namespace ETicaretAPI_V2.Application.Features.Commands.Order.CreateOrder
                 {
                     data.Product.Stock = data.Product.Stock - data.Quantity;
                     data.Product.QuantitySold = data.Product.QuantitySold + data.Quantity;
-                   
-                    await _productWriteRepository.SaveAsync();
-					await _dailySaleWriteRepository.AddAsync(new()
-					{
-						ProductId =data.Product.Id.ToString(),
-                        QuantitySold=data.Quantity,
-                        SaleDate= new DateTime(2023, 11, 3, 0, 0, 0, DateTimeKind.Utc),
+					var currentDate = DateTime.UtcNow.Date;
+					var startOfDay = new DateTime(currentDate.Year, currentDate.Month, currentDate.Day, 0, 0, 0, DateTimeKind.Utc);
 
-					});
-                    await _dailySaleWriteRepository.SaveAsync();
+					var dailySale = await _dailySaleReadRepository
+						.GetAll()
+						.FirstOrDefaultAsync(d => d.SalesTime.Date == currentDate);
+                    if (dailySale==null)
+                    {
+                       await _dailySaleWriteRepository.AddAsync(new()
+                        {
+                            Id = Guid.NewGuid(),
+                            SalesTime = startOfDay,
+                            SaleQuantity = data.Quantity,
+
+                        });
+                    }
+                    else
+                    {
+                        int currentSaleQ= dailySale.SaleQuantity;
+                        dailySale.SaleQuantity=currentSaleQ+data.Quantity;
+                        await _dailySaleWriteRepository.SaveAsync();
+                    }
+
+					await _productWriteRepository.SaveAsync();
+					
 				}
             }
 

@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ETicaretAPI_V2.Persistence.Migrations
 {
     [DbContext(typeof(ETicaretAPI_V2DBContext))]
-    [Migration("20231126184407_mig_8")]
-    partial class mig_8
+    [Migration("20231204032226_mig_4")]
+    partial class mig_4
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -141,6 +141,24 @@ namespace ETicaretAPI_V2.Persistence.Migrations
                     b.ToTable("BasketItems");
                 });
 
+            modelBuilder.Entity("ETicaretAPI_V2.Domain.Entities.BestSellingProduct", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("QuantitySold")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("BestSellingProducts");
+                });
+
             modelBuilder.Entity("ETicaretAPI_V2.Domain.Entities.Category", b =>
                 {
                     b.Property<Guid>("Id")
@@ -165,6 +183,43 @@ namespace ETicaretAPI_V2.Persistence.Migrations
                     b.ToTable("Categories");
                 });
 
+            modelBuilder.Entity("ETicaretAPI_V2.Domain.Entities.Comment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("UpdatedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("UserCommentContent")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("UserCommentTitle")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("UserNameSurname")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<float>("UserScore")
+                        .HasColumnType("real");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("Comments");
+                });
+
             modelBuilder.Entity("ETicaretAPI_V2.Domain.Entities.CompletedOrder", b =>
                 {
                     b.Property<Guid>("Id")
@@ -186,6 +241,29 @@ namespace ETicaretAPI_V2.Persistence.Migrations
                         .IsUnique();
 
                     b.ToTable("CompletedOrders");
+                });
+
+            modelBuilder.Entity("ETicaretAPI_V2.Domain.Entities.DailySale", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("SaleQuantity")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("SalesTime")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("UpdatedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("DailySales");
                 });
 
             modelBuilder.Entity("ETicaretAPI_V2.Domain.Entities.Endpoint", b =>
@@ -360,6 +438,24 @@ namespace ETicaretAPI_V2.Persistence.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("ETicaretAPI_V2.Domain.Entities.LowestStockProduct", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("Stock")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("LowestStockProducts");
+                });
+
             modelBuilder.Entity("ETicaretAPI_V2.Domain.Entities.Menu", b =>
                 {
                     b.Property<Guid>("Id")
@@ -438,6 +534,9 @@ namespace ETicaretAPI_V2.Persistence.Migrations
 
                     b.Property<float>("Price")
                         .HasColumnType("real");
+
+                    b.Property<int>("QuantitySold")
+                        .HasColumnType("integer");
 
                     b.Property<string>("ShortDesciription")
                         .IsRequired()
@@ -656,6 +755,17 @@ namespace ETicaretAPI_V2.Persistence.Migrations
                     b.Navigation("Product");
                 });
 
+            modelBuilder.Entity("ETicaretAPI_V2.Domain.Entities.Comment", b =>
+                {
+                    b.HasOne("ETicaretAPI_V2.Domain.Entities.Product", "Product")
+                        .WithMany("Comments")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+                });
+
             modelBuilder.Entity("ETicaretAPI_V2.Domain.Entities.CompletedOrder", b =>
                 {
                     b.HasOne("ETicaretAPI_V2.Domain.Entities.Order", "Order")
@@ -800,6 +910,8 @@ namespace ETicaretAPI_V2.Persistence.Migrations
             modelBuilder.Entity("ETicaretAPI_V2.Domain.Entities.Product", b =>
                 {
                     b.Navigation("BasketItems");
+
+                    b.Navigation("Comments");
                 });
 #pragma warning restore 612, 618
         }

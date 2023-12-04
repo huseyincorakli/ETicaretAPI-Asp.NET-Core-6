@@ -29,11 +29,18 @@ namespace ETicaretAPI_V2.API.Filters
                 //istek hangi actiona gidiyorsa onla ilgili bilgileri getiren ActionDescriptor sınıfın ActionDescriptor propertysini conteximizden çağırıyoruz
                 //bizim controllerıza gelen istekleri yakalammız için özelleştirmemiz lazım bunun için as ile ControllerActionDescriptor sınıfı türünde olacağını belirtiyoruz
 
-                var descriptor = context.ActionDescriptor as ControllerActionDescriptor;
+				var descriptor = context.ActionDescriptor as ControllerActionDescriptor;
 
-                // MethodInfo üzerinden ilgili actionun işartlenmiş olan attributlarına erişebiliriz. 
-                // Ancak bu method bize attribute türünden geri dönüş yapacaktır ilgili attributeun propertylerine erişebilmek için as ile AuthorizeDefinitionAttribute türüne dönüştürmemiz gerekiyor
-                var attribute = descriptor.MethodInfo.GetCustomAttribute(typeof(AuthorizeDefinitionAttribute)) as AuthorizeDefinitionAttribute;
+				if (descriptor == null)
+				{
+					// ActionDescriptor null ise, uygun bir işlem yapabilirsiniz.
+					context.Result = new BadRequestResult();
+					return;
+				}
+
+				// MethodInfo üzerinden ilgili actionun işartlenmiş olan attributlarına erişebiliriz. 
+				// Ancak bu method bize attribute türünden geri dönüş yapacaktır ilgili attributeun propertylerine erişebilmek için as ile AuthorizeDefinitionAttribute türüne dönüştürmemiz gerekiyor
+				var attribute = descriptor.MethodInfo.GetCustomAttribute(typeof(AuthorizeDefinitionAttribute)) as AuthorizeDefinitionAttribute;
 
                 //üstte tanımladığımız attribute bize ilgili actionun typenı getirmediği için  HttpMethod attributeuda tanımlamamız gerekir.
                 //sonuç olarak ilgili actionun typeını da yakalamış olacağız

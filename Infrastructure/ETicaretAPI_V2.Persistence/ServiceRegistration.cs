@@ -4,6 +4,7 @@ using ETicaretAPI_V2.Application.Repositories.AddressRepositories;
 using ETicaretAPI_V2.Application.Repositories.BasketItemRepositories;
 using ETicaretAPI_V2.Application.Repositories.BasketRepositories;
 using ETicaretAPI_V2.Application.Repositories.CategoryRepositories;
+using ETicaretAPI_V2.Application.Repositories.CommentRepositories;
 using ETicaretAPI_V2.Application.Repositories.CompletedOrderRepositories;
 using ETicaretAPI_V2.Application.Repositories.CustomerRepositories;
 using ETicaretAPI_V2.Application.Repositories.DailySaleRepositories;
@@ -20,6 +21,7 @@ using ETicaretAPI_V2.Persistence.Repositories.AddressRepositories;
 using ETicaretAPI_V2.Persistence.Repositories.BasketItemRepositories;
 using ETicaretAPI_V2.Persistence.Repositories.BasketRepositories;
 using ETicaretAPI_V2.Persistence.Repositories.CategoryRepositories;
+using ETicaretAPI_V2.Persistence.Repositories.CommentRepositories;
 using ETicaretAPI_V2.Persistence.Repositories.CompletedOrderRepositories;
 using ETicaretAPI_V2.Persistence.Repositories.CustomerRepositories;
 using ETicaretAPI_V2.Persistence.Repositories.DailySaleRepositories;
@@ -83,6 +85,9 @@ namespace ETicaretAPI_V2.Persistence
 			service.AddScoped<IAddressWriteRepository, AddressWriteRepository>();
 			service.AddScoped<IDailySaleReadRepository, DailySaleReadRepository>();
 			service.AddScoped<IDailySaleWriteRepository, DailySaleWriteRepository>();
+			service.AddScoped<ICommentWriteRepository, CommentWriteRepository>();
+			service.AddScoped<ICommentReadRepository, CommentReadRepository>();
+
 
 
 

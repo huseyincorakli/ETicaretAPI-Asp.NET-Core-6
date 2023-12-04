@@ -8,15 +8,12 @@ namespace ETicaretAPI_V2.Persistence.Contexts
 {
     public class ETicaretAPI_V2DBContext : IdentityDbContext<AppUser, AppRole, string>
     {
-        //IoC DOLDURULACAK
         public ETicaretAPI_V2DBContext(DbContextOptions options) : base(options)
         {
         }
         public DbSet<Product> Products { get; set; }
-       // public DbSet<ProductTag> ProductTags { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Order> Orders { get; set; }
-       // public DbSet<Customer> Customers { get; set; }
         public DbSet<Domain.Entities.File> Files { get; set; }
         public DbSet<ProductImageFile> ProductImageFiles { get; set; }
         public DbSet<InvoiceFile> InvoiceFiles { get; set; }
@@ -26,13 +23,10 @@ namespace ETicaretAPI_V2.Persistence.Contexts
         public DbSet<Menu> Menus { get; set; }
         public DbSet<Endpoint> Endpoints { get; set; }
         public DbSet<Address> Addresses { get; set; }
-        public DbSet<DailySale> DailySales { get; set; }
-
         public DbSet<LowestStockProduct> LowestStockProducts { get; set; }
         public DbSet<BestSellingProduct> BestSellingProducts { get; set; }
-        public DbSet<DailySaleSold> DailySaleSolds { get; set; }
-
-
+        public DbSet<DailySale> DailySales { get; set; }
+        public DbSet<Comment> Comments { get; set; }
 
 		protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -57,6 +51,11 @@ namespace ETicaretAPI_V2.Persistence.Contexts
                 .HasOne(au => au.Address)
                 .WithOne(ad => ad.AppUser)
                 .HasForeignKey<Address>(ad => ad.UserId);
+
+            builder.Entity<Product>()
+                .HasMany(p => p.Comments)
+                .WithOne(c => c.Product)
+                .HasForeignKey(c => c.ProductId);
 
             base.OnModelCreating(builder);
             base.OnModelCreating(builder);

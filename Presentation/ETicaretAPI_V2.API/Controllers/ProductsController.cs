@@ -16,7 +16,6 @@ using ETicaretAPI_V2.Application.Features.Queries.Product.GetByIdProduct;
 using ETicaretAPI_V2.Application.Features.Queries.Product.GetLowStockProduct;
 using ETicaretAPI_V2.Application.Features.Queries.Product.GetProductsByCategory;
 using ETicaretAPI_V2.Application.Features.Queries.ProductImageFile.GetProductImages;
-using ETicaretAPI_V2.Application.Repositories.DailySaleRepositories;
 using ETicaretAPI_V2.Application.Repositories.ProductRepositories;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -32,16 +31,14 @@ namespace ETicaretAPI_V2.API.Controllers
 		readonly IMediator _mediator;
 		readonly IProductService _productService;
 		readonly IProductReadRepository _productReadRepository;
-		readonly IDailySaleReadRepository _dailySaleReadRepository;
-		public ProductsController(IMediator mediator, IProductService productService, IProductReadRepository productReadRepository, IDailySaleReadRepository dailySaleReadRepository)
+		public ProductsController(IMediator mediator, IProductService productService, IProductReadRepository productReadRepository)
 		{
 			_mediator = mediator;
 			_productService = productService;
 			_productReadRepository = productReadRepository;
-			_dailySaleReadRepository = dailySaleReadRepository;
 		}
 
-
+		
 
 		[HttpGet("qrCode/{productId}")]
 		public async Task<IActionResult> GetQRCodeToProduct([FromRoute] string productId)
@@ -170,12 +167,6 @@ namespace ETicaretAPI_V2.API.Controllers
 			return Ok(response);
 		}
 
-		[HttpGet("[action]")]
-		public async Task<IActionResult> GetDailySale(int year,int mounth,int day)
-		{
-			var data= await _dailySaleReadRepository.GetDailySale (new DateTime(year, day, mounth, 0, 0, 0, DateTimeKind.Utc));
-			return Ok(data);
-		}
-
+		
 	}
 }
