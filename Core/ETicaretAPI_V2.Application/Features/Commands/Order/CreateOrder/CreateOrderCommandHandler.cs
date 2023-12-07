@@ -17,7 +17,27 @@ namespace ETicaretAPI_V2.Application.Features.Commands.Order.CreateOrder
         readonly IDailySaleWriteRepository _dailySaleWriteRepository;
         readonly IDailySaleReadRepository _dailySaleReadRepository;
 
+		private async Task<DateTime> GetTurkeyCurrentTimeAsync()
+		{
+			using (HttpClient client = new HttpClient())
+			{
+				HttpResponseMessage response = await client.GetAsync("http://worldtimeapi.org/api/timezone/Europe/Istanbul");
+				response.EnsureSuccessStatusCode();
+				string responseData = await response.Content.ReadAsStringAsync();
+				dynamic json = Newtonsoft.Json.JsonConvert.DeserializeObject(responseData);
 
+				// 'datetime' alanını al ve DateTime tipine dönüştür
+				DateTime turkeyTime = json.datetime;
+
+				// Ensure that the DateTime is in UTC
+				if (turkeyTime.Kind != DateTimeKind.Utc)
+				{
+					turkeyTime = turkeyTime.ToUniversalTime();
+				}
+
+				return turkeyTime;
+			}
+		}
 
 		public CreateOrderCommandHandler(IOrderService orderService, IBasketService basketService, IOrderHubService orderHubService, IProductWriteRepository productWriteRepository, IDailySaleWriteRepository dailySaleWriteRepository, IDailySaleReadRepository dailySaleReadRepository)
 		{
@@ -47,12 +67,22 @@ namespace ETicaretAPI_V2.Application.Features.Commands.Order.CreateOrder
                 {
                     data.Product.Stock = data.Product.Stock - data.Quantity;
                     data.Product.QuantitySold = data.Product.QuantitySold + data.Quantity;
-					var currentDate = DateTime.UtcNow.Date;
-					var startOfDay = new DateTime(currentDate.Year, currentDate.Month, currentDate.Day, 0, 0, 0, DateTimeKind.Utc);
+                    DateTime currentDate;
+                    try
+                    {
+                        currentDate = await GetTurkeyCurrentTimeAsync();
+
+					}
+                    catch (Exception ex)
+                    {
+
+						throw new Exception("Turkey's current time couldn't be retrieved.", ex);
+					}
+					DateTime startOfDay = new DateTime(currentDate.Year, currentDate.Month, currentDate.Day, 0, 0, 0, DateTimeKind.Utc);
 
 					var dailySale = await _dailySaleReadRepository
 						.GetAll()
-						.FirstOrDefaultAsync(d => d.SalesTime.Date == currentDate);
+						.FirstOrDefaultAsync(d => d.SalesTime.Date == currentDate.Date);
                     if (dailySale==null)
                     {
                        await _dailySaleWriteRepository.AddAsync(new()
