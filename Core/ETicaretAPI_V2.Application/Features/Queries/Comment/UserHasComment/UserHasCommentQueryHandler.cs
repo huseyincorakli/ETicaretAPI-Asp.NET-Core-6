@@ -11,10 +11,31 @@ namespace ETicaretAPI_V2.Application.Features.Queries.Comment.UserHasComment
 		{
 			_commentService = commentService;
 		}
-		//burada kaldım
-		public Task<UserHasCommentQueryResponse> Handle(UserHasCommentQueryRequest request, CancellationToken cancellationToken)
+		public async Task<UserHasCommentQueryResponse> Handle(UserHasCommentQueryRequest request, CancellationToken cancellationToken)
 		{
-			throw new NotImplementedException();
+			if (request.UserId==null)
+			{
+				return new()
+				{
+					Comment = null,
+					isHas = false,
+				};
+			}
+		 bool response = await	_commentService.UserHasComment(request.UserId, request.ProductId);
+			if (response)
+			{
+				var data= await _commentService.UserComment(request.UserId, request.ProductId);
+				return new()
+				{
+					isHas = true,
+					Comment = data
+				};
+			}
+			else
+				return new() {
+					isHas = false,
+					Comment = null
+				};
 		}
 	}
 }

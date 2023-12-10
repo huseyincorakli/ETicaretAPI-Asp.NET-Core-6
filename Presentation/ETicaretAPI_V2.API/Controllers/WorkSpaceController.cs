@@ -1,6 +1,11 @@
 ﻿using Azure.Messaging;
+using ETicaretAPI_V2.Application.Abstraction.Services;
+using ETicaretAPI_V2.Application.Features.Commands.Campaign.CreateCampaign;
+using ETicaretAPI_V2.Application.Features.Commands.Campaign.DeleteCampaign;
+using ETicaretAPI_V2.Application.Features.Commands.Campaign.UpdateShowcase;
 using ETicaretAPI_V2.Application.Features.Commands.Comment.AddComment;
 using ETicaretAPI_V2.Application.Features.Queries.Comment.GetCommentByProductId;
+using ETicaretAPI_V2.Application.Features.Queries.Comment.UserHasComment;
 using ETicaretAPI_V2.Application.Repositories.CommentRepositories;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -21,13 +26,17 @@ namespace ETicaretAPI_V2.API.Controllers
 		readonly IMediator _mediator;
 		private readonly HttpClient _httpClient;
 		readonly IConfiguration configuration;
-		public WorkSpaceController(ICommentWriteRepository commentWriteRepository, ICommentReadRepository commentReadRepository, IMediator mediator, IConfiguration configuration, HttpClient httpClient, IHttpClientFactory httpClientFactory)
+		readonly ICommentService _commentService;
+		readonly ICampaignService _campaignService;
+		public WorkSpaceController(ICommentWriteRepository commentWriteRepository, ICommentReadRepository commentReadRepository, IMediator mediator, IConfiguration configuration, HttpClient httpClient, IHttpClientFactory httpClientFactory, ICommentService commentService, ICampaignService campaignService)
 		{
 			_commentWriteRepository = commentWriteRepository;
 			_commentReadRepository = commentReadRepository;
 			_mediator = mediator;
 			this.configuration = configuration;
 			_httpClient = httpClientFactory.CreateClient();
+			_commentService = commentService;
+			_campaignService = campaignService;
 		}
 
 
@@ -47,7 +56,32 @@ namespace ETicaretAPI_V2.API.Controllers
 			return Ok(data);
 		}
 
+		[HttpGet("[action]")]
+		public async Task<IActionResult> GetCommentsByUserId([FromQuery] UserHasCommentQueryRequest userHasCommentQueryRequest)
+		{
+			UserHasCommentQueryResponse response = await _mediator.Send(userHasCommentQueryRequest);
 
 
+			return Ok(response);
+		}
+		[HttpPost("[action]")]
+		public async Task<IActionResult> PostCampaign([FromBody] CreateCampaignCommandRequest createCampaignCommandRequest)
+		{
+			CreateCampaignCommandResponse response = await _mediator.Send(createCampaignCommandRequest);
+			return Ok(response);
+		}
+
+		[HttpDelete("[action]")]
+		public async Task<IActionResult> DeleteCampaign([FromQuery] DeleteCampaignCommandRequest deleteCampaignCommandRequest)
+		{
+			DeleteCampaignCommandResponse response = await _mediator.Send(deleteCampaignCommandRequest);
+			return Ok(response);
+		}
+		[HttpPut("[action]")]
+		public async Task<IActionResult> UpdateCampaingShowcase([FromBody] UpdateShowcaseCommandRequest updateShowcaseCommandRequest)
+		{
+			UpdateShowcaseCommandResponse response = await _mediator.Send(updateShowcaseCommandRequest);
+			return Ok(response);
+		}
 	}
 }

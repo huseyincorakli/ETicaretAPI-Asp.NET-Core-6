@@ -3,6 +3,7 @@ using ETicaretAPI_V2.Application.Abstraction.Services.Authentications;
 using ETicaretAPI_V2.Application.Repositories.AddressRepositories;
 using ETicaretAPI_V2.Application.Repositories.BasketItemRepositories;
 using ETicaretAPI_V2.Application.Repositories.BasketRepositories;
+using ETicaretAPI_V2.Application.Repositories.CampaignRepositories;
 using ETicaretAPI_V2.Application.Repositories.CategoryRepositories;
 using ETicaretAPI_V2.Application.Repositories.CommentRepositories;
 using ETicaretAPI_V2.Application.Repositories.CompletedOrderRepositories;
@@ -20,6 +21,7 @@ using ETicaretAPI_V2.Persistence.Contexts;
 using ETicaretAPI_V2.Persistence.Repositories.AddressRepositories;
 using ETicaretAPI_V2.Persistence.Repositories.BasketItemRepositories;
 using ETicaretAPI_V2.Persistence.Repositories.BasketRepositories;
+using ETicaretAPI_V2.Persistence.Repositories.CampaignRepositories;
 using ETicaretAPI_V2.Persistence.Repositories.CategoryRepositories;
 using ETicaretAPI_V2.Persistence.Repositories.CommentRepositories;
 using ETicaretAPI_V2.Persistence.Repositories.CompletedOrderRepositories;
@@ -87,7 +89,8 @@ namespace ETicaretAPI_V2.Persistence
 			service.AddScoped<IDailySaleWriteRepository, DailySaleWriteRepository>();
 			service.AddScoped<ICommentWriteRepository, CommentWriteRepository>();
 			service.AddScoped<ICommentReadRepository, CommentReadRepository>();
-
+            service.AddScoped<ICampaignReadRepository, CampaignReadRepository>();
+            service.AddScoped<ICampaignWriteRepository,CampaignWriteRepository>();
 
 
 
@@ -105,6 +108,7 @@ namespace ETicaretAPI_V2.Persistence
             service.AddScoped<IAuthorizationEndpointService, AuthorizationEndpointService>();
             service.AddScoped<IProductService, ProductService>();
 			service.AddScoped<ICommentService, CommentService>();
+            service.AddScoped<ICampaignService, CampaignService>();
 
 		}
 	}

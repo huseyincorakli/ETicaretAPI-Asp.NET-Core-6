@@ -3,5 +3,6 @@
 	public class UserHasCommentQueryResponse
 	{
 		public  bool isHas { get; set; }
+		public object Comment { get; set; }
 	}
 }

@@ -62,9 +62,30 @@ namespace ETicaretAPI_V2.Persistence.Services
 			return (data, tCount, avarageScore);
 		}
 
-		public Task<object> GetCommentByUserIdAsync(string userId)
+		public async Task<bool> UserHasComment(string userId,string productId)
 		{
-			throw new NotImplementedException();
+			var data =  _commentReadRepository.GetAll(false).Where(p => p.UserId == userId);
+			if (data==null)
+			{
+				return false;
+			}
+			else
+			{
+				var isHas = await data.Where(x => x.ProductId == Guid.Parse(productId)).ToListAsync();
+				if (isHas.Count==0)
+				{
+					return false;
+				}
+				else
+					return true;
+			}
+		}
+		
+
+		public async Task<object> UserComment(string userId,string productId)
+		{
+			var data = await _commentReadRepository.GetAll(false).Where(p => p.UserId == userId && p.ProductId==Guid.Parse(productId)).FirstAsync();
+			return data;
 		}
 	}
 }

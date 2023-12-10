@@ -3,6 +3,7 @@ using ETicaretAPI_V2.Application.CustomAttributes;
 using ETicaretAPI_V2.Application.Enums;
 using ETicaretAPI_V2.Application.Features.Commands.Comment.AddComment;
 using ETicaretAPI_V2.Application.Features.Queries.Comment.GetCommentByProductId;
+using ETicaretAPI_V2.Application.Features.Queries.Comment.UserHasComment;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -37,6 +38,14 @@ namespace ETicaretAPI_V2.API.Controllers
 		{
 			var data = await _mediator.Send(getCommentByProductIdQueryRequest);
 			return Ok(data);
+		}
+
+		[HttpGet("[action]")]
+		public async Task<IActionResult> GetUserComment([FromQuery] UserHasCommentQueryRequest userHasCommentQueryRequest)
+		{
+			UserHasCommentQueryResponse response = await _mediator.Send(userHasCommentQueryRequest);
+
+			return Ok(response);
 		}
 	}
 }

@@ -7,6 +7,7 @@ namespace ETicaretAPI_V2.Application.Abstraction.Services
 	{
 		Task<bool> CreateCommentAsync(CreateComment createComment);
 		Task<(List<Comment>, int TotalCount, float averageRating)> GetCommentByProductIdAsync(string productId, int Size, int Page);
-		Task<object> GetCommentByUserIdAsync(string userId);
+		Task<bool> UserHasComment(string userId, string productId);
+		Task<object> UserComment(string userId, string productId);
 	}
 }

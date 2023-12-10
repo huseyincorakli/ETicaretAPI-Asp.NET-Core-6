@@ -27,8 +27,9 @@ namespace ETicaretAPI_V2.Persistence.Contexts
         public DbSet<BestSellingProduct> BestSellingProducts { get; set; }
         public DbSet<DailySale> DailySales { get; set; }
         public DbSet<Comment> Comments { get; set; }
+        public DbSet<Campaign> Campaigns { get; set; }
 
-		protected override void OnModelCreating(ModelBuilder builder)
+        protected override void OnModelCreating(ModelBuilder builder)
         {
             
 
