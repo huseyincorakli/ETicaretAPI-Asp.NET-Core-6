@@ -4,6 +4,9 @@ using ETicaretAPI_V2.Application.Features.Commands.Campaign.CreateCampaign;
 using ETicaretAPI_V2.Application.Features.Commands.Campaign.DeleteCampaign;
 using ETicaretAPI_V2.Application.Features.Commands.Campaign.UpdateShowcase;
 using ETicaretAPI_V2.Application.Features.Commands.Comment.AddComment;
+using ETicaretAPI_V2.Application.Features.Queries.Campaign.GetActiveCampaign;
+using ETicaretAPI_V2.Application.Features.Queries.Campaign.GetAllCampaign;
+using ETicaretAPI_V2.Application.Features.Queries.Campaign.GetCampaignById;
 using ETicaretAPI_V2.Application.Features.Queries.Comment.GetCommentByProductId;
 using ETicaretAPI_V2.Application.Features.Queries.Comment.UserHasComment;
 using ETicaretAPI_V2.Application.Repositories.CommentRepositories;
@@ -64,24 +67,6 @@ namespace ETicaretAPI_V2.API.Controllers
 
 			return Ok(response);
 		}
-		[HttpPost("[action]")]
-		public async Task<IActionResult> PostCampaign([FromBody] CreateCampaignCommandRequest createCampaignCommandRequest)
-		{
-			CreateCampaignCommandResponse response = await _mediator.Send(createCampaignCommandRequest);
-			return Ok(response);
-		}
-
-		[HttpDelete("[action]")]
-		public async Task<IActionResult> DeleteCampaign([FromQuery] DeleteCampaignCommandRequest deleteCampaignCommandRequest)
-		{
-			DeleteCampaignCommandResponse response = await _mediator.Send(deleteCampaignCommandRequest);
-			return Ok(response);
-		}
-		[HttpPut("[action]")]
-		public async Task<IActionResult> UpdateCampaingShowcase([FromBody] UpdateShowcaseCommandRequest updateShowcaseCommandRequest)
-		{
-			UpdateShowcaseCommandResponse response = await _mediator.Send(updateShowcaseCommandRequest);
-			return Ok(response);
-		}
+		
 	}
 }

@@ -38,6 +38,35 @@ namespace ETicaretAPI_V2.Persistence.Services
 
 		}
 
+		public async Task<Campaign> GetActiveCampaign()
+		{
+			Campaign campaign = await _campaignReadRepository.GetAll().FirstOrDefaultAsync(p => p.ShowCase == true);
+			if (campaign != null)
+			{
+
+				return campaign;
+			}
+			else
+				return null;
+		}
+
+		public async Task<List<Campaign>> GetAllCampaignAsync()
+		{
+			List<Campaign> data = await _campaignReadRepository.GetAll().ToListAsync();
+			return data;
+		}
+
+		public async Task<Campaign> GetCampaignByIdAsync(string campaignId)
+		{
+			Campaign campaign = await _campaignReadRepository.GetByIdAsync(campaignId);
+			if (campaign != null)
+			{
+				return campaign;
+			}
+			else
+				return null;
+		}
+
 		public async Task<bool> RemoveCampaingAsync(string campaingId)
 		{
 			Campaign campaign = await _campaignReadRepository.GetByIdAsync(campaingId);
