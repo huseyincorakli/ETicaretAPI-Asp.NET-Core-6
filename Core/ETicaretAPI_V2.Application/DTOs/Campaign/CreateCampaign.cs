@@ -7,5 +7,7 @@
 		public string Content { get; set; }
 		public DateTime ExpiredTime { get; set; }
 		public bool Showcase { get; set; }=false;
+		public float DiscountPercentage { get; set; }
+
 	}
 }

@@ -9,5 +9,6 @@ namespace ETicaretAPI_V2.Domain.Entities
 		public string Content { get; set; }
 		public DateTime ExpiredTime { get; set; }
 		public bool ShowCase { get; set; } = false;
+		public float DiscountPercentage { get; set; }
 	}
 }

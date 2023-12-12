@@ -27,6 +27,7 @@ namespace ETicaretAPI_V2.Persistence.Services
 				ExpiredTime = createCampaign.ExpiredTime,
 				ShowCase = createCampaign.Showcase,
 				Title = createCampaign.Title,
+				DiscountPercentage=createCampaign.DiscountPercentage,
 			});
 			var succes = await _campaignWriteRepository.SaveAsync();
 			if (succes == 1)
@@ -100,6 +101,7 @@ namespace ETicaretAPI_V2.Persistence.Services
 				campaign.Code = createCampaign.Code;
 				campaign.Content = createCampaign.Content;
 				campaign.ExpiredTime = campaign.ExpiredTime;
+				campaign.DiscountPercentage = createCampaign.DiscountPercentage;
 
 				int success = await _campaignWriteRepository.SaveAsync();
 				if (success == 1)
