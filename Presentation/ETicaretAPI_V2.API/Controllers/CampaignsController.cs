@@ -22,14 +22,14 @@ namespace ETicaretAPI_V2.API.Controllers
 		}
 
 		[HttpPost("[action]")]
-		public async Task<IActionResult> PostCampaign([FromBody] CreateCampaignCommandRequest createCampaignCommandRequest)
+		public async Task<IActionResult> CreateCampaign([FromBody] CreateCampaignCommandRequest createCampaignCommandRequest)
 		{
 			CreateCampaignCommandResponse response = await _mediator.Send(createCampaignCommandRequest);
 			return Ok(response);
 		}
 
-		[HttpDelete("[action]")]
-		public async Task<IActionResult> DeleteCampaign([FromQuery] DeleteCampaignCommandRequest deleteCampaignCommandRequest)
+		[HttpDelete("[action]/{CampaignId}")]
+		public async Task<IActionResult> DeleteCampaign([FromRoute] DeleteCampaignCommandRequest deleteCampaignCommandRequest)
 		{
 			DeleteCampaignCommandResponse response = await _mediator.Send(deleteCampaignCommandRequest);
 			return Ok(response);

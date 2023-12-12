@@ -50,9 +50,10 @@ namespace ETicaretAPI_V2.Persistence.Services
 				return null;
 		}
 
-		public async Task<List<Campaign>> GetAllCampaignAsync()
+		public async Task<List<Campaign>> GetAllCampaignAsync(int size,string campaignCode)
 		{
-			List<Campaign> data = await _campaignReadRepository.GetAll().ToListAsync();
+			List<Campaign> data = await _campaignReadRepository.GetAll().Where(campaign => string.IsNullOrEmpty(campaignCode) || campaign.Code.ToLower().Contains(campaignCode.ToLower()))
+				.Take(size).ToListAsync();
 			return data;
 		}
 
@@ -72,7 +73,7 @@ namespace ETicaretAPI_V2.Persistence.Services
 			Campaign campaign = await _campaignReadRepository.GetByIdAsync(campaingId);
 			if (campaign != null)
 			{
-				 _campaignWriteRepository.Remove(campaign);
+				_campaignWriteRepository.Remove(campaign);
 				int success = await _campaignWriteRepository.SaveAsync();
 				if (success == 1)
 				{
@@ -96,9 +97,9 @@ namespace ETicaretAPI_V2.Persistence.Services
 			{
 				campaign.ShowCase = createCampaign.Showcase;
 				campaign.Title = createCampaign.Title;
-				campaign.Code= createCampaign.Code;
+				campaign.Code = createCampaign.Code;
 				campaign.Content = createCampaign.Content;
-				campaign.ExpiredTime=campaign.ExpiredTime;
+				campaign.ExpiredTime = campaign.ExpiredTime;
 
 				int success = await _campaignWriteRepository.SaveAsync();
 				if (success == 1)
@@ -110,11 +111,13 @@ namespace ETicaretAPI_V2.Persistence.Services
 			}
 		}
 
-		public async Task<bool> UpdateShowcaseAsync(string showcaseId,bool showValue)
+		public async Task<bool> UpdateShowcaseAsync(string showcaseId, bool showValue)
 		{
-			if (showValue==true)
+			if (showValue == true)
 			{
-				var datas = await _campaignReadRepository.GetAll().ToListAsync();
+				var query = _campaignReadRepository.GetAll();
+				var dataCount = query.Count();
+				var datas = await query.Take(dataCount).ToListAsync();
 				foreach (var item in datas)
 				{
 					item.ShowCase = false;
@@ -122,7 +125,7 @@ namespace ETicaretAPI_V2.Persistence.Services
 				}
 				var data = await _campaignReadRepository.GetByIdAsync(showcaseId);
 				data.ShowCase = true;
-				var response= await _campaignWriteRepository.SaveAsync();
+				var response = await _campaignWriteRepository.SaveAsync();
 				if (response == 1)
 				{
 					return true;

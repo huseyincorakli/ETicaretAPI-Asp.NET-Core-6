@@ -14,7 +14,7 @@ namespace ETicaretAPI_V2.Application.Features.Queries.Campaign.GetAllCampaign
 
 		public async Task<GetAllCampaignQueryResponse> Handle(GetAllCampaignQueryRequest request, CancellationToken cancellationToken)
 		{
-			var data = await _campaignService.GetAllCampaignAsync();
+			var data = await _campaignService.GetAllCampaignAsync(request.Size,request.CampaignCode);
 
 			if (data != null)
 			{
