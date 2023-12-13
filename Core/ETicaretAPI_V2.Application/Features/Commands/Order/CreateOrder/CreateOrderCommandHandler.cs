@@ -109,7 +109,7 @@ namespace ETicaretAPI_V2.Application.Features.Commands.Order.CreateOrder
             {
                 Address = request.Address,
                 Description = request.Description,
-                BasketId = (_basketService.GetUserActiveBasket?.Id).ToString()
+                BasketId = (_basketService.GetUserActiveBasket?.Id).ToString(),
             });
             var orderAddedMessage = request.Description + " " + request.Description +" "+" == Yeni Sipariş Geldi!";
             await _orderHubService.OrderAddedMessageAsync(orderAddedMessage);
