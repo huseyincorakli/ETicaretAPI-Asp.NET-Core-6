@@ -82,7 +82,7 @@ namespace ETicaretAPI_V2.API.Controllers
 			int totalAmount=0;
 			for (int i = 0; i < items.Length; i++)
 			{
-				totalAmount=totalAmount+ int.Parse(items[i].Amount);
+				totalAmount=totalAmount+ int.Parse(items[i].Amount.Split('.')[0]);
 			}
 			return totalAmount;
 		}

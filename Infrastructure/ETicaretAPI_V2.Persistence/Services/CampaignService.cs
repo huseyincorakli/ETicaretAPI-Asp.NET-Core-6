@@ -69,6 +69,17 @@ namespace ETicaretAPI_V2.Persistence.Services
 				return null;
 		}
 
+		public async Task<Campaign> GetCampaignByCodeAsync(string campaignCode)
+		{
+			var data =await _campaignReadRepository.GetSingleAsync(a => a.Code == campaignCode);
+			if (data != null)
+			{
+				return data;
+			}
+			else
+				return null;
+		}
+
 		public async Task<bool> RemoveCampaingAsync(string campaingId)
 		{
 			Campaign campaign = await _campaignReadRepository.GetByIdAsync(campaingId);

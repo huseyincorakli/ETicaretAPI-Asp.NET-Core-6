@@ -1,5 +1,6 @@
 ﻿using Azure.Messaging;
 using ETicaretAPI_V2.Application.Abstraction.Services;
+using ETicaretAPI_V2.Application.DTOs.Comment;
 using ETicaretAPI_V2.Application.Features.Commands.Campaign.CreateCampaign;
 using ETicaretAPI_V2.Application.Features.Commands.Campaign.DeleteCampaign;
 using ETicaretAPI_V2.Application.Features.Commands.Campaign.UpdateShowcase;
@@ -107,6 +108,74 @@ namespace ETicaretAPI_V2.API.Controllers
 			}
 			else
 				return Ok(true);
+		}
+		[HttpGet("[action]")]
+		public async Task<IActionResult> SummarizeCommentAPI([FromQuery] string productId)
+		{
+			var data = await _commentReadRepository.GetAll().Where(p => p.ProductId == Guid.Parse(productId)).ToListAsync();
+			List<SummarizeComment> comments = new();
+
+			foreach (var item in data)
+			{
+				SummarizeComment comment = new()
+				{
+					UserCommentTitle = item.UserCommentTitle,
+					UserCommentContent = item.UserCommentContent,
+					UserScore = item.UserScore
+				};
+				comments.Add(comment);
+			}
+
+			var requestData = new { comments = comments };
+			string baseUrl = ",,";
+
+			string username = ",,";
+			string password = ",,";
+
+			HttpClient client = new HttpClient();
+
+			// Step 1: Login
+			await Login(client, baseUrl, username, password);
+
+			// Step 2: Make POST request
+			var datax = await MakePostRequest(client, baseUrl, requestData);
+
+			return Ok(datax);
+		}
+
+		static async Task Login(HttpClient client, string baseUrl, string username, string password)
+		{
+			HttpResponseMessage response = await client.GetAsync($"{baseUrl}/login?username={username}&password={password}");
+
+			if (response.IsSuccessStatusCode)
+			{
+				Console.WriteLine("Login successful");
+			}
+			else
+			{
+				Console.WriteLine($"Login failed. Status code: {response.StatusCode}");
+			}
+		}
+
+		static async Task<string> MakePostRequest(HttpClient client, string baseUrl, object requestData)
+		{
+			var requestBody = requestData;
+
+			string requestBodyJson = Newtonsoft.Json.JsonConvert.SerializeObject(requestBody);
+
+			var content = new StringContent(requestBodyJson, Encoding.UTF8, "application/json");
+
+			HttpResponseMessage response = await client.PostAsync($"{baseUrl}/", content);
+
+			if (response.IsSuccessStatusCode)
+			{
+				string responseContent = await response.Content.ReadAsStringAsync();
+				return responseContent;
+			}
+			else
+			{
+				return null;
+			}
 		}
 	}
 }

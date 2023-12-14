@@ -23,14 +23,15 @@ namespace ETicaretAPI_V2.Application.Features.Queries.Basket.GetBasketItems
 
 			if (request.CampaignCode!=null && request.UserId!=null)
             {
-				var data =  await _campaignService.GetAllCampaignAsync(1,request.CampaignCode);
-				CC.Campaign campaign = data[0];
+				CC.Campaign campaign = await _campaignService.GetCampaignByCodeAsync(request.CampaignCode);
 				
 				bool checkUsage=  await  CheckUsage(request.UserId, (campaign.Id).ToString());
 				if (!checkUsage)
 				{
-					if (campaign != null)
+					bool expiredTime = await CheckDate((campaign.Id).ToString());
+					if (campaign != null && expiredTime )
 					{
+						
 						discount = campaign.DiscountPercentage;
 					}
 				}
@@ -79,6 +80,24 @@ namespace ETicaretAPI_V2.Application.Features.Queries.Basket.GetBasketItems
 			else
 				return true;
 		}
+
+		private async Task<bool> CheckDate(string campaigId)
+		{
+			CC.Campaign campaign = await _campaignService.GetCampaignByIdAsync(campaigId);
+
+			if (campaign != null && campaign.ExpiredTime!=null)
+			{
+				DateTime now = DateTime.UtcNow;
+
+				if (campaign.ExpiredTime < now)
+				{
+					return false;
+				}
+			}
+
+			return true;
+		}
+
 	}
 
 }
