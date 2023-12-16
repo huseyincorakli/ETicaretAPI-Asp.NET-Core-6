@@ -17,6 +17,7 @@ using ETicaretAPI_V2.Application.Repositories.MenuRepositories;
 using ETicaretAPI_V2.Application.Repositories.OrderRepositories;
 using ETicaretAPI_V2.Application.Repositories.ProductImageFileRepositories;
 using ETicaretAPI_V2.Application.Repositories.ProductRepositories;
+using ETicaretAPI_V2.Application.Repositories.ShippingCompanyRepositories;
 using ETicaretAPI_V2.Domain.Entities.Identity;
 using ETicaretAPI_V2.Persistence.Contexts;
 using ETicaretAPI_V2.Persistence.Repositories.AddressRepositories;
@@ -36,7 +37,7 @@ using ETicaretAPI_V2.Persistence.Repositories.MenuRepositories;
 using ETicaretAPI_V2.Persistence.Repositories.OrderRepositories;
 using ETicaretAPI_V2.Persistence.Repositories.ProductImageFileRepositories;
 using ETicaretAPI_V2.Persistence.Repositories.ProductRepositores;
-
+using ETicaretAPI_V2.Persistence.Repositories.ShippingCompanyRepositories;
 using ETicaretAPI_V2.Persistence.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -95,7 +96,8 @@ namespace ETicaretAPI_V2.Persistence
             service.AddScoped<ICampaignWriteRepository,CampaignWriteRepository>();
             service.AddScoped<ICampaignUsageReadRepository, CampaignUsageReadRepository>();
             service.AddScoped<ICampaignUsageWriteRepository, CampaignUsageWriteRepository>();
-
+            service.AddScoped<IShippingCompanyReadRepository, ShippingCompanyReadRepository>();
+            service.AddScoped<IShippingCompanyWriteRepository, ShippingCompanyWriteRepository>();
 
 
 
@@ -113,6 +115,7 @@ namespace ETicaretAPI_V2.Persistence
             service.AddScoped<IProductService, ProductService>();
 			service.AddScoped<ICommentService, CommentService>();
             service.AddScoped<ICampaignService, CampaignService>();
+            service.AddScoped<IShippingCompanyService, ShippingCompanyService>();
 
 		}
 	}

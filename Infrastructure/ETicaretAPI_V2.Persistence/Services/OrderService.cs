@@ -23,7 +23,51 @@ namespace ETicaretAPI_V2.Persistence.Services
         }
 
 
-        public async Task CreateOrderAsync(CreateOrder createOrder)
+		public async Task<ListOrder> GetOrderByUserId(int size,string userId)
+		{
+			var query = _orderReadRepository.Table.Include(x => x.Basket)
+				   .ThenInclude(c => c.User)
+				   .Include(a => a.Basket)
+				   .ThenInclude(b => b.BasketItems)
+				   .ThenInclude(d => d.Product);
+
+			var data = await query.Where(a=>a.Basket.UserId==userId).ToListAsync();
+
+			var data2 = from order in data
+						join completedOrder in _completedOrderReadRepository.Table
+						on order.Id equals completedOrder.OrderId into co
+						from _co in co.DefaultIfEmpty()
+						select new
+						{
+							Id = order.Id,
+							CreatedDate = order.CreateDate,
+							OrderCode = order.OrderCode,
+							Basket = order.Basket,
+							Completed = _co != null ? true : false,
+							
+						};
+			
+			var filteredData = data2;
+			var sortedData = filteredData.OrderByDescending(a => a.CreatedDate).ToList().Take(size);
+			
+			return new ListOrder
+			{
+				TotalOrderCount = filteredData.Count(),
+				Orders = sortedData.Select(o => new
+				{
+					Id = o.Id,
+					CreatedDate = o.CreatedDate,
+					OrderCode = o.OrderCode,
+					TotalPrice = o.Basket.BasketItems.Sum(bi => bi.Quantity * bi.Product.Price),
+					UserName = o.Basket.User.NameSurname,
+					o.Completed,
+					
+				}).OrderByDescending(o => o.CreatedDate).ToList()
+			};
+		}
+
+
+		public async Task CreateOrderAsync(CreateOrder createOrder)
         {
             var orderCode = (new Random().NextDouble() * 10000).ToString();
             orderCode = orderCode.Substring(orderCode.IndexOf(",") + 1, orderCode.Length - orderCode.IndexOf(",") - 1);

@@ -12,6 +12,7 @@ using ETicaretAPI_V2.Application.Features.Queries.Comment.GetCommentByProductId;
 using ETicaretAPI_V2.Application.Features.Queries.Comment.UserHasComment;
 using ETicaretAPI_V2.Application.Repositories.CampaignUsageRepositories;
 using ETicaretAPI_V2.Application.Repositories.CommentRepositories;
+using ETicaretAPI_V2.Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -30,13 +31,16 @@ namespace ETicaretAPI_V2.API.Controllers
 		readonly ICommentReadRepository _commentReadRepository;
 		readonly ICampaignUsageWriteRepository _campaignUsageWriteRepository;
 		readonly ICampaignUsageReadRepository _campaignUsageReadRepository;
+		readonly IOrderService _orderService;
+		readonly IShippingCompanyService _shippingCompanyService;
+
 
 		readonly IMediator _mediator;
 		private readonly HttpClient _httpClient;
 		readonly IConfiguration configuration;
 		readonly ICommentService _commentService;
 		readonly ICampaignService _campaignService;
-		public WorkSpaceController(ICommentWriteRepository commentWriteRepository, ICommentReadRepository commentReadRepository, IMediator mediator, IConfiguration configuration, HttpClient httpClient, IHttpClientFactory httpClientFactory, ICommentService commentService, ICampaignService campaignService, ICampaignUsageReadRepository campaignUsageReadRepository, ICampaignUsageWriteRepository campaignUsageWriteRepository)
+		public WorkSpaceController(ICommentWriteRepository commentWriteRepository, ICommentReadRepository commentReadRepository, IMediator mediator, IConfiguration configuration, HttpClient httpClient, IHttpClientFactory httpClientFactory, ICommentService commentService, ICampaignService campaignService, ICampaignUsageReadRepository campaignUsageReadRepository, ICampaignUsageWriteRepository campaignUsageWriteRepository, IOrderService orderService, IShippingCompanyService shippingCompanyService)
 		{
 			_commentWriteRepository = commentWriteRepository;
 			_commentReadRepository = commentReadRepository;
@@ -47,6 +51,8 @@ namespace ETicaretAPI_V2.API.Controllers
 			_campaignService = campaignService;
 			_campaignUsageReadRepository = campaignUsageReadRepository;
 			_campaignUsageWriteRepository = campaignUsageWriteRepository;
+			_orderService = orderService;
+			_shippingCompanyService = shippingCompanyService;
 		}
 
 
@@ -109,73 +115,33 @@ namespace ETicaretAPI_V2.API.Controllers
 			else
 				return Ok(true);
 		}
+
 		[HttpGet("[action]")]
-		public async Task<IActionResult> SummarizeCommentAPI([FromQuery] string productId)
+
+		public async Task<IActionResult> GetOrdersByUserId([FromQuery]string userId,int size)
 		{
-			var data = await _commentReadRepository.GetAll().Where(p => p.ProductId == Guid.Parse(productId)).ToListAsync();
-			List<SummarizeComment> comments = new();
-
-			foreach (var item in data)
-			{
-				SummarizeComment comment = new()
-				{
-					UserCommentTitle = item.UserCommentTitle,
-					UserCommentContent = item.UserCommentContent,
-					UserScore = item.UserScore
-				};
-				comments.Add(comment);
-			}
-
-			var requestData = new { comments = comments };
-			string baseUrl = ",,";
-
-			string username = ",,";
-			string password = ",,";
-
-			HttpClient client = new HttpClient();
-
-			// Step 1: Login
-			await Login(client, baseUrl, username, password);
-
-			// Step 2: Make POST request
-			var datax = await MakePostRequest(client, baseUrl, requestData);
-
-			return Ok(datax);
+			var data = await _orderService.GetOrderByUserId(size, userId);
+			return Ok(data);
 		}
 
-		static async Task Login(HttpClient client, string baseUrl, string username, string password)
+		[HttpPost("[action]")]
+		public async Task<IActionResult> Shippign([FromBody] ShipCompany shippingCompany )
 		{
-			HttpResponseMessage response = await client.GetAsync($"{baseUrl}/login?username={username}&password={password}");
-
-			if (response.IsSuccessStatusCode)
-			{
-				Console.WriteLine("Login successful");
-			}
-			else
-			{
-				Console.WriteLine($"Login failed. Status code: {response.StatusCode}");
-			}
+	     var data=	 await _shippingCompanyService.AddCompanyAsync(new()
+		 {
+			 CompanyName=shippingCompany.CompanyName,
+			 CompanyUrl=shippingCompany.CompanyUrl,
+			 CreateDate=DateTime.UtcNow,
+			 Id=Guid.NewGuid(),
+		 });
+			return Ok(data);
 		}
 
-		static async Task<string> MakePostRequest(HttpClient client, string baseUrl, object requestData)
+		public class ShipCompany
 		{
-			var requestBody = requestData;
+			public string CompanyName { get; set; }
+			public string CompanyUrl { get; set; }
 
-			string requestBodyJson = Newtonsoft.Json.JsonConvert.SerializeObject(requestBody);
-
-			var content = new StringContent(requestBodyJson, Encoding.UTF8, "application/json");
-
-			HttpResponseMessage response = await client.PostAsync($"{baseUrl}/", content);
-
-			if (response.IsSuccessStatusCode)
-			{
-				string responseContent = await response.Content.ReadAsStringAsync();
-				return responseContent;
-			}
-			else
-			{
-				return null;
-			}
 		}
 	}
 }

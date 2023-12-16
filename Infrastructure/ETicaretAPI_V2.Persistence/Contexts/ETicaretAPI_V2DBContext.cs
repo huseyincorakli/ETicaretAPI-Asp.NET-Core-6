@@ -30,6 +30,7 @@ namespace ETicaretAPI_V2.Persistence.Contexts
 		public DbSet<Comment> Comments { get; set; }
 		public DbSet<Campaign> Campaigns { get; set; }
 		public DbSet<CampaignUsage> CampaignUsages { get; set; }
+		public DbSet<ShippingCompany> ShippingCompanies { get; set; }
 		protected override void OnModelCreating(ModelBuilder builder)
 		{
 
@@ -77,6 +78,10 @@ namespace ETicaretAPI_V2.Persistence.Contexts
 				.WithMany(c => c.CampaignUsages)
 				.HasForeignKey(cu => cu.CampaignId);
 
+			builder.Entity<Order>()
+				.HasOne(o => o.ShippingCompany)
+				.WithMany(a => a.Orders)
+				.HasForeignKey(cx => cx.ShippingCompanyId);
 
 			base.OnModelCreating(builder);
 			base.OnModelCreating(builder);

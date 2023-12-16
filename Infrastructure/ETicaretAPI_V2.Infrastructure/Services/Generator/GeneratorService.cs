@@ -1,5 +1,6 @@
 ﻿using ETicaretAPI_V2.Application.Abstraction.Services;
 using ETicaretAPI_V2.Application.DTOs.ProductDesciription;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using System.Net.Http.Headers;
 
@@ -7,7 +8,11 @@ namespace ETicaretAPI_V2.Infrastructure.Services.Generator
 {
 	public class GeneratorService : IGeneratorService
 	{
-
+		readonly IConfiguration _configuration;
+		public GeneratorService(IConfiguration configuration)
+		{
+			_configuration = configuration;
+		}
 
 		public async Task<string> ProductDescriptionGenerator(string brand, string category, string productDesciription, string[] keywords, string name)
 		{
@@ -38,10 +43,10 @@ namespace ETicaretAPI_V2.Infrastructure.Services.Generator
 			var request = new HttpRequestMessage
 			{
 				Method = HttpMethod.Post,
-				RequestUri = new Uri("https://api.textcortex.com/v1/texts/products/descriptions"),
+				RequestUri = new Uri($" {_configuration["SecretKeys:TEXTCORTEXT_URL"]}"),
 				Headers =
 					{
-						{ "Authorization", "Bearer gAAAAABlNQDefyk0uhbo0KPsZnltVCMLC_8CpD6QKrZkh3alaFi8FTd3QwXYGRfaypbQ39YhxSmrMrOPL8zzwsztZnWCFdUogT1dZJUYCpBGsGbhxKVyFgf9xgqnYlAbPNiKcZvPzrdW" },
+						{ "Authorization", $"Bearer {_configuration["SecretKeys:TEXTCORTEXT_SK"]} " },
 					},
 				Content = content
 			};

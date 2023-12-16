@@ -1,13 +1,16 @@
 ﻿using ETicaretAPI_V2.Application.Consts;
 using ETicaretAPI_V2.Application.CustomAttributes;
+using ETicaretAPI_V2.Application.DTOs.Comment;
 using ETicaretAPI_V2.Application.Enums;
 using ETicaretAPI_V2.Application.Features.Commands.Comment.AddComment;
+using ETicaretAPI_V2.Application.Features.Commands.Comment.SummarizeComment;
 using ETicaretAPI_V2.Application.Features.Queries.Comment.GetCommentByProductId;
 using ETicaretAPI_V2.Application.Features.Queries.Comment.UserHasComment;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Text;
 
 namespace ETicaretAPI_V2.API.Controllers
 {
@@ -47,5 +50,14 @@ namespace ETicaretAPI_V2.API.Controllers
 
 			return Ok(response);
 		}
+
+		[HttpGet("[action]")]
+		public async Task<IActionResult> SummarizeCommentAPI([FromQuery] SummarizeCommentCommandRequest summarizeCommentCommandRequest)
+		{
+			 var data=  await _mediator.Send(summarizeCommentCommandRequest);
+			return Ok(data);
+		}
+
+		
 	}
 }
