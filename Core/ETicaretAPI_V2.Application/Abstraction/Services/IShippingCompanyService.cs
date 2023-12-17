@@ -8,6 +8,7 @@ namespace ETicaretAPI_V2.Application.Abstraction.Services
 		Task<bool> RemoveCompanyAsync(string companyId);
 		Task<List<ShippingCompany>> GetAll();
 		Task<ShippingCompany> GetCompanyByIdAsync(string companyId);
+		Task<bool> UpdateCompanyAsync(ShippingCompany shippingCompany,string shippingCompanyId);
 		
 
 	}

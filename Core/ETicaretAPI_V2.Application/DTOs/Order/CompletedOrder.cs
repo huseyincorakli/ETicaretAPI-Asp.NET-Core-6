@@ -7,5 +7,7 @@
         public string Username { get; set; }
         public string UserSurname { get; set; }
         public string Email { get; set; }
+        public string CargoTrackingCode { get; set; }
+        public string ShippingCompanyId { get; set; }
     }
 }

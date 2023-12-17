@@ -6,5 +6,8 @@ namespace ETicaretAPI_V2.Domain.Entities
     {
         public Guid OrderId { get; set; }
         public Order Order { get; set; }
-    }
+		public Guid? ShippingCompanyId { get; set; }
+		public string? CargoTrackingCode { get; set; }
+		public ShippingCompany? ShippingCompany { get; set; }
+	}
 }

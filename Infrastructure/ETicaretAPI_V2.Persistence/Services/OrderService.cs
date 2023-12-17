@@ -206,7 +206,7 @@ namespace ETicaretAPI_V2.Persistence.Services
 
         }
 
-        public async Task<(bool, CompletedOrderDTO)> CompleteOrderAsync(string id)
+        public async Task<(bool, CompletedOrderDTO)> CompleteOrderAsync(string id,string trackCode,string companyId)
         {
             Order? order = await _orderReadRepository.Table
                 .Include(o => o.Basket)
@@ -217,7 +217,9 @@ namespace ETicaretAPI_V2.Persistence.Services
                 await _completedOrderWriteRepository.AddAsync(new CompletedOrder()
                 {
                     OrderId = Guid.Parse(id),
-                });
+					CargoTrackingCode = trackCode,
+					ShippingCompanyId = Guid.Parse(companyId),
+				});
                 return (await _completedOrderWriteRepository.SaveAsync() > 0, new()
                 {
                     OrderCode = order.OrderCode,
@@ -225,6 +227,7 @@ namespace ETicaretAPI_V2.Persistence.Services
                     Username = order.Basket.User.UserName,
                     UserSurname = order.Basket.User.NameSurname,
                     Email = order.Basket.User.Email,
+					
                 });
             }
             return (false, null);

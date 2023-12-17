@@ -69,10 +69,10 @@ namespace ETicaretAPI_V2.Infrastructure.Services.Mail
             await SendMailAsync(to, "Şifre Yenileme Talebi", mailBody);
         }
 
-        public async Task SendCompletedOrderMailAsync(string to, string orderCode, DateTime orderDate, string userName, string userSurname)
+        public async Task SendCompletedOrderMailAsync(string to, string orderCode, DateTime orderDate, string userName, string userSurname, string trackCode, string companyName)
         {
             string mail = $"Sayın {userSurname.ToUpper()}-[{userName}],<br>" +
-                $"{orderDate} tarihli , {orderCode} sipariş koduna sahip siparişiniz kargo firmasına teslim edilmiştir.<br>" +
+                $"{orderDate} tarihli , {orderCode} sipariş koduna sahip siparişiniz {companyName} adlı kargo firmasına teslim edilmiştir. Kargo Takip Numaranız : {trackCode}.<br>" +
                 $"Bizi tercih ettiğiniz için teşekkür ederiz.";
             await SendMailAsync(to, $"{orderCode} Sipariş Numaralı Siparişiniz Tamamlandı", mail);
         }

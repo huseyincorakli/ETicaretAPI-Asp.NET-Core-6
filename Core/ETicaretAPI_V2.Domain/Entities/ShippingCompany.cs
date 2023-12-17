@@ -6,6 +6,6 @@ namespace ETicaretAPI_V2.Domain.Entities
 	{
 		public string  CompanyName { get; set; }
 		public string CompanyUrl { get; set; }
-		public ICollection<Order>? Orders { get; set; }
+		public ICollection<CompletedOrder>? CompletedOrders { get; set; }
 	}
 }

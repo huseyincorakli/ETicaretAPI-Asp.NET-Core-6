@@ -15,7 +15,7 @@ namespace ETicaretAPI_V2.API.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]
-	[Authorize(AuthenticationSchemes ="Admin")]
+	//[Authorize(AuthenticationSchemes ="Admin")]
 	public class OrdersController : ControllerBase
 	{
 		readonly IMediator _mediator;
@@ -62,9 +62,9 @@ namespace ETicaretAPI_V2.API.Controllers
 			return Ok(response);
 		}
 
-		[HttpGet("complete-order/{Id}")]
-		[AuthorizeDefinition(Menu = AuthorizeDefinitionConstants.Orders, ActionType = ActionType.Updating, Definition = "Complete Order")]
-		public async Task<IActionResult> CompleteOrder([FromRoute] CompleteOrderCommandRequest completeOrderCommandRequest)
+		[HttpPost("[action]")]
+		//[AuthorizeDefinition(Menu = AuthorizeDefinitionConstants.Orders, ActionType = ActionType.Updating, Definition = "Complete Order")]
+		public async Task<IActionResult> CompleteOrder([FromBody] CompleteOrderCommandRequest completeOrderCommandRequest)
 		{
 			CompleteOrderCommandResponse response = await _mediator.Send(completeOrderCommandRequest);
 			return Ok(response);

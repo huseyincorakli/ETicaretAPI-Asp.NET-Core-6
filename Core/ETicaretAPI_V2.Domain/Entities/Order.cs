@@ -10,9 +10,6 @@ namespace ETicaretAPI_V2.Domain.Entities
         public Basket Basket { get; set; }
         public string OrderCode { get; set; }
         public CompletedOrder CompletedOrder { get; set; }
-		public Guid? ShippingCompanyId { get; set; }
-        public string? CargoTrackingCode { get; set; }
-        public ShippingCompany? ShippingCompany { get; set; }
 
     }
 }

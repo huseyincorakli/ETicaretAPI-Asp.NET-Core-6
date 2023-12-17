@@ -78,9 +78,9 @@ namespace ETicaretAPI_V2.Persistence.Contexts
 				.WithMany(c => c.CampaignUsages)
 				.HasForeignKey(cu => cu.CampaignId);
 
-			builder.Entity<Order>()
+			builder.Entity<CompletedOrder>()
 				.HasOne(o => o.ShippingCompany)
-				.WithMany(a => a.Orders)
+				.WithMany(a => a.CompletedOrders)
 				.HasForeignKey(cx => cx.ShippingCompanyId);
 
 			base.OnModelCreating(builder);

@@ -51,5 +51,20 @@ namespace ETicaretAPI_V2.Persistence.Services
 			else
 				return false;
 		}
+
+		public async Task<bool> UpdateCompanyAsync(ShippingCompany shippingCompany, string shippingCompanyId)
+		{
+			ShippingCompany company = 	 await _shippingCompanyReadRepository.GetByIdAsync(shippingCompanyId);
+			company.CompanyName = shippingCompany != null ? shippingCompany.CompanyName : company.CompanyName;
+			company.CompanyUrl = shippingCompany != null ? shippingCompany.CompanyUrl : company.CompanyUrl;
+			company.UpdatedDate= DateTime.UtcNow;
+			var data=  await _shippingCompanyWriteRepository.SaveAsync();
+			if (data==1)
+			{
+				return true;
+			}
+			else
+				return false;
+		}
 	}
 }
