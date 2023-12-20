@@ -197,6 +197,7 @@ namespace ETicaretAPI_V2.Persistence.Services
                     bi.Product.Price,
                     bi.Quantity
                 }),
+				
                 Address = data2.Address,
                 CreatedDate = data2.CreateDate,
                 Description = data2.Description,

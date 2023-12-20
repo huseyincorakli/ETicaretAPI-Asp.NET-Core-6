@@ -1,4 +1,5 @@
-﻿using ETicaretAPI_V2.Application.Consts;
+﻿using ETicaretAPI_V2.Application.Abstraction.Services;
+using ETicaretAPI_V2.Application.Consts;
 using ETicaretAPI_V2.Application.CustomAttributes;
 using ETicaretAPI_V2.Application.Enums;
 using ETicaretAPI_V2.Application.Features.Commands.Order.CompleteOrder;
@@ -19,12 +20,13 @@ namespace ETicaretAPI_V2.API.Controllers
 	public class OrdersController : ControllerBase
 	{
 		readonly IMediator _mediator;
+		readonly IOrderService _orderService;
 
 
-
-		public OrdersController(IMediator mediator)
+		public OrdersController(IMediator mediator, IOrderService orderService)
 		{
 			_mediator = mediator;
+			_orderService = orderService;
 		}
 
 		[HttpGet("[action]")]
@@ -77,6 +79,13 @@ namespace ETicaretAPI_V2.API.Controllers
 		{
 			GetDailySaleQueryResponse response = await _mediator.Send(getDailySaleQueryRequest);
 			return Ok(response);
+		}
+
+		[HttpGet("[action]")]
+		public async Task<IActionResult> GetOrdersByUserId([FromQuery] string userId, int size)
+		{
+			var data = await _orderService.GetOrderByUserId(size, userId);
+			return Ok(data);
 		}
 	}
 }

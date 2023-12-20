@@ -15,6 +15,7 @@ namespace ETicaretAPI_V2.Application.Features.Queries.Order.GetOrderById
         public async Task<GetOrderByIdQueryResponse> Handle(GetOrderByIdQueryRequest request, CancellationToken cancellationToken)
         {
             var data = await _orderService.GetOrderByIdAsync(request.Id);
+    
 
             return new()
             {
