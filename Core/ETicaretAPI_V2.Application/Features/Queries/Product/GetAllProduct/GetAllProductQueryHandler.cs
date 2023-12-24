@@ -22,9 +22,9 @@ namespace ETicaretAPI_V2.Application.Features.Queries.Product.GetAllProduct
             _logger.LogInformation("Tüm PRODUCTLAR LİSTLENEDİ!");
             int size = request.Size;
             int skip = request.Size * request.Page;
-            if (!string.IsNullOrEmpty(request.ProductName))
+            if (!string.IsNullOrEmpty(request.ProductName) || request.FirstPriceValue!=null || request.SecondPriceValue!=null ||(request.FirstPriceValue!=null && request.SecondPriceValue!=null) || !string.IsNullOrEmpty(request.CategoryId) )
             {
-                size = 300;
+                size = 10000;
                 skip = 0;
             }
             var totalProductCount = await _productReadRepository.GetAll(false).CountAsync();
@@ -43,6 +43,7 @@ namespace ETicaretAPI_V2.Application.Features.Queries.Product.GetAllProduct
                     p.UpdatedDate,
                     p.ProductImageFiles,
                     p.Category.CategoryName,
+                    p.CategoryId,
                     p.Category.IsActive,
                     p.Brand,
                     p.Desciription,
@@ -55,7 +56,23 @@ namespace ETicaretAPI_V2.Application.Features.Queries.Product.GetAllProduct
 				products = products.Where(p => 
                 p.Name.Contains(request.ProductName, StringComparison.OrdinalIgnoreCase) || p.Brand.Contains(request.ProductName, StringComparison.OrdinalIgnoreCase)).ToList();
 			}
+			if (request.FirstPriceValue != null && request.SecondPriceValue != null)
+			{
+				products = products.Where(p => p.Price >= request.FirstPriceValue && p.Price <= request.SecondPriceValue).ToList();
+			}
+			else if (request.FirstPriceValue != null)
+			{
+				products = products.Where(p => p.Price >= request.FirstPriceValue).ToList();
+			}
+			else if (request.SecondPriceValue != null)
+			{
+				products = products.Where(p => p.Price <= request.SecondPriceValue).ToList();
+			}
 
+			if (!string.IsNullOrEmpty(request.CategoryId))
+			{
+				products = products.Where(p => p.CategoryId == Guid.Parse(request.CategoryId)).ToList();
+			}
 
 			var response = new GetAllProductQueryResponse
             {
