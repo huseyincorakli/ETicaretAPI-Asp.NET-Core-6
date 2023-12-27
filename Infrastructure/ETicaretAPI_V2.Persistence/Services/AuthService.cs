@@ -95,7 +95,8 @@ namespace ETicaretAPI_V2.Persistence.Services
                 throw new NotFoundUserException("Hatalı giriş bilgileri!");
             }
             SignInResult result = await _signInManager.CheckPasswordSignInAsync(user, password, false);
-            if (result.Succeeded)
+			
+			if (result.Succeeded)
             {
                 Token token = _tokenHandler.CreateAccessToken(accessTokenLifeTime, user);
                 

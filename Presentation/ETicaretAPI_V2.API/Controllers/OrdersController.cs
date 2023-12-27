@@ -56,7 +56,7 @@ namespace ETicaretAPI_V2.API.Controllers
 		}
 
 		[HttpGet("{Id}")]
-		[AuthorizeDefinition(Menu = AuthorizeDefinitionConstants.Orders, ActionType = ActionType.Writing, Definition = "Get Order By Id")]
+		[AuthorizeDefinition(Menu = AuthorizeDefinitionConstants.Orders, ActionType = ActionType.Reading, Definition = "Get Order By Id")]
 		public async Task<IActionResult> GetOrderById([FromRoute] GetOrderByIdQueryRequest getOrderByIdQueryRequest)
 		{
 			GetOrderByIdQueryResponse response = await _mediator.Send(getOrderByIdQueryRequest);

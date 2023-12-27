@@ -23,6 +23,7 @@ namespace ETicaretAPI_V2.Application.Features.Commands.AppUser.CreateUser
                 PasswordConfirm = request.PasswordConfirm,
                 Username = request.Username,
             } );
+            
             return new CreateUserCommandResponse()
             {
                 Message = response.Message,

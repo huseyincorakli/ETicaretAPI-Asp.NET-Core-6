@@ -4,6 +4,8 @@ using ETicaretAPI_V2.Application.CustomAttributes;
 using ETicaretAPI_V2.Application.Enums;
 using ETicaretAPI_V2.Application.Features.Commands.Product.CreateProduct;
 using ETicaretAPI_V2.Application.Features.Commands.Product.CreateProductDescription;
+using ETicaretAPI_V2.Application.Features.Commands.Product.CreateSellingReport;
+using ETicaretAPI_V2.Application.Features.Commands.Product.CreateStockReport;
 using ETicaretAPI_V2.Application.Features.Commands.Product.RemoveProduct;
 using ETicaretAPI_V2.Application.Features.Commands.Product.UpdateProduct;
 using ETicaretAPI_V2.Application.Features.Commands.Product.UpdateProductStockFromQr;
@@ -41,12 +43,16 @@ namespace ETicaretAPI_V2.API.Controllers
 		
 
 		[HttpGet("qrCode/{productId}")]
+		[Authorize(AuthenticationSchemes = "Admin")]
+		[AuthorizeDefinition(Menu = AuthorizeDefinitionConstants.Products, ActionType = ActionType.Reading, Definition = "Get QRCode To Product")]
 		public async Task<IActionResult> GetQRCodeToProduct([FromRoute] string productId)
 		{
 			var data = await _productService.QRCodeToProductAsync(productId);
 			return File(data, "image/png");
 		}
 		[HttpPut("qrCode")]
+		[Authorize(AuthenticationSchemes = "Admin")]
+		[AuthorizeDefinition(Menu = AuthorizeDefinitionConstants.Products, ActionType = ActionType.Updating, Definition = "Update Product Stock From Qr")]
 		public async Task<IActionResult> UpdateProductStockFromQr(UpdateProductStockFromQrCommandRequest updateProductStockFromQrCommandRequest)
 		{
 			UpdateProductStockFromQrCommandResponse response = await _mediator.Send(updateProductStockFromQrCommandRequest);
@@ -71,8 +77,8 @@ namespace ETicaretAPI_V2.API.Controllers
 
 
 		[HttpPost]
-		//[Authorize(AuthenticationSchemes = "Admin")]
-		//[AuthorizeDefinition(Menu = AuthorizeDefinitionConstants.Products, ActionType = ActionType.Writing, Definition = "Create Product")]
+		[Authorize(AuthenticationSchemes = "Admin")]
+		[AuthorizeDefinition(Menu = AuthorizeDefinitionConstants.Products, ActionType = ActionType.Writing, Definition = "Create Product")]
 		public async Task<IActionResult> Post(CreateProductCommandRequest createProductCommandRequest)
 		{
 			CreateProductCommandResponse response = await _mediator.Send(createProductCommandRequest);
@@ -81,6 +87,8 @@ namespace ETicaretAPI_V2.API.Controllers
 
 
 		[HttpPost("[action]")]
+		[Authorize(AuthenticationSchemes = "Admin")]
+		[AuthorizeDefinition(Menu = AuthorizeDefinitionConstants.Products, ActionType = ActionType.Writing, Definition = "Create Product Description")]
 		public async Task<IActionResult> CreateProductDescription(CreateProductDescriptionCommandRequest createProductDescriptionCommandRequest)
 		{
 			CreateProductDescriptionCommandResponse response = await _mediator.Send(createProductDescriptionCommandRequest);
@@ -154,6 +162,8 @@ namespace ETicaretAPI_V2.API.Controllers
 		}
 
 		[HttpGet("[action]")]
+		[Authorize(AuthenticationSchemes = "Admin")]
+		[AuthorizeDefinition(Menu = AuthorizeDefinitionConstants.Products, ActionType = ActionType.Reading, Definition = "Get Low Stock Products")]
 		public async Task<IActionResult> GetLowStockProducts([FromQuery] GetLowStockProductQueryRequest getLowStockProductQueryRequest)
 		{
 			GetLowStockProductQueryResponse response = await _mediator.Send(getLowStockProductQueryRequest);
@@ -161,12 +171,25 @@ namespace ETicaretAPI_V2.API.Controllers
 		}
 
 		[HttpGet("[action]")]
+		
 		public async Task<IActionResult> GetBestSellingProducts([FromQuery] GetBestSellingProductQueryRequest getBestSellingProductQueryRequest)
 		{
 			GetBestSellingProductQueryResponse response = await _mediator.Send(getBestSellingProductQueryRequest);
 			return Ok(response);
 		}
 
-		
+		[HttpGet("[action]")]
+		public async Task<IActionResult> GetProductStockReport([FromQuery] CreateStockReportCommandRequest createStockReportCommandRequest)
+		{
+			CreateStockReportCommandResponse response = await _mediator.Send(createStockReportCommandRequest);
+			return Ok(response);
+		}
+
+		[HttpGet("[action]")]
+		public async Task<IActionResult> GetProductSellingReport([FromQuery] CreateSellingReportCommandRequest createSellingReportCommandRequest)
+		{
+			CreateSellingReportCommandResponse response = await _mediator.Send(createSellingReportCommandRequest);
+			return Ok(response);
+		}
 	}
 }

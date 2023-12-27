@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using ETicaretAPI_V2.Application.Consts;
+using ETicaretAPI_V2.Application.CustomAttributes;
+using ETicaretAPI_V2.Application.Enums;
 using ETicaretAPI_V2.Application.Repositories.CampaignRepositories;
 using ETicaretAPI_V2.Application.Repositories.CampaignUsageRepositories;
 using Microsoft.AspNetCore;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -14,6 +18,7 @@ namespace ETicaretAPI_V2.API.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]
+	//[Authorize(AuthenticationSchemes = "Admin")]
 	public class PaymentIntentApiController : ControllerBase
 	{
 		readonly ICampaignUsageWriteRepository _campaignUsageWriteRepository;
@@ -29,6 +34,7 @@ namespace ETicaretAPI_V2.API.Controllers
 		}
 
 		[HttpPost]
+		[AuthorizeDefinition(Menu = AuthorizeDefinitionConstants.Payment, ActionType = ActionType.Writing, Definition = "Create Payment")]
 		public ActionResult Create([FromBody] PaymentIntentCreateRequest request)
 		{
 			var paymentIntentService = new PaymentIntentService();
@@ -47,6 +53,42 @@ namespace ETicaretAPI_V2.API.Controllers
 		}
 
 		[HttpGet("[action]")]
+		public async Task<IActionResult> GetPayments(long limit)
+		{ 
+			PaymentIntentListOptions abc = new()
+			{
+				Limit = limit,
+				
+			};
+			var paymentIntentService = new PaymentIntentService();
+			var payments = await paymentIntentService.ListAsync(abc);
+
+			///kullanıcı bilgilerine erişmek için //paymentMethodId ile
+			//var service = new PaymentMethodService();
+			//var xyz= service.Get("pm_1ORIlEFTVXhGXu7OT9X83OjD");
+			//return Ok(xyz);
+
+			return Ok(payments);
+		}
+
+		[HttpGet("[action]")]
+		public async Task<IActionResult> GetPaymentDetail(string PaymentMethodId)
+		{
+			var service = new PaymentMethodService();
+			var detail = service.Get(PaymentMethodId);
+			return Ok(detail);
+		}
+
+		[HttpGet("[action]")]
+		public async Task<IActionResult> GetBalances()
+		{
+			var service = new BalanceService();
+			var data = service.Get();
+			return Ok(data);
+		}
+
+		[HttpGet("[action]")]
+		[AuthorizeDefinition(Menu = AuthorizeDefinitionConstants.Payment, ActionType = ActionType.Reading, Definition = "Set Campaign Usage")]
 		public async Task<IActionResult> SetCampaignUsage([FromQuery] string userId, string campaignId)
 		{
 			var data = await _campaignUsageReadRepository.GetSingleAsync(s => s.UserId == userId && s.CampaignId == Guid.Parse(campaignId));
@@ -69,6 +111,7 @@ namespace ETicaretAPI_V2.API.Controllers
 		}
 
 		[HttpGet("[action]")]
+
 		public async Task<IActionResult> GetCampaignIdByCode(string code)
 		{
 			var data = await _campaignReadRepository.GetSingleAsync(u => u.Code == code);

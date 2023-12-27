@@ -1,10 +1,14 @@
-﻿using ETicaretAPI_V2.Application.Features.Commands.Category.ChangeCategoryStatus;
+﻿using ETicaretAPI_V2.Application.Consts;
+using ETicaretAPI_V2.Application.CustomAttributes;
+using ETicaretAPI_V2.Application.Enums;
+using ETicaretAPI_V2.Application.Features.Commands.Category.ChangeCategoryStatus;
 using ETicaretAPI_V2.Application.Features.Commands.Category.CreateCategory;
 using ETicaretAPI_V2.Application.Features.Commands.Category.GetAllCategoryName;
 using ETicaretAPI_V2.Application.Features.Commands.Category.UpdateCategory;
 using ETicaretAPI_V2.Application.Features.Queries.Category.GetAllCategory;
 using ETicaretAPI_V2.Application.Features.Queries.Category.GetCategoryById;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -44,6 +48,8 @@ namespace ETicaretAPI_V2.API.Controllers
 		}
 
 		[HttpPost("[action]")]
+		[Authorize(AuthenticationSchemes = "Admin")]
+		[AuthorizeDefinition(Menu = AuthorizeDefinitionConstants.Category, ActionType = ActionType.Writing, Definition = "Create Category")]
 		public async Task<IActionResult> CreateCategory([FromBody]CreateCategoryCommandRequest createCategoryCommandRequest)
 		{
 			var response= await _mediator.Send(createCategoryCommandRequest);
@@ -51,6 +57,8 @@ namespace ETicaretAPI_V2.API.Controllers
 		}
 
 		[HttpPut("[action]")]
+		[Authorize(AuthenticationSchemes = "Admin")]
+		[AuthorizeDefinition(Menu = AuthorizeDefinitionConstants.Category, ActionType = ActionType.Updating, Definition = "Update Category")]
 		public async Task<IActionResult> UpdateCategory([FromBody]UpdateCategoryCommandRequest updateCategoryCommandRequest)
 		{
 			var response = await _mediator.Send(updateCategoryCommandRequest);
@@ -58,6 +66,8 @@ namespace ETicaretAPI_V2.API.Controllers
 		}
 
 		[HttpPut("[action]")]
+		[Authorize(AuthenticationSchemes = "Admin")]
+		[AuthorizeDefinition(Menu = AuthorizeDefinitionConstants.Category, ActionType = ActionType.Updating, Definition = "Change Category Status")]
 		public async Task<IActionResult> ChangeCategoryStatus([FromBody]ChangeCategoryStatusCommandRequest changeCategoryStatusCommandRequest)
 		{
 			var response=  await _mediator.Send(changeCategoryStatusCommandRequest);

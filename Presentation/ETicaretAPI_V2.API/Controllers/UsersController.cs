@@ -1,6 +1,8 @@
 ﻿using Azure;
 using ETicaretAPI_V2.Application.Abstraction.Services;
+using ETicaretAPI_V2.Application.Consts;
 using ETicaretAPI_V2.Application.CustomAttributes;
+using ETicaretAPI_V2.Application.Enums;
 using ETicaretAPI_V2.Application.Features.Commands.AppUser.AssignRoleToUser;
 using ETicaretAPI_V2.Application.Features.Commands.AppUser.CreateUser;
 using ETicaretAPI_V2.Application.Features.Commands.AppUser.UpdatePassword;
@@ -38,7 +40,8 @@ namespace ETicaretAPI_V2.API.Controllers
         
 
         [HttpPost("update-password")]
-        public async Task<IActionResult> UpdatePassword([FromBody] UpdatePasswordCommandRequest updatePasswordCommandRequest)
+		
+		public async Task<IActionResult> UpdatePassword([FromBody] UpdatePasswordCommandRequest updatePasswordCommandRequest)
         {
             UpdatePasswordCommandResponse response = await _mediator.Send(updatePasswordCommandRequest);
             return Ok(response);
@@ -71,13 +74,16 @@ namespace ETicaretAPI_V2.API.Controllers
         }
 
         [HttpPut("[action]")]
-        public async Task<IActionResult> UpdateProfile([FromBody]UpdateProfileCommandRequest updateProfileCommandRequest)
+		[Authorize(AuthenticationSchemes = "Admin")]
+		[AuthorizeDefinition(ActionType = Application.Enums.ActionType.Updating, Definition = "Update Profile", Menu = "Users")]
+		public async Task<IActionResult> UpdateProfile([FromBody]UpdateProfileCommandRequest updateProfileCommandRequest)
         {
             var response = await _mediator.Send(updateProfileCommandRequest);
             return Ok(response);
         }
 
         [HttpGet("[action]")]
+
         public async Task<IActionResult> GetUserById([FromQuery] GetUserByIdQueryRequest getUserByIdQueryRequest)
         {
             var response = await _mediator.Send(getUserByIdQueryRequest);

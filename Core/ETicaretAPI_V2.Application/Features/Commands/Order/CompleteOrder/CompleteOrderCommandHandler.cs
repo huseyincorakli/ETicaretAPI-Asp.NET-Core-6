@@ -28,7 +28,7 @@ namespace ETicaretAPI_V2.Application.Features.Commands.Order.CompleteOrder
             if(succeeded==true)
             {
                 await _mailService.SendCompletedOrderMailAsync(
-                    dto.Email, dto.OrderCode, dto.OrderDate, dto.Username, dto.UserSurname,request.TrackCode,data.CompanyName);
+                    dto.Email, dto.OrderCode, dto.OrderDate, dto.Username, dto.UserSurname,request.TrackCode,data.CompanyName,data.CompanyUrl);
             }
             return new();
         }
