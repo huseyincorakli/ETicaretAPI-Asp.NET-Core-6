@@ -14,6 +14,7 @@ using ETicaretAPI_V2.Application.Features.Commands.ProductImageFile.RemoveProduc
 using ETicaretAPI_V2.Application.Features.Commands.ProductImageFile.UploadProductImage;
 using ETicaretAPI_V2.Application.Features.Queries.Product.GetAllProduct;
 using ETicaretAPI_V2.Application.Features.Queries.Product.GetBestSellingProduct;
+using ETicaretAPI_V2.Application.Features.Queries.Product.GetBrand;
 using ETicaretAPI_V2.Application.Features.Queries.Product.GetByIdProduct;
 using ETicaretAPI_V2.Application.Features.Queries.Product.GetLowStockProduct;
 using ETicaretAPI_V2.Application.Features.Queries.Product.GetProductsByCategory;
@@ -40,7 +41,7 @@ namespace ETicaretAPI_V2.API.Controllers
 			_productReadRepository = productReadRepository;
 		}
 
-		
+
 
 		[HttpGet("qrCode/{productId}")]
 		[Authorize(AuthenticationSchemes = "Admin")]
@@ -155,7 +156,7 @@ namespace ETicaretAPI_V2.API.Controllers
 		}
 
 		[HttpGet("[action]")]
-		public async Task<IActionResult> GetProductsByCategory([FromQuery]GetProductsByCategoryQueryRequest getProductsByCategoryQueryRequest)
+		public async Task<IActionResult> GetProductsByCategory([FromQuery] GetProductsByCategoryQueryRequest getProductsByCategoryQueryRequest)
 		{
 			var response = await _mediator.Send(getProductsByCategoryQueryRequest);
 			return Ok(response);
@@ -171,7 +172,7 @@ namespace ETicaretAPI_V2.API.Controllers
 		}
 
 		[HttpGet("[action]")]
-		
+
 		public async Task<IActionResult> GetBestSellingProducts([FromQuery] GetBestSellingProductQueryRequest getBestSellingProductQueryRequest)
 		{
 			GetBestSellingProductQueryResponse response = await _mediator.Send(getBestSellingProductQueryRequest);
@@ -189,6 +190,13 @@ namespace ETicaretAPI_V2.API.Controllers
 		public async Task<IActionResult> GetProductSellingReport([FromQuery] CreateSellingReportCommandRequest createSellingReportCommandRequest)
 		{
 			CreateSellingReportCommandResponse response = await _mediator.Send(createSellingReportCommandRequest);
+			return Ok(response);
+		}
+
+		[HttpGet("[action]")]
+		public async Task<IActionResult> GetBrands([FromQuery] GetBrandQueryRequest getBrandQueryRequest)
+		{
+			GetBrandQueryResponse response = await _mediator.Send(getBrandQueryRequest);
 			return Ok(response);
 		}
 	}

@@ -51,6 +51,10 @@ namespace ETicaretAPI_V2.Application.Features.Queries.Product.GetAllProduct
                     p.Specifications
                 })
                 .ToListAsync();
+            if (!string.IsNullOrEmpty(request.Brand))
+            {
+                products= products.Where(p=>p.Brand.ToLower().Trim()==(request.Brand).ToLower().Trim()).ToList();
+            }
 			if (!string.IsNullOrEmpty(request.ProductName))
 			{
 				products = products.Where(p => 
