@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Controllers\WorkSpaceController.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.4">
       <PrivateAssets>all</PrivateAssets>
@@ -31,7 +35,6 @@
 
   <ItemGroup>
     <Folder Include="Middlewares\" />
-    <Folder Include="wwwroot\" />
     <Folder Include="wwwroot\photo-images\" />
   </ItemGroup>
 

@@ -190,6 +190,7 @@ namespace ETicaretAPI_V2.API.Controllers
 		public async Task<IActionResult> GetProductSellingReport([FromQuery] CreateSellingReportCommandRequest createSellingReportCommandRequest)
 		{
 			CreateSellingReportCommandResponse response = await _mediator.Send(createSellingReportCommandRequest);
+			Thread.Sleep(6000);
 			return Ok(response);
 		}
 

@@ -418,6 +418,34 @@ namespace ETicaretAPI_V2.Persistence.Migrations
                     b.UseTphMappingStrategy();
                 });
 
+            modelBuilder.Entity("ETicaretAPI_V2.Domain.Entities.HomeSetting", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("NumberOfFeaturedProducts")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("UpdatedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("WelcomeText")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("WelcomeTitle")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("HomeSetting");
+                });
+
             modelBuilder.Entity("ETicaretAPI_V2.Domain.Entities.Identity.AppRole", b =>
                 {
                     b.Property<string>("Id")

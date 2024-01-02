@@ -21,7 +21,8 @@ namespace ETicaretAPI_V2.Application.Features.Commands.Product.CreateSellingRepo
 				x.Brand,
 				x.Name,
 				x.Price,
-				x.QuantitySold
+				x.QuantitySold,
+				x.ProductImageFiles
 			}).ToListAsync();
 
 			return new()
