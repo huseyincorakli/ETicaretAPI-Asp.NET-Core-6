@@ -6,5 +6,7 @@
         Task SendMailAsync(string to, string subject, string body, bool isBodyHtml = true);
         Task SendPasswordResetMailAsync(string to,string userId,string resetToken);
         Task SendCompletedOrderMailAsync(string to,string orderCode,DateTime orderDate,string userName,string userSurname,string trackCode,string companyName, string companyUrl);
-    }
+        Task ReplyToUserMailAsync(string to, string title, string messageContent);
+
+	}
 }

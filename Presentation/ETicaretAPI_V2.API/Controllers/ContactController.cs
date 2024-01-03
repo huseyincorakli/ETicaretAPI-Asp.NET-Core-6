@@ -1,4 +1,5 @@
-﻿using ETicaretAPI_V2.Application.DTOs.Message;
+﻿using ETicaretAPI_V2.Application.Abstraction.Services;
+using ETicaretAPI_V2.Application.DTOs.Message;
 using ETicaretAPI_V2.Application.Repositories.MessageRepositories;
 using ETicaretAPI_V2.Domain.Entities;
 using Microsoft.AspNetCore.Http;
@@ -13,10 +14,12 @@ namespace ETicaretAPI_V2.API.Controllers
 	{
 		readonly IMessageReadRepository _messageReadRepository;
 		readonly IMessageWriteRepository _messageWriteRepository;
-		public ContactController(IMessageReadRepository messageReadRepository, IMessageWriteRepository messageWriteRepository)
+		readonly IMailService _mailService;
+		public ContactController(IMessageReadRepository messageReadRepository, IMessageWriteRepository messageWriteRepository, IMailService mailService)
 		{
 			_messageReadRepository = messageReadRepository;
 			_messageWriteRepository = messageWriteRepository;
+			_mailService = mailService;
 		}
 
 
@@ -43,9 +46,13 @@ namespace ETicaretAPI_V2.API.Controllers
 		}
 
 		[HttpGet("[action]")]
-		public async Task<IActionResult> GetAllMessage()
+		public async Task<IActionResult> GetAllMessage(int size)
 		{
-			var data = await _messageReadRepository.GetAll().ToListAsync();
+			if (size==null)
+			{
+				size = 6;
+			}
+			var data = await _messageReadRepository.GetAll().Take(size).ToListAsync();
 			return Ok(data);
 		}
 
@@ -63,6 +70,13 @@ namespace ETicaretAPI_V2.API.Controllers
 			{
 				return BadRequest();
 			}
+		}
+
+		[HttpGet("[action]")]
+		public async Task<IActionResult> ReplyToMessage(string userMail,string title,string message)
+		{
+			await _mailService.ReplyToUserMailAsync(userMail,title, message);
+			return Ok();
 		}
 
 	}

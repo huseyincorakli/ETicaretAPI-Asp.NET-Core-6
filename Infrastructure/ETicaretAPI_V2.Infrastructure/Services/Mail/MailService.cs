@@ -77,7 +77,17 @@ namespace ETicaretAPI_V2.Infrastructure.Services.Mail
                 $"Bizi tercih ettiğiniz için teşekkür ederiz. <br>";
             await SendMailAsync(to, $"{orderCode} Sipariş Numaralı Siparişiniz Tamamlandı", mail);
         }
-    }
+
+		public async Task ReplyToUserMailAsync(string to,string title,string messageContent)
+		{
+			string mail = $"Sayın {to},<br>" +
+				$"{messageContent} <br>" +
+				$"Bizi tercih ettiğiniz için teşekkür ederiz. <br>";
+			await SendMailAsync(to, $"{title}", mail);
+		}
+
+
+	}
 }
 
 
