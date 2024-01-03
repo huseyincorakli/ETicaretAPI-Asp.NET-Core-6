@@ -32,6 +32,7 @@ namespace ETicaretAPI_V2.Persistence.Contexts
 		public DbSet<CampaignUsage> CampaignUsages { get; set; }
 		public DbSet<ShippingCompany> ShippingCompanies { get; set; }
 		public DbSet<HomeSetting> HomeSetting { get; set; }
+		public DbSet<Message> Messages { get; set; }
 		protected override void OnModelCreating(ModelBuilder builder)
 		{
 

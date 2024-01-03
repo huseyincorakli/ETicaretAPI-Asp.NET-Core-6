@@ -15,6 +15,7 @@ using ETicaretAPI_V2.Application.Repositories.FileRepositories;
 using ETicaretAPI_V2.Application.Repositories.HomeSettingRepositories;
 using ETicaretAPI_V2.Application.Repositories.InvoiceFileRepositories;
 using ETicaretAPI_V2.Application.Repositories.MenuRepositories;
+using ETicaretAPI_V2.Application.Repositories.MessageRepositories;
 using ETicaretAPI_V2.Application.Repositories.OrderRepositories;
 using ETicaretAPI_V2.Application.Repositories.ProductImageFileRepositories;
 using ETicaretAPI_V2.Application.Repositories.ProductRepositories;
@@ -36,6 +37,7 @@ using ETicaretAPI_V2.Persistence.Repositories.FileRepositories;
 using ETicaretAPI_V2.Persistence.Repositories.HomeSettingRepositories;
 using ETicaretAPI_V2.Persistence.Repositories.InvoiceFileRepositories;
 using ETicaretAPI_V2.Persistence.Repositories.MenuRepositories;
+using ETicaretAPI_V2.Persistence.Repositories.MessageRepositories;
 using ETicaretAPI_V2.Persistence.Repositories.OrderRepositories;
 using ETicaretAPI_V2.Persistence.Repositories.ProductImageFileRepositories;
 using ETicaretAPI_V2.Persistence.Repositories.ProductRepositores;
@@ -102,6 +104,8 @@ namespace ETicaretAPI_V2.Persistence
 			service.AddScoped<IShippingCompanyWriteRepository, ShippingCompanyWriteRepository>();
 			service.AddScoped<IHomeSettingReadRepositories, HomeSettingReadRepository>();
 			service.AddScoped<IHomeSettingWriteRepositories, HomeSettingWriteRepository>();
+			service.AddScoped<IMessageReadRepository, MessageReadRepository>();
+			service.AddScoped<IMessageWriteRepository, MessageWriteRepository>();
 
 
 

@@ -123,7 +123,10 @@ namespace ETicaretAPI_V2.API.Controllers
 					Id = Guid.NewGuid(),
 					WelcomeText = "string",
 					WelcomeTitle = "string",
-					NumberOfFeaturedProducts = 6
+					NumberOfFeaturedProducts = 6,
+					ContactAddress= "1234 Bootstrap Caddesi Sıfır Blok, Bootstrap Mahallesi BootCity, BC 54321 Ülke: Bootland",
+					ContactMail= "info@cartopia.com",
+					ContactNumber= "+90555 555 5555"
 				};
 				await _homeSettingWriteRepositories.AddAsync(homeSetting1);
 				await _homeSettingWriteRepositories.SaveAsync();
@@ -159,5 +162,31 @@ namespace ETicaretAPI_V2.API.Controllers
 			return Ok();
 		}
 
+
+		[HttpGet("[action]")]
+		public async Task<IActionResult> UpdateContactAddress([FromQuery] string address)
+		{
+			HomeSetting homeSetting = await _homeSettingReadRepositories.Table.FirstOrDefaultAsync();
+			homeSetting.ContactAddress = address;
+			await _homeSettingWriteRepositories.SaveAsync();
+			return Ok();
+		}
+
+		[HttpGet("[action]")]
+		public async Task<IActionResult> UpdateContactMail([FromQuery] string mail)
+		{
+			HomeSetting homeSetting = await _homeSettingReadRepositories.Table.FirstOrDefaultAsync();
+			homeSetting.ContactMail = mail;
+			await _homeSettingWriteRepositories.SaveAsync();
+			return Ok();
+		}
+		[HttpGet("[action]")]
+		public async Task<IActionResult> UpdateContactNumber([FromQuery] string number)
+		{
+			HomeSetting homeSetting = await _homeSettingReadRepositories.Table.FirstOrDefaultAsync();
+			homeSetting.ContactNumber = number;
+			await _homeSettingWriteRepositories.SaveAsync();
+			return Ok();
+		}
 	}
 }
