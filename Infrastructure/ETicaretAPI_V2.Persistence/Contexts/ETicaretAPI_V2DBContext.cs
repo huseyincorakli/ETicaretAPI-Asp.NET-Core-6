@@ -1,4 +1,5 @@
-﻿using ETicaretAPI_V2.Domain.Entities;
+﻿using ETicaretAPI_V2.Domain;
+using ETicaretAPI_V2.Domain.Entities;
 using ETicaretAPI_V2.Domain.Entities.Common;
 using ETicaretAPI_V2.Domain.Entities.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -33,6 +34,7 @@ namespace ETicaretAPI_V2.Persistence.Contexts
 		public DbSet<ShippingCompany> ShippingCompanies { get; set; }
 		public DbSet<HomeSetting> HomeSetting { get; set; }
 		public DbSet<Message> Messages { get; set; }
+		public DbSet<Refund> Refunds { get; set; }
 		protected override void OnModelCreating(ModelBuilder builder)
 		{
 

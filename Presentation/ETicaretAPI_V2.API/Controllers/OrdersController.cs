@@ -85,7 +85,10 @@ namespace ETicaretAPI_V2.API.Controllers
 		public async Task<IActionResult> GetOrdersByUserId([FromQuery] string userId, int size)
 		{
 			var data = await _orderService.GetOrderByUserId(size, userId);
-			return Ok(data);
+			if(data!=null)
+				return Ok(data);
+			else
+				return Ok(null);
 		}
 	}
 }

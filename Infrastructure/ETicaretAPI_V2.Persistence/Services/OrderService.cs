@@ -49,21 +49,26 @@ namespace ETicaretAPI_V2.Persistence.Services
 			
 			var filteredData = data2;
 			var sortedData = filteredData.OrderByDescending(a => a.CreatedDate).ToList().Take(size);
-			
-			return new ListOrder
+
+			if (filteredData != null && sortedData != null)
 			{
-				TotalOrderCount = filteredData.Count(),
-				Orders = sortedData.Select(o => new
+				return new ListOrder
 				{
-					Id = o.Id,
-					CreatedDate = o.CreatedDate,
-					OrderCode = o.OrderCode,
-					TotalPrice = o.Basket.BasketItems.Sum(bi => bi.Quantity * bi.Product.Price),
-					UserName = o.Basket.User.NameSurname,
-					o.Completed,
-					
-				}).OrderByDescending(o => o.CreatedDate).ToList()
-			};
+					TotalOrderCount = filteredData.Count(),
+					Orders = sortedData.Select(o => new
+					{
+						Id = o.Id,
+						CreatedDate = o.CreatedDate,
+						OrderCode = o.OrderCode,
+						TotalPrice = o.Basket.BasketItems.Sum(bi => bi.Quantity * bi.Product.Price),
+						UserName = o.Basket.User.NameSurname,
+						o.Completed,
+
+					}).OrderByDescending(o => o.CreatedDate).ToList()
+				};
+			}
+			else
+				return new() { Orders = null, TotalOrderCount = 0 };
 		}
 
 

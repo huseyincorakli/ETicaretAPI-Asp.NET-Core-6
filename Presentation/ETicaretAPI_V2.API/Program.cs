@@ -47,7 +47,7 @@ builder.Services.AddControllers(options =>
 Logger log = new LoggerConfiguration()
     .WriteTo.Console()
     .WriteTo.File("logs/logs.txt")
-    .WriteTo.PostgreSQL(builder.Configuration.GetConnectionString("PostgreSQL"), "logs",
+    .WriteTo.PostgreSQL(builder.Configuration.GetConnectionString("PostgreSQL2"), "logs",
     needAutoCreateTable: true, columnOptions: new Dictionary<string, ColumnWriterBase>
     {
         {"message",new RenderedMessageColumnWriter()},

@@ -19,6 +19,7 @@ using ETicaretAPI_V2.Application.Repositories.MessageRepositories;
 using ETicaretAPI_V2.Application.Repositories.OrderRepositories;
 using ETicaretAPI_V2.Application.Repositories.ProductImageFileRepositories;
 using ETicaretAPI_V2.Application.Repositories.ProductRepositories;
+using ETicaretAPI_V2.Application.Repositories.RefundRepositories;
 using ETicaretAPI_V2.Application.Repositories.ShippingCompanyRepositories;
 using ETicaretAPI_V2.Domain.Entities.Identity;
 using ETicaretAPI_V2.Persistence.Contexts;
@@ -41,6 +42,7 @@ using ETicaretAPI_V2.Persistence.Repositories.MessageRepositories;
 using ETicaretAPI_V2.Persistence.Repositories.OrderRepositories;
 using ETicaretAPI_V2.Persistence.Repositories.ProductImageFileRepositories;
 using ETicaretAPI_V2.Persistence.Repositories.ProductRepositores;
+using ETicaretAPI_V2.Persistence.Repositories.RefundRepositories;
 using ETicaretAPI_V2.Persistence.Repositories.ShippingCompanyRepositories;
 using ETicaretAPI_V2.Persistence.Services;
 using Microsoft.AspNetCore.Identity;
@@ -106,6 +108,8 @@ namespace ETicaretAPI_V2.Persistence
 			service.AddScoped<IHomeSettingWriteRepositories, HomeSettingWriteRepository>();
 			service.AddScoped<IMessageReadRepository, MessageReadRepository>();
 			service.AddScoped<IMessageWriteRepository, MessageWriteRepository>();
+			service.AddScoped<IRefundReadRepository, RefundReadRepository>();
+			service.AddScoped<IRefundWriteRepository, RefundWriteRepository>();
 
 
 
@@ -124,6 +128,7 @@ namespace ETicaretAPI_V2.Persistence
 			service.AddScoped<ICommentService, CommentService>();
 			service.AddScoped<ICampaignService, CampaignService>();
 			service.AddScoped<IShippingCompanyService, ShippingCompanyService>();
+			service.AddScoped<IRefundService, RefundService>();
 
 		}
 	}
