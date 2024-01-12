@@ -22,6 +22,12 @@ namespace ETicaretAPI_V2.Persistence.Services
             _completedOrderWriteRepository = completedOrderWriteRepository;
         }
 
+		public async Task<SingleOrder> GetOrderByOrderCode(string orderCode)
+		{
+			var data = await _orderReadRepository.GetWhere(x => x.OrderCode == orderCode).FirstOrDefaultAsync() ;
+			var data2= await GetOrderByIdAsync((data.Id).ToString());
+			return data2;
+		}
 
 		public async Task<ListOrder> GetOrderByUserId(int size,string userId)
 		{

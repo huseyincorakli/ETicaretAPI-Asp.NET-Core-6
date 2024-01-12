@@ -82,6 +82,7 @@ namespace ETicaretAPI_V2.API.Controllers
 		}
 
 		[HttpGet("[action]")]
+		[AuthorizeDefinition(Menu = AuthorizeDefinitionConstants.Orders, ActionType = ActionType.Reading, Definition = "Get Order By User Id")]
 		public async Task<IActionResult> GetOrdersByUserId([FromQuery] string userId, int size)
 		{
 			var data = await _orderService.GetOrderByUserId(size, userId);
@@ -89,6 +90,14 @@ namespace ETicaretAPI_V2.API.Controllers
 				return Ok(data);
 			else
 				return Ok(null);
+		}
+
+		[HttpGet("[action]")]
+		[AuthorizeDefinition(Menu = AuthorizeDefinitionConstants.Orders, ActionType = ActionType.Reading, Definition = "Get Order By User Id")]
+		public async Task<IActionResult> GetOrderByOrderCode(string orderCode)
+		{
+			var data = await _orderService.GetOrderByOrderCode(orderCode);
+			return Ok(data);
 		}
 	}
 }

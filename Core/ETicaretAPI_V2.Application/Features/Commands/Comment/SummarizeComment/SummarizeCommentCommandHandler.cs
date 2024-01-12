@@ -34,7 +34,7 @@ namespace ETicaretAPI_V2.Application.Features.Commands.Comment.SummarizeComment
 			}
 
 
-			if (comments.Count<10)
+			if (comments.Count<0)
 			{
 				return new()
 				{

@@ -26,8 +26,8 @@ namespace ETicaretAPI_V2.API.Controllers
 		}
 
 		[HttpPost("[action]")]
-		[Authorize(AuthenticationSchemes = "Admin")]
-		[AuthorizeDefinition(Menu = AuthorizeDefinitionConstants.Comments, ActionType = ActionType.Writing, Definition = "Create Comment")]
+		//[Authorize(AuthenticationSchemes = "Admin")]
+		//[AuthorizeDefinition(Menu = AuthorizeDefinitionConstants.Comments, ActionType = ActionType.Writing, Definition = "Create Comment")]
 		public async Task<IActionResult> AddComment([FromBody] AddCommentCommandRequest addCommentCommandRequest)
 		{
 			AddCommentCommandResponse response = await _mediator.Send(addCommentCommandRequest);
