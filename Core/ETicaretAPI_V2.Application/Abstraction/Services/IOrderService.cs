@@ -12,6 +12,7 @@ namespace ETicaretAPI_V2.Application.Abstraction.Services
         Task<SingleOrder> GetOrderByIdAsync(string id);
         Task<(bool, CompletedOrderDTO)> CompleteOrderAsync(string id, string trackCode, string companyId);
         Task<ListOrder> GetUnCompletedOrders(int size);
+        Task<bool> RemoveOrderByOrderCode(string orderCode,string userId);
 
 	}
 }

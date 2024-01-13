@@ -27,14 +27,21 @@ namespace ETicaretAPI_V2.API.Controllers
 		readonly ICampaignUsageReadRepository _campaignUsageReadRepository;
 		readonly ICampaignReadRepository _campaignReadRepository;
 		readonly IRefundService _refundService;
+		readonly IMailService _mailService;
+		readonly IUserService _userService;
+		readonly IOrderService _orderService;
 
 
-		public PaymentIntentApiController(ICampaignUsageWriteRepository campaignUsageWriteRepository, ICampaignUsageReadRepository campaignUsageReadRepository, ICampaignReadRepository campaignReadRepository, IRefundService refundService)
+
+		public PaymentIntentApiController(ICampaignUsageWriteRepository campaignUsageWriteRepository, ICampaignUsageReadRepository campaignUsageReadRepository, ICampaignReadRepository campaignReadRepository, IRefundService refundService, IMailService mailService, IUserService userService, IOrderService orderService)
 		{
 			_campaignUsageWriteRepository = campaignUsageWriteRepository;
 			_campaignUsageReadRepository = campaignUsageReadRepository;
 			_campaignReadRepository = campaignReadRepository;
 			_refundService = refundService;
+			_mailService = mailService;
+			_userService = userService;
+			_orderService = orderService;
 		}
 
 		[HttpPost]
@@ -179,8 +186,7 @@ namespace ETicaretAPI_V2.API.Controllers
 				var detail = await service.GetAsync(item.PaymentMethodId);
 				detailsList.Add(detail);
 
-				// Şimdi, detail nesnesini paymentIntent nesnesine ekleyebilirsiniz.
-				item.PaymentMethod = detail; // Eğer PaymentIntent sınıfında bir 'Details' property'si varsa, bu şekilde ekleyebilirsiniz.
+				item.PaymentMethod = detail; 
 			}
 
 			var payments = new List<PaymentIntent>();
@@ -197,17 +203,41 @@ namespace ETicaretAPI_V2.API.Controllers
 		}
 
 		[HttpGet("[action]")]
-		public async Task<IActionResult> RefundDeneme(string paymentIntentId,long amount)
+		public async Task<IActionResult> RefundAccept(string paymentIntentId,long amount,string message,string userId,string orderCode)
 		{
 			var options = new RefundCreateOptions
 			{
 				PaymentIntent = paymentIntentId,
-				Amount = amount,
+				Amount = amount*100,
 			};
 			var service = new RefundService();
  			var data = await service.CreateAsync(options);
+			var result = Ok(data.Status);
 
-			return Ok(data.Status);
+			if (result.StatusCode==200)
+			{
+				await AgreeRefundMessage(userId, message);
+				await _orderService.RemoveOrderByOrderCode(orderCode,userId);
+			}
+
+			return result;
+		}
+		[HttpGet("[action]")]
+		public async Task<IActionResult> RefundReject(string message, string userId)
+		{
+			await RejectRefundMessage(userId,message);
+			return Ok();
+		}
+		private async Task AgreeRefundMessage(string userId, string message)
+		{
+			var user = await _userService.GetUserById(userId);
+			await _mailService.SendMailAsync(user.Email, "Sipariş İadesi Kabul Edildi", message);
+		}
+
+		private async Task RejectRefundMessage(string userId, string message)
+		{
+			var user = await _userService.GetUserById(userId);
+			await _mailService.SendMailAsync(user.Email, "Sipariş İadesi Reddedildi", message);
 		}
 
 		private int CalculateOrderAmount(Item[] items)
